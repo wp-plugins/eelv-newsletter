@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: EELV Newsletter
-Plugin URI: http//ecolosites.eelv.fr
+Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
 Version: 2.6.3
 Author: Bastien Ho,  EELV
