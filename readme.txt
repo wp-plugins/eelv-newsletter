@@ -47,8 +47,13 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+V 2.6.3
+* Added : custom email to receive a copy of any campaign send (manage it in the network admin)
+* Performances optimisation 
+* Add some lines for completing translation, not finished yet !
+
 V 2.6.2
-broken link for status icons : bug fixed
+* broken link for status icons : bug fixed
 
 v 2.6
 

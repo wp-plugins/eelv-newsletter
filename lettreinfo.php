@@ -3,12 +3,12 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http//ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.6.2
+Version: 2.6.3
 Author: Bastien Ho,  EELV
 License: CC
 */
 
-$eelv_newsletter_version = "2.6.2";
+$eelv_newsletter_version = "2.6.3";
 
 $newsletter_tb_name = 'eelv_'.$wpdb->blogid. "_newsletter_adr";
 
@@ -94,7 +94,7 @@ register_post_type('newsletter', array(  'label' => 'Newsletter','description' =
   'not_found_in_trash' => __('No newsletter Found in Trash','eelv_lettreinfo'),
   'parent' => __('Parent newsletter','eelv_lettreinfo'),
 ),) );
-register_post_type('newsletter_template', array(  'label' => 'Modèles','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+register_post_type('newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
   'name' => __('Habillage','eelv_lettreinfo'),
   'singular_name' => __('Habillage','eelv_lettreinfo'),
   'menu_name' => __('Habillages','eelv_lettreinfo'),
@@ -120,17 +120,12 @@ register_post_type('newsletter_archive', array(  'label' => 'Archives','descript
   'view' => __('Afficher','eelv_lettreinfo'),
   'view_item' => __('Voir archive','eelv_lettreinfo'),
   'search_items' => __('Rechercher une archive','eelv_lettreinfo'),
-  'not_found' => __('Aucun envoi n\'a encore été effectué','eelv_lettreinfo'),
+  'not_found' => __('Aucun envoi n\'a encore &eacute;t&eacute; effectu&eacute;','eelv_lettreinfo'),
   'not_found_in_trash' => __('No archive Found in Trash','eelv_lettreinfo'),
   'parent' => __('Parent archive','eelv_lettreinfo'),
 ),) );
   
   require_once($lettreinfo_plugin_path.'/templates.php');
-
- 
-  
-   
-  //eelv_news_ajout_menu();
 }
 
 // ADD NEW COLUMN  
@@ -155,7 +150,7 @@ register_post_type('newsletter_archive', array(  'label' => 'Archives','descript
 function newsletter_add_custom_box() {
     add_meta_box( 
         'news-carnet-adresse',
-        __( "Outils d'éditions", 'eelv_lettreinfo' ),
+        __( "Outils d'&eacute;ditions", 'eelv_lettreinfo' ),
         'newsletter_admin',
         'newsletter' 
     );
@@ -201,9 +196,12 @@ function eelv_news_ajout_menu() {
   add_submenu_page('edit.php?post_type=newsletter', __('Envoi', 'eelv_lettreinfo' ), __('Envoi', 'eelv_lettreinfo' ), 7, 'news_envoi', 'news_envoi');
   add_submenu_page('edit.php?post_type=newsletter', __('Configuration/aide', 'eelv_lettreinfo' ), __('Configuration/aide', 'eelv_lettreinfo' ), 7, 'newsletter_page_configuration', 'newsletter_page_configuration');
   add_submenu_page('edit.php?post_type=newsletter', __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), 7, 'newsletter_checkdb', 'newsletter_checkdb');
-    
   
-  
+}
+// Ajout du menu d'option sur le r&eacute;seau
+function eelv_news_ajout_network_menu() {
+  add_submenu_page('settings.php', __('Lettre d\'info', 'eelv_lettreinfo' ), __('Lettre d\'info', 'eelv_lettreinfo' ), 'Super Admin', 'newsletter_network_configuration', 'newsletter_network_configuration');
+  //add_submenu_page('tpe', 'Historique', 'Historique', 'Super Admin', 'eelv_tpe_liste', 'tpe_supercommandes_liste');    
 }
 
 function get_news_meta($id){
@@ -261,11 +259,11 @@ function style_newsletter(){
                   $news_reg_return.=__("Erreur d'enregistrement !", 'eelv_lettreinfo') ;
                 }
                 elseif($query!=''){
-                  $news_reg_return=__("Vous avez bien été ré-inscrit(e).", 'eelv_lettreinfo') ;                
+                  $news_reg_return=__("Vous avez bien &eacute;t&eacute; r&eacute;-inscrit(e).", 'eelv_lettreinfo') ;                
                 }                
               }
               else{
-                $news_reg_return.=__("Votre email est déjà enregistré dans notre liste d'envoi.", 'eelv_lettreinfo') ;
+                $news_reg_return.=__("Votre email est d&eacute;jà enregistr&eacute; dans notre liste d'envoi.", 'eelv_lettreinfo') ;
               }
             }
             else{
@@ -275,7 +273,7 @@ function style_newsletter(){
                 $news_reg_return.=__("Erreur d'enregistrement !", 'eelv_lettreinfo');
               }
               elseif($query!=''){
-                $news_reg_return.=__("Merci, vous avez bien été inscrit(e)", 'eelv_lettreinfo');                
+                $news_reg_return.=__("Merci, vous avez bien &eacute;t&eacute; inscrit(e)", 'eelv_lettreinfo');                
               }
             }
           break;
@@ -287,11 +285,11 @@ function style_newsletter(){
                 $news_reg_return.=__("Erreur d'enregistrement !", 'eelv_lettreinfo');
               }
               elseif($query!=''){
-                $news_reg_return.=__("Merci, vous avez bien été désinscrit(e)", 'eelv_lettreinfo');                
+                $news_reg_return.=__("Merci, vous avez bien &eacute;t&eacute; d&eacute;sinscrit(e)", 'eelv_lettreinfo');                
               }  
             }
             else{
-              $news_reg_return.=__("Votre email n'est pas enregistré dans notre liste d'envoi. Aucune désinscription n'est nécessaire.", 'eelv_lettreinfo');
+              $news_reg_return.=__("Votre email n'est pas enregistr&eacute; dans notre liste d'envoi. Aucune d&eacute;sinscription n'est n&eacute;cessaire.", 'eelv_lettreinfo');
             }
           break;
         }
@@ -388,14 +386,14 @@ function news_carnet_adresse(){
     <h2><?=__("Lettre d'info",'eelv_lettreinfo')?></h2>
     <script>
     function changegrp(form,url,grpname){
-      is_confirmed = confirm("êtes vous sûr de vouloir supprimer déplacer les adresses sélectionnées vers "+grpname+" ?");
+      is_confirmed = confirm("êtes vous sûr de vouloir supprimer d&eacute;placer les adresses s&eacute;lectionn&eacute;es vers "+grpname+" ?");
       if (is_confirmed) {
         form.action=url;
         form.submit();
       }  
     }
     function confsup(url,action){
-      is_confirmed = confirm("êtes vous sûr de vouloir supprimer définitivement les enregistrements sélectionnés et tout ce qu'il contiennent ?");
+      is_confirmed = confirm("êtes vous sûr de vouloir supprimer d&eacute;finitivement les enregistrements s&eacute;lectionn&eacute;s et tout ce qu'il contiennent ?");
       if (is_confirmed) {
         if(action==1){
           document.location=url;
@@ -437,10 +435,10 @@ function news_carnet_adresse(){
     $grp_id = $_GET['delgroupe'];
     $query="DELETE FROM $newsletter_tb_name WHERE `id`='$grp_id' OR `parent`='$grp_id'";
     if(false===$wpdb->query($query)){
-      ?><div class="updated"><p><strong>Une erreur s'est produite, aucun groupe n'a été supprimé !</strong></p></div><?php
+      ?><div class="updated"><p><strong>Une erreur s'est produite, aucun groupe n'a &eacute;t&eacute; supprim&eacute; !</strong></p></div><?php
     }
     else{
-      ?><div class="updated"><p><strong>Suppression effectuée avec succès !</strong></p></div><?php
+      ?><div class="updated"><p><strong>Suppression effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
     }
     $grp_id='';
   }
@@ -459,14 +457,14 @@ function news_carnet_adresse(){
       }
       $query="DELETE FROM $newsletter_tb_name WHERE $ac";
       if(false===$wpdb->query($query)){
-        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a été supprimé !</strong></p></div><?php
+        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; supprim&eacute; !</strong></p></div><?php
       }
       else{
-        ?><div class="updated"><p><strong>Suppression de <?=$nb?> contact(s) effectuée avec succès !</strong></p></div><?php
+        ?><div class="updated"><p><strong>Suppression de <?=$nb?> contact(s) effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
       }
     }
   }
-  // déplacement de contacts
+  // d&eacute;placement de contacts
   if(isset($_GET['ngrp']) && isset($_GET['liste'])){
     $grp_id = $_GET['liste'];
     $MBRS = news_liste_contacts($grp_id);    
@@ -481,10 +479,10 @@ function news_carnet_adresse(){
       }
       $query="UPDATE $newsletter_tb_name SET `parent`='".str_replace("'","''",$_GET['ngrp'])."' WHERE $ac";
       if(false===$wpdb->query($query)){
-        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a été déplacé !</strong></p></div><?php
+        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; d&eacute;plac&eacute; !</strong></p></div><?php
       }
       else{
-        ?><div class="updated"><p><strong>Déplacement de <?=$nb?> contact(s) effectuée avec succès !</strong></p></div><?php
+        ?><div class="updated"><p><strong>D&eacute;placement de <?=$nb?> contact(s) effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
       }
     }
   }
@@ -551,7 +549,7 @@ function news_carnet_adresse(){
           $query.="";
         break;
         case 'file':
-          ?><div class="updated"><p><strong>Fonctionnalité en cours de développement</strong></p></div><?php
+          ?><div class="updated"><p><strong>Fonctionnalit&eacute; en cours de d&eacute;veloppement</strong></p></div><?php
         break;
       }
     }
@@ -625,7 +623,7 @@ function news_carnet_adresse(){
       $MBRS = news_liste_contacts($grp_id);    
       $nb_contacts = sizeof($MBRS);
       ?>
-             <h3 class="sectiontitle title3"><a href='edit.php?post_type=newsletter&page=news_carnet_adresse'>Groupes</a> > <?=$grp_nom?></h3>  
+             <h3 class="sectiontitle title3"><a href='edit.php?post_type=newsletter&page=news_carnet_adresse'><?php _e('Groupes', 'eelv_lettreinfo' ) ?></a> > <?=$grp_nom?></h3>  
              
             <?php  
       
@@ -634,7 +632,7 @@ function news_carnet_adresse(){
             <table class='eelv_news_groups'><tr><td>
                   <input type="checkbox" onclick="tout(document.getElementById('liste_mel'),this)"/>
                     <select onchange="eval(this.value)">
-                        <option value="">Action groupée</option>
+                        <option value=""><?php _e('Action group&eacute;e', 'eelv_lettreinfo' ) ?></option>
                         <?php
             $GRPS = news_liste_groupes();    
             $nb_groups = sizeof($GRPS);
@@ -643,12 +641,12 @@ function news_carnet_adresse(){
               if($groupe->id !=$grp_id){
                 $nbinsc = sizeof(news_liste_contacts($groupe->id));                
                 ?>      
-                <option value="changegrp(document.getElementById('liste_mel'),'edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&ngrp=<?=$groupe->id?>','<?=$groupe->nom?>')">déplacer dans : <?=$groupe->nom?></option>
+                <option value="changegrp(document.getElementById('liste_mel'),'edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&ngrp=<?=$groupe->id?>','<?=$groupe->nom?>')"><?php _e('d&eacute;placer dans :', 'eelv_lettreinfo' ) ?> <?=$groupe->nom?></option>
             <?php } } }  ?>
-                        <option value="confsup(document.getElementById('liste_mel'),2)">Supprimer</option>
+                        <option value="confsup(document.getElementById('liste_mel'),2)"><?php _e('Supprimer', 'eelv_lettreinfo' ) ?></option>
                     </select>
-                    <a href='edit.php?post_type=newsletter&page=news_carnet_adresse' class="button">Retour</a>
-                <a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&contact=new' class="button-primary">Nouveau destinataire</a>
+                    <a href='edit.php?post_type=newsletter&page=news_carnet_adresse' class="button"><?php _e('Retour', 'eelv_lettreinfo' ) ?></a>
+                <a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&contact=new' class="button-primary"><?php _e('Nouveau destinataire', 'eelv_lettreinfo' ) ?></a>
                     </td></tr></table>
             <?php
         if($nb_contacts>0){?>                
@@ -667,7 +665,7 @@ function news_carnet_adresse(){
           <?php
         }
         else{
-          echo"Aucun destinataire n'a encore été enregistré";  
+          echo"Aucun destinataire n'a encore &eacute;t&eacute; enregistr&eacute;";  
         }
         ?>
         
@@ -688,18 +686,18 @@ function news_carnet_adresse(){
                 <ul>
                 <li>
                   <label for="imp_unite">
-                    <h3><input type="radio" name="import_type" value='unite' id='imp_unite' checked="checked" /> Edition contact</h3>
-                    Nom            
+                    <h3><input type="radio" name="import_type" value='unite' id='imp_unite' checked="checked" /> <?php _e('Edition contact', 'eelv_lettreinfo' ) ?></h3>
+                    <?php _e('Nom', 'eelv_lettreinfo' ) ?>            
                     <input type="text" name="con_nom" size="30" value="<?=$con_nom;?>" id="con_nom" autocomplete="off" onfocus="import_type[0].checked=true"/>  
-                    Email               
+                    <?php _e('Email', 'eelv_lettreinfo' ) ?>               
                     <input type="email" name="con_email" size="30" value="<?=$con_email;?>" id="con_email" autocomplete="off" onfocus="import_type[0].checked=true"/>
                     </label>
                 </li>
                 <?php if(!is_numeric($con_id)){ ?>
                 <li>
                   <label for="imp_masse">
-                    <h3><input type="radio" name="import_type" value='masse' id='imp_masse' /> Copier en masse</h3>
-                    <p>Adresses email séparées par un retour à la ligne</p>                       
+                    <h3><input type="radio" name="import_type" value='masse' id='imp_masse' /> <?php _e('Copier en masse', 'eelv_lettreinfo' ) ?></h3>
+                    <p><?php _e('Adresses email s&eacute;par&eacute;es par un retour à la ligne', 'eelv_lettreinfo' ) ?></p>                       
                     <textarea cols="50" rows="10" name="con_mul" id="con_mul" onfocus="import_type[1].checked=true"></textarea>
                     </label> 
                 </li>
@@ -737,7 +735,7 @@ function news_envoi(){
   ?>
     <div class="wrap">
     <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
-    <h2>Lettre d'information</h2>
+    <h2><?php _e('Lettre d\'information', 'eelv_lettreinfo' ) ?></h2>
 
 <table class="widefat" style="margin-top: 1em;">
             <thead>
@@ -764,7 +762,7 @@ function news_envoi(){
     }
     else{
       ?>
-            Aucune lettre n'est en cours. pour en créer une <a href="post-new.php?post_type=newsletter" class="button">cliquez ici</a>
+            Aucune lettre n'est en cours. pour en cr&eacute;er une <a href="post-new.php?post_type=newsletter" class="button">cliquez ici</a>
       <?php    
     }
   }
@@ -776,10 +774,10 @@ function news_envoi(){
         add_post_meta($new_post, 'nl_template', $_GET['convert']);
         $post_id=$new_post;        
         $post = get_post( $new_post);
-        echo"Une lettre d'info a été créée";
+        echo"Une lettre d'info a &eacute;t&eacute; cr&eacute;&eacute;e";
       }
       else{
-        echo"Erreur de converstion...";  
+        echo "Erreur de converstion...";  
       }
     }
     $content=nl_content($post_id); 
@@ -793,31 +791,31 @@ function news_envoi(){
       get_userdata( $userid );
       /////////////////////////////////// CHOIX DES DESTINATAIRES
       ?>
-            <h3 class="sectiontitle title3">Aperçu</h3>
+            <h3 class="sectiontitle title3"><?php _e('Aperçu', 'eelv_lettreinfo' ) ?></h3>
       <div class='eelv_news_frame'>
       <?php
               echo $content;
       ?></div>
-                      <a href="post.php?post=<?=$post_id?>&action=edit" class="button">Modifier</a>               
+                      <a href="post.php?post=<?=$post_id?>&action=edit" class="button"><?php _e('Modifier', 'eelv_lettreinfo' ) ?></a>               
       <form action="edit.php?post_type=newsletter&page=news_envoi&post=<?=$post_id?>" method="post" class='eelv_news'>
       <input type="hidden" name="send" value="1" />
             <table><tr>
             <td>
-              <h3 class="sectiontitle title3">Entêtes</h3>
-              <label for="sujet">Sujet               
+              <h3 class="sectiontitle title3"><?php _e('Entêtes', 'eelv_lettreinfo' ) ?></h3>
+              <label for="sujet"><?php _e('Sujet', 'eelv_lettreinfo' ) ?>               
                 <input type="text" name="eelv_news_sujet" size="30" tabindex="1" value="<?=$post->post_title?>" id="sujet" autocomplete="off" required="required"/></label> 
                 
-                <label for="exp">Expéditeur               
+                <label for="exp"><?php _e('Exp&eacute;diteur ', 'eelv_lettreinfo' ) ?>              
                 <input type="text" name="eelv_news_exp" size="30" tabindex="1" value="<?=$default_exp?>" id="exp" autocomplete="off" required="required"/></label> 
                 
-                <label for="mel">Adresse de réponse               
+                <label for="mel"><?php _e('Adresse de r&eacute;ponse ', 'eelv_lettreinfo' ) ?>              
                 <input type="email" name="eelv_news_mel" size="30" tabindex="1" value="<?=$default_mel?>" id="mel" autocomplete="off" required="required"/></label> 
             </td>
             <td>
-      <h3 class="sectiontitle title3">Destinataires</h3>
+      <h3 class="sectiontitle title3"><?php _e('Destinataires', 'eelv_lettreinfo' ) ?></h3>
            <table><tr>
              <td>
-                  <h4>Groupes</h4>                  
+                  <h4><?php _e('Groupes', 'eelv_lettreinfo' ) ?></h4>                  
                   <ul class='eelv_news_groups'>   
                   <?php      
                   $GRPS = news_liste_groupes();
@@ -835,7 +833,7 @@ function news_envoi(){
                   </ul>
               </td>
               <td>
-                  <h4>Utilisateurs du site</h4>
+                  <h4><?php _e('Utilisateurs du site', 'eelv_lettreinfo' ) ?></h4>
                   <ul class='eelv_news_groups'> 
                     
                   <?php  
@@ -853,7 +851,7 @@ function news_envoi(){
                   </ul>
               </td>
               <td>
-                   <h4>Destinataires suppl&eacute;mentaires</h4>                  
+                   <h4><?php _e('Destinataires suppl&eacute;mentaires', 'eelv_lettreinfo' ) ?></h4>                  
                   <textarea name="dests" ></textarea> 
               </td>
               </tr></table>
@@ -898,10 +896,9 @@ function news_envoi(){
         }
       
       $contacts=implode(',',array_unique(explode(',',$contacts)));
-      $contacts = substr($contacts,0,-1);
-      //$contacts='nl@eelv.fr'.$contacts;
+      
       if(0=== $archive = wp_insert_post( array('post_type'=>'newsletter_archive','post_title' => $post->post_title,  'post_content' => $post->post_content,  'post_status' => 'publish'))){
-        echo"Erreur d'enregistrement dans la base de données !";
+        echo"Erreur d'enregistrement dans la base de donn&eacute;es !";
       }
       else{
         add_post_meta($archive, 'sujet', $_POST['eelv_news_sujet']);
@@ -931,6 +928,7 @@ function news_envoi(){
   }
   ?>
     </td></tr></tbody></table>
+
     </div>
     <?php  
 }
@@ -969,7 +967,7 @@ function newsletter_admin() {
   ?>
     <table><tr>
     <td valign="top">
-  <h4>Habillage</h4>
+  <h4><?php _e('Habillage', 'eelv_lettreinfo' ) ?></h4>
     <?php
   $querystr = "SELECT `ID` FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'newsletter_template' ORDER BY `post_title`";
   $IDS = $wpdb->get_col($querystr);  
@@ -988,7 +986,7 @@ function newsletter_admin() {
   }
   ?>
     </td><td valign="top" style='padding-left:20px'>
-    <h4>Insérer du contenu</h4>
+    <h4><?php _e('Ins&eacute;rer du contenu', 'eelv_lettreinfo' ) ?></h4>
     <script>
   var IEbof=false;
   </script>
@@ -1044,7 +1042,7 @@ function newsletter_admin() {
   function set_default_content(ki){
     ki = document.getElementById(ki);
     if(ki.value && ki.value!=''){
-      if(confirm("Voulez vous charger le contenu par défaut pour ce modèle ?\n\nAttention !\n\nVous aller perdre tout le contenu actuel.")){
+      if(confirm("Voulez vous charger le contenu par d&eacute;faut pour ce mod&egrave;le ?\n\nAttention !\n\nVous aller perdre tout le contenu actuel.")){
         str=ki.value;
         switchEditors.go('content', 'html');
         document.post.content.value=str;
@@ -1072,7 +1070,7 @@ function newsletter_admin() {
       
     } ?> 
         <select name="nl_insert_post" onchange="incontent(getElementById('nl_post_'+this.value).value);this.value=''">
-          <option value="">Articles</option>
+          <option value=""><?php _e('Articles', 'eelv_lettreinfo' ) ?></option>
           <?=$optis?>
         </select>
     <?php  }
@@ -1092,7 +1090,7 @@ function newsletter_admin() {
       
     } ?> 
         <select name="nl_insert_page" onchange="incontent(getElementById('nl_page_'+this.value).value);this.value=''">
-          <option value="">Pages</option>
+          <option value=""><?php _e('Pages', 'eelv_lettreinfo' ) ?></option>
           <?=$optis?>
         </select>
     <?php  }
@@ -1116,7 +1114,7 @@ function newsletter_archive_admin() {
     $content=nl_content($post_id );   ?>
     <h2><?=$sujet?></h2>
  <?php if(!$template){ ?>
-        L'habillage a disparu ! voulez en appliquer un nouveau ?
+        <?php _e('L\'habillage a disparu ! voulez en appliquer un nouveau ?', 'eelv_lettreinfo' ) ?>
         <select name="newslettertemplate">
           <option></option>
     <?php
@@ -1137,7 +1135,7 @@ function newsletter_archive_admin() {
   }
   ?></select>
  <?php } ?>
-    <p>envoyé par : <?=$expediteur?> (<?=$reponse?>)</p>
+    <p>envoy&eacute; par : <?=$expediteur?> (<?=$reponse?>)</p>
     <p>dernier envoi le : <?=$lastsend?></p>
     <div><?=$content?></div>
     <?php 
@@ -1156,20 +1154,24 @@ function newsletter_archive_admin_queue() {
     $dest = get_post_meta($post_id, 'destinataires',true);
     ?>    
     <p><?=$dest?></p>
-    <?php 
-  newsletter_autosend(true);
+    <?php if($dest!=''){ ?>
+    <a href='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>'><?=__('Envoi automatique d\'une nouvelle salve','eelv_lettreinfo')?></a>
+    <script>
+	document.location='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
+	</script>
+    <?php }
 }
 ///////////////////////////////////// CHECK DB
 function newsletter_checkdb(){
   ?>
         <div class="wrap">
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
-        <h2>Lettre d'information</h2>
+        <h2><?php _e('Lettre d\'information', 'eelv_lettreinfo' ) ?></h2>
         
      <table class="widefat" style="margin-top: 1em;">
             <thead>
                 <tr>
-                  <th scope="col" colspan="2">Verification</th>
+                  <th scope="col" colspan="2"><?php _e('V&eacute;rification', 'eelv_lettreinfo' ) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -1181,13 +1183,13 @@ function newsletter_checkdb(){
   // GROUPE NON CLASSE
   $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='1'");
   echo'<h3>Carnet d\'adresses</h3>';
-  echo'<p>Groupe "Non classés" : ';
+  echo'<p>Groupe "Non class&eacute;s" : ';
   if(is_array($ret) && sizeof($ret)>0){
-    $query="UPDATE $newsletter_tb_name SET `nom`='Non classés',`email`='',`parent`='0' WHERE `id`='1'";
+    $query="UPDATE $newsletter_tb_name SET `nom`='Non class&eacute;s',`email`='',`parent`='0' WHERE `id`='1'";
     echo'ok';
   }
   else{
-    $query="INSERT INTO $newsletter_tb_name (`id`,`nom`) VALUES ('1','Non classés')";
+    $query="INSERT INTO $newsletter_tb_name (`id`,`nom`) VALUES ('1','Non class&eacute;s')";
     'ajout ok';
   }
   echo'  </p>';
@@ -1201,7 +1203,7 @@ function newsletter_checkdb(){
   }
   else{
     $query="INSERT INTO $newsletter_tb_name (`id`,`nom`) VALUES ('2','Liste rouge')";
-    echo'créé';
+    echo'cr&eacute;&eacute;';
   }
     echo'  </p>';
   $wpdb->query($query);
@@ -1248,7 +1250,6 @@ function newsletter_autosend(){
   $querystr = "SELECT $wpdb->posts.`ID` FROM $wpdb->posts,$wpdb->postmeta WHERE post_status = 'publish' AND post_type = 'newsletter_archive'  AND $wpdb->postmeta.`post_id`=$wpdb->posts.`ID` AND $wpdb->postmeta.`meta_key`='destinataires' AND $wpdb->postmeta.`meta_value`!=''";
   $IDS = $wpdb->get_col($querystr);  
   $send_nb = sizeof($IDS);
-
   if($send_nb>0){
     
     $desinsc_url = get_option( 'newsletter_desinsc_url' );
@@ -1277,10 +1278,13 @@ function newsletter_autosend(){
         $mime_boundary="----=_NextPart_".md5(time());
         $headers .= 'MIME-Version: 1.0'.$eol;
         $headers .= "Content-Type: text/html; charset=\"utf-8\"; Content-Transfer-Encoding: quoted-printable; boundary=\"".$mime_boundary."\"".$eol;
-        //print_r($dests);
+        //print_r($dests);		
+		$newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+		if($newsletter_admin_surveillance!=''){
+			mail($newsletter_admin_surveillance,'[EELV-newsletter:envoi] '.$sujet,$content,$headers);
+		}
         while($dest = array_shift($dests)){
-          //echo'+';
-          $dest=trim($dest);
+         $dest=trim($dest);
           
           if (filter_var($dest, FILTER_VALIDATE_EMAIL)) {
             $ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$dest)."' AND `parent`='2' LIMIT 0,1");
@@ -1324,7 +1328,53 @@ function newsletter_autosend(){
 }
 /*****************************************************************************************************************************************
                                                                      C O N F I G U R A T I O N                                            *****************************************************************************************************************************************/
-
+function newsletter_network_configuration(){
+	if( $_REQUEST[ 'type' ] == 'update' ) {    
+      update_site_option( 'newsletter_admin_surveillance', $_REQUEST['newsletter_admin_surveillance'] );      
+      ?>
+      <div class="updated"><p><strong><?php _e('Options sauvegard&eacute;es.', 'eelv_lettreinfo' ); ?></strong></p></div>
+      <?php 
+    }
+	 $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+	?>  
+        <div class="wrap">
+        <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
+        <h2><?=_e('Lettre d\'information', 'eelv_lettreinfo' )?></h2>
+        
+    <form name="typeSite" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">  
+    <input type="hidden" name="type" value="update">
+    
+        
+        <table class="widefat" style="margin-top: 1em;">
+            <thead>
+                <tr>
+                  <th scope="col" colspan="2"><?= __( 'Configuration ', 'menu-config' ) ?></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td width="30%">
+                        <label for="newsletter_default_exp"><?=_e('Envoyer une copie de chaque salve d\'envois à:', 'eelv_lettreinfo' )?> :</label>
+                    </td><td>
+                        <input  type="text" name="newsletter_admin_surveillance"  size="60"  id="newsletter_admin_surveillance"  value="<?=$newsletter_admin_surveillance?>" class="wide">
+                   </td>
+                 </tr>
+                     
+                 <tr>
+                    <td colspan="2">
+                        <p class="submit">
+                        <input type="submit" name="Submit" value="<?php _e('sauvegarder', 'eelv_lettreinfo' ) ?>" />
+                        </p>                    
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </form>
+    </div>
+    
+<?php
+}
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function newsletter_page_configuration() {
   global $newsletter_plugin_url,$wpdb;
@@ -1345,7 +1395,7 @@ function newsletter_page_configuration() {
     ?>  
         <div class="wrap">
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
-        <h2>Lettre d'information</h2>
+        <h2><?=_e('Lettre d\'information', 'eelv_lettreinfo' )?></h2>
         
     <form name="typeSite" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">  
     <input type="hidden" name="type" value="update">
@@ -1360,24 +1410,24 @@ function newsletter_page_configuration() {
             <tbody>
                 <tr>
                     <td width="30%">
-                        <label for="newsletter_default_exp">Nom d'expéditeur par défaut :</label>
+                        <label for="newsletter_default_exp"><?php _e('Nom d\'exp&eacute;diteur par d&eacute;faut :', 'eelv_lettreinfo' ) ?></label>
                     </td><td>
                         <input  type="text" name="newsletter_default_exp"  size="60"  id="newsletter_default_exp"  value="<?=$default_exp?>" class="wide">
                    </td>
                  </tr>
                  <tr>
                     <td width="30%">
-                        <label for="newsletter_default_mel">Adresse de réponse par défaut :</label>
+                        <label for="newsletter_default_mel"><?php _e('Adresse de r&eacute;ponse par d&eacute;faut :', 'eelv_lettreinfo' ) ?></label>
                     </td><td>
                         <input  type="text" name="newsletter_default_mel"  size="60"  id="newsletter_default_mel"  value="<?=$default_mel?>" class="wide">
                    </td>
                  </tr>
                  <tr>
                     <td width="30%">
-                        <label for="newsletter_desinsc_url">Page de désinscription :</label>
+                        <label for="newsletter_desinsc_url"><?php _e('Page de d&eacute;sinscription :', 'eelv_lettreinfo' ) ?></label>
                     </td><td>
                         <select  name="newsletter_desinsc_url"   id="newsletter_desinsc_url">
-                          <option>Articles</option>
+                          <option><?php _e('Articles', 'eelv_lettreinfo' ) ?></option>
                               <?php
                 $querystr = "";
                 $ret =  $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'page' ORDER BY `post_title`");
@@ -1395,10 +1445,10 @@ function newsletter_page_configuration() {
            
            <tr>
             <td width="30%">
-                        <label for="affichage">Afficher en page d'accueil:</label>
+                        <label for="affichage"><?php _e('Afficher en page d\'accueil:', 'eelv_lettreinfo' ) ?></label>
                     </td><td>
                 
-                          <p>  Oui <INPUT TYPE=RADIO NAME="affichage_NL_hp" VALUE="oui" <?if($affichage_NL_hp=="oui"){?>CHECKED<?}?><?if($affichage_NL_hp==""){?>CHECKED<?}?>> | <INPUT TYPE=RADIO NAME="affichage_NL_hp" VALUE="non" <?if($affichage_NL_hp=="non"){?>CHECKED<?}?>>Non
+                          <p>  <?php _e('oui', 'eelv_lettreinfo' ) ?> <INPUT TYPE=RADIO NAME="affichage_NL_hp" VALUE="oui" <?if($affichage_NL_hp=="oui"){?>CHECKED<?}?><?if($affichage_NL_hp==""){?>CHECKED<?}?>> | <INPUT TYPE=RADIO NAME="affichage_NL_hp" VALUE="non" <?if($affichage_NL_hp=="non"){?>CHECKED<?}?>><?php _e('non', 'eelv_lettreinfo' ) ?>
              
                    </td>
            
@@ -1426,20 +1476,20 @@ function newsletter_page_configuration() {
             <tbody>
                 <tr>
                     <td>
-       Shortcodes dans le site: 
+        <?php _e('Shortcodes dans le site:', 'eelv_lettreinfo' ) ?>
         <ul>
-      <li>insertion du formulaire d'inscription dans une page : <strong>[eelv_news_form]</strong></li>
+      <li><?php _e('insertion du formulaire d\'inscription dans une page :', 'eelv_lettreinfo' ) ?><strong>[eelv_news_form]</strong></li>
         </ul>
-        Shortcodes dans un thème: 
+        <?php _e(' Shortcodes dans un th&egrave;me:', 'eelv_lettreinfo' ) ?>        
         <ul>
-      <li>insertion du contenu d'une lettre dans un thème : <strong>[newsletter]</strong></li>
-      <li>insertion du contenu d'une lettre dans un thème : <strong>[desinsc_url]</strong></li>
+      <li><?php _e('insertion du contenu d\'une lettre dans un th&egrave;me : ', 'eelv_lettreinfo' ) ?><strong>[newsletter]</strong></li>
+      <li><?php _e('insertion du contenu d\'une lettre dans un th&egrave;me :', 'eelv_lettreinfo' ) ?><strong>[desinsc_url]</strong></li>
         </ul>
-        Légende des symboles d'envoi :<ul>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg"/> Email invalide</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/0.jpg"/> Envoi échoué</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/1.jpg"/> Envoi effectué avec succès</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/2.jpg"/> Adresse inscrite sur la liste des désinscrits</li>
+        <?php _e('L&eacute;gende des symboles d\'envoi :', 'eelv_lettreinfo' ) ?><ul>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg"/> <?php _e('Email invalide:', 'eelv_lettreinfo' ) ?></li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/0.jpg"/> <?php _e('Envoi &eacute;chou&eacute;:', 'eelv_lettreinfo' ) ?></li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/1.jpg"/> <?php _e('Envoi effectu&eacute; avec succ&egrave;s:', 'eelv_lettreinfo' ) ?></li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/2.jpg"/> <?php _e('Adresse inscrite sur la liste des d&eacute;sinscrits:', 'eelv_lettreinfo' ) ?></li>
         </ul>
         </td></tr></tbody></table>
     </form>
@@ -1473,7 +1523,7 @@ function eelv_lettrinfo_locate_plugin_template($template_names, $load = false, $
 }
 function eelv_lettrinfo_get_custom_archive_template($template){
     // Twenty Ten adds a 'pretty' link at the end of the excerpt. We don't need it for the taxonomy.
-    // Buzug : j'ai réactivé le if et réintégré le apply_filters dans le return
+    // Buzug : j'ai r&eacute;activ&eacute; le if et r&eacute;int&eacute;gr&eacute; le apply_filters dans le return
     //if ( 'newsletter_archive' == $taxonomy ) {
          $templates = array('archive-newsletter_archive.php', 'archive.php');
          $template = eelv_lettrinfo_locate_plugin_template($templates);
@@ -1489,7 +1539,7 @@ function eelv_lettrinfo_get_custom_single_template($template){
          $templates = array('single-' . $object->post_type . '.php', 'single.php');
          $template = eelv_lettrinfo_locate_plugin_template($templates);
      }
-    // Buzug : j'ai réintégré le apply_filters dans le return
+    // Buzug : j'ai r&eacute;int&eacute;gr&eacute; le apply_filters dans le return
     // return apply_filters('single_template', $template);
      return $template;
 }
@@ -1525,7 +1575,7 @@ register_widget_control('widget_eelv_lettreinfo_insc','widget_eelv_lettreinfo_in
 function widget_eelv_lettreinfo_insc_control(){
     if( isset($_POST['eelv_li_xs_title']) ){
         update_option('eelv_li_xs_title', $_POST['eelv_cal_xs_title']);
-        echo 'Options sauvegardées<br/>';
+        echo 'Options sauvegard&eacute;es<br/>';
     }
   $eelv_li_xs_title= get_option('eelv_li_xs_title');
   ?>
@@ -1556,9 +1606,10 @@ add_action('plugins_loaded', 'eelvnewsletter_update_db_check');
 add_action( 'add_meta_boxes', 'newsletter_add_custom_box' );
 add_action( 'init', 'newsletter_BO' );
 add_action('admin_menu', 'eelv_news_ajout_menu');
+add_action( 'network_admin_menu', 'eelv_news_ajout_network_menu'); 
 add_action('wp_head', 'style_newsletter');
 add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
-add_action( 'init', 'newsletter_autosend' );
+add_action( 'admin_init', 'newsletter_autosend' );
 add_filter( 'archive_template', 'eelv_lettrinfo_get_custom_archive_template' );
 add_filter( 'single_template', 'eelv_lettrinfo_get_custom_single_template' );
 add_filter('manage_newsletter_posts_columns', 'lettreinfo_columns_head');  
