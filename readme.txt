@@ -26,7 +26,7 @@ the plugin allows to use shortcodes into the newsletters
 
 Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
 
-Your can create skins or use the default skin. The default skin automaticly load the 3 latest posts into your newsletter.
+You can create skins or use the default skin. The default skin automaticly load the 3 latest posts into your newsletter.
 
 == Installation ==
 
