@@ -1,0 +1,270 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: eelv_lettreinfo\n"
+"POT-Creation-Date: 2012-10-18 14:07+0100\n"
+"PO-Revision-Date: 2012-10-18 14:39+0100\n"
+"Last-Translator: Bastien HO <bastienho@urbancube.fr>\n"
+"Language-Team:  <ecolosites@eelv.fr>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.4\n"
+"X-Poedit-KeywordsList: _;__;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-SearchPath-0: ..\n"
+"X-Poedit-SearchPath-1: ..\n"
+
+#: ../lettreinfo.php:82 ../lettreinfo.php:83 ../lettreinfo.php:84
+#: ../lettreinfo.php:403
+msgid "Lettre d'info"
+msgstr "Newsletter"
+
+#: ../lettreinfo.php:85
+msgid "ajouter"
+msgstr "add"
+
+#: ../lettreinfo.php:86 ../lettreinfo.php:101 ../lettreinfo.php:116
+msgid "Ajouter"
+msgstr "Add"
+
+#: ../lettreinfo.php:87 ../lettreinfo.php:88 ../lettreinfo.php:102
+#: ../lettreinfo.php:103 ../lettreinfo.php:117
+msgid "Editer"
+msgstr "Edit"
+
+#: ../lettreinfo.php:89
+msgid "Nouvelle"
+msgstr "New"
+
+#: ../lettreinfo.php:90 ../lettreinfo.php:105 ../lettreinfo.php:120
+msgid "Afficher"
+msgstr "View"
+
+#: ../lettreinfo.php:91
+msgid "Afficher Lettre d'info"
+msgstr "View newsletter"
+
+#: ../lettreinfo.php:92
+msgid "Chercher"
+msgstr ""
+
+#: ../lettreinfo.php:93
+msgid "No newsletter Found"
+msgstr ""
+
+#: ../lettreinfo.php:94
+msgid "No newsletter Found in Trash"
+msgstr ""
+
+#: ../lettreinfo.php:95
+msgid "Parent newsletter"
+msgstr ""
+
+#: ../lettreinfo.php:98 ../lettreinfo.php:99
+msgid "Habillage"
+msgstr "Skin"
+
+#: ../lettreinfo.php:100
+msgid "Habillages"
+msgstr "Skins"
+
+#: ../lettreinfo.php:104
+msgid "Nouveau"
+msgstr ""
+
+#: ../lettreinfo.php:106
+msgid "Voir"
+msgstr ""
+
+#: ../lettreinfo.php:107
+msgid "Rechercher"
+msgstr ""
+
+#: ../lettreinfo.php:108
+msgid "No template Found"
+msgstr ""
+
+#: ../lettreinfo.php:109
+msgid "No template Found in Trash"
+msgstr ""
+
+#: ../lettreinfo.php:110
+msgid "Parent template"
+msgstr ""
+
+#: ../lettreinfo.php:113 ../lettreinfo.php:115
+msgid "Archives"
+msgstr ""
+
+#: ../lettreinfo.php:114
+msgid "Archive"
+msgstr ""
+
+#: ../lettreinfo.php:118
+msgid "Editer archive"
+msgstr ""
+
+#: ../lettreinfo.php:119
+msgid "Nouvelle archive"
+msgstr ""
+
+#: ../lettreinfo.php:121
+msgid "Voir archive"
+msgstr ""
+
+#: ../lettreinfo.php:122
+msgid "Rechercher une archive"
+msgstr ""
+
+#: ../lettreinfo.php:123
+msgid "Aucun envoi n'a encore été effectué"
+msgstr ""
+
+#: ../lettreinfo.php:124
+msgid "No archive Found in Trash"
+msgstr ""
+
+#: ../lettreinfo.php:125
+msgid "Parent archive"
+msgstr ""
+
+#: ../lettreinfo.php:138 ../lettreinfo.php:164
+msgid "Envoyer"
+msgstr ""
+
+#: ../lettreinfo.php:147
+msgid "Pr&eacute;visualiser et envoyer"
+msgstr "Preview and send"
+
+#: ../lettreinfo.php:150
+msgid "Pas encore pr&egrave;te..."
+msgstr "Not ready yet"
+
+#: ../lettreinfo.php:158
+msgid "Outils d'éditions"
+msgstr "Edit tools"
+
+#: ../lettreinfo.php:172
+msgid "Envoyer en lettre d'info"
+msgstr "Send newsletter"
+
+#: ../lettreinfo.php:179
+msgid "Aper&ccedil;u"
+msgstr "Preview"
+
+#: ../lettreinfo.php:185
+msgid "Destinataires"
+msgstr ""
+
+#: ../lettreinfo.php:191
+msgid "Fil d'attente"
+msgstr ""
+
+#: ../lettreinfo.php:213
+msgid "Carnet d'adresses"
+msgstr ""
+
+#: ../lettreinfo.php:215
+msgid "Envoi"
+msgstr ""
+
+#: ../lettreinfo.php:217
+msgid "Configuration/aide"
+msgstr ""
+
+#: ../lettreinfo.php:218
+msgid "V&eacute;rifier les parametres"
+msgstr ""
+
+#: ../lettreinfo.php:276 ../lettreinfo.php:290 ../lettreinfo.php:302
+msgid "Erreur d'enregistrement !"
+msgstr ""
+
+#: ../lettreinfo.php:279
+msgid "Vous avez bien été ré-inscrit(e)."
+msgstr ""
+
+#: ../lettreinfo.php:283
+msgid "Votre email est déjà enregistré dans notre liste d'envoi."
+msgstr ""
+
+#: ../lettreinfo.php:293
+msgid "Merci, vous avez bien été inscrit(e)"
+msgstr ""
+
+#: ../lettreinfo.php:305
+msgid "Merci, vous avez bien été désinscrit(e)"
+msgstr ""
+
+#: ../lettreinfo.php:309
+msgid ""
+"Votre email n'est pas enregistré dans notre liste d'envoi. Aucune "
+"désinscription n'est nécessaire."
+msgstr ""
+
+#: ../lettreinfo.php:316
+msgid "adresse non valide"
+msgstr ""
+
+#: ../lettreinfo.php:329
+msgid "Inscription &agrave; la newsletter :"
+msgstr ""
+
+#: ../lettreinfo.php:333
+msgid " S'inscrire"
+msgstr "Suscribe"
+
+#: ../lettreinfo.php:334 ../lettreinfo.php:362
+msgid "Se d&eacute;sinscrire"
+msgstr "Unsuscribe"
+
+#: ../lettreinfo.php:335
+msgid "Derni&egrave;res Lettres d'info"
+msgstr "Last newsletters"
+
+#: ../lettreinfo.php:352
+msgid "Votre email:"
+msgstr "Your email:"
+
+#: ../lettreinfo.php:357
+msgid "S'inscrire"
+msgstr "Suscribe"
+
+#: ../lettreinfo.php:365
+msgid "ok"
+msgstr "ok"
+
+#: ../lettreinfo.php:370
+msgid "Derni&egrave;res Lettres d\\'information"
+msgstr ""
+
+#: ../lettreinfo.php:536 ../lettreinfo.php:577
+msgid "Enregistrement sauvegard&eacute;."
+msgstr ""
+
+#: ../lettreinfo.php:1373
+msgid "Options sauvegard&eacute;es."
+msgstr ""
+
+#: ../lettreinfo.php:1392
+msgid "Configuration "
+msgstr ""
+
+#: ../lettreinfo.php:1449
+msgid "sauvegarder"
+msgstr ""
+
+#: ../lettreinfo.php:1539
+msgid "EELV Inscription &agrave; la Lettre d'info"
+msgstr "Suscribe newsletter"
+
+#: ../lettreinfo.php:1542
+msgid ""
+"Formulaire d'inscription/d&eacute;sinscription et archives de la Lettre "
+"d'info"
+msgstr ""
+
+#: ../lettreinfo.php:1584
+msgid "aucun habillage disponible"
+msgstr "No skin available"
