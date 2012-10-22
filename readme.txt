@@ -47,6 +47,9 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+V 2.6.2
+broken link for status icons : bug fixed
+
 v 2.6
 
 == Upgrade notice ==
