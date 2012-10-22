@@ -3,12 +3,12 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http//ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.6
+Version: 2.6.1
 Author: Bastien Ho,  EELV
 License: CC
 */
 
-$eelv_newsletter_version = "2.6";
+$eelv_newsletter_version = "2.6.1";
 
 $newsletter_tb_name = 'eelv_'.$wpdb->blogid. "_newsletter_adr";
 
@@ -1147,7 +1147,7 @@ function newsletter_archive_admin_dest() {
     $post_id = get_the_ID(); //$_GET['id'];
     $sent = get_post_meta($post_id, 'sentmails',true);
     ?>    
-    <p><?php echo str_replace(':-1','<img src="'.$newsletter_plugin_url.'/eelv_lettreinfo/img/-1.jpg"/>',str_replace(':0','<img src="'.$newsletter_plugin_url.'/eelv_lettreinfo/img/0.jpg"/>',str_replace(':1','<img src="'.$newsletter_plugin_url.'/eelv_lettreinfo/img/1.jpg"/>',str_replace(':2','<img src="'.$newsletter_plugin_url.'/eelv_lettreinfo/img/2.jpg"/>',$sent)))); ?></p>
+    <p><?php echo str_replace(':-1','<img src="'.$newsletter_plugin_url.'/eelv_newsletter/img/-1.jpg"/>',str_replace(':0','<img src="'.$newsletter_plugin_url.'/eelv_newsletter/img/0.jpg"/>',str_replace(':1','<img src="'.$newsletter_plugin_url.'/eelv_newsletter/img/1.jpg"/>',str_replace(':2','<img src="'.$newsletter_plugin_url.'/eelv_newsletter/img/2.jpg"/>',$sent)))); ?></p>
     <?php 
 }
 function newsletter_archive_admin_queue() {
@@ -1436,10 +1436,10 @@ function newsletter_page_configuration() {
       <li>insertion du contenu d'une lettre dans un thème : <strong>[desinsc_url]</strong></li>
         </ul>
         Légende des symboles d'envoi :<ul>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv_lettreinfo/img/-1.jpg"/> Email invalide</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv_lettreinfo/img/0.jpg"/> Envoi échoué</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv_lettreinfo/img/1.jpg"/> Envoi effectué avec succès</li>
-          <li><img src="<?=$newsletter_plugin_url?>/eelv_lettreinfo/img/2.jpg"/> Adresse inscrite sur la liste des désinscrits</li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv_newsletter/img/-1.jpg"/> Email invalide</li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv_newsletter/img/0.jpg"/> Envoi échoué</li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv_newsletter/img/1.jpg"/> Envoi effectué avec succès</li>
+          <li><img src="<?=$newsletter_plugin_url?>/eelv_newsletter/img/2.jpg"/> Adresse inscrite sur la liste des désinscrits</li>
         </ul>
         </td></tr></tbody></table>
     </form>
