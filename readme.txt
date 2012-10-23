@@ -58,6 +58,11 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+V 2.6.4
+* Added : custom column for archives to display queue and sent
+* Choice of the archive status : publish or private (for tests) 
+* Again some lines for completing translation, soon soon!
+
 V 2.6.3
 * Added : custom email to receive a copy of any campaign send (manage it in the network admin)
 * Performances optimisation 

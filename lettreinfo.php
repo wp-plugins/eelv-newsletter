@@ -3,12 +3,12 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.6.3
+Version: 2.6.4
 Author: Bastien Ho,  EELV
 License: CC
 */
 
-$eelv_newsletter_version = "2.6.3";
+$eelv_newsletter_version = "2.6.4";
 
 $newsletter_tb_name = 'eelv_'.$wpdb->blogid. "_newsletter_adr";
 
@@ -133,7 +133,7 @@ register_post_type('newsletter_archive', array(  'label' => 'Archives','descript
     $defaults['envoyer'] = __('Envoyer','eelv_lettreinfo');  
     return $defaults;  
   }  
-  // SHOW THE FEATURED IMAGE  
+  // COLUMN CONTENT  
   function lettreinfo_columns_content($column_name, $post_ID) {  
     if ($column_name == 'envoyer') {  
       $my_temp=get_post(get_post_meta(get_the_ID(), 'nl_template',true));
@@ -142,10 +142,30 @@ register_post_type('newsletter_archive', array(  'label' => 'Archives','descript
         echo '<br/><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'">'.__('Pr&eacute;visualiser et envoyer','eelv_lettreinfo').'</a>';
       }
       else{
-        echo __('Pas encore pr&egrave;te...','eelv_lettreinfo');
+        echo __('Pas encore pr&ecirc;te...','eelv_lettreinfo');
       }  
     }  
   }
+  
+  // ADD NEW COLUMN (ARCHIVES) 
+  function lettreinfo_archives_columns_head($defaults) {  
+    $defaults['queue'] = __('File d\'attente','eelv_lettreinfo'); 
+    $defaults['sent'] = __('Envoy&eacute;(s)','eelv_lettreinfo');  
+    return $defaults;  
+  }  
+  // COLUMN CONTENT  (ARCHIVES) 
+  function lettreinfo_archives_columns_content($column_name, $post_ID) {  
+    if ($column_name == 'queue') {  
+      $dest = get_post_meta($post_ID, 'destinataires',true);
+      echo abs(substr_count($dest,',')); 
+    }
+	if ($column_name == 'sent') {  
+      $sent = get_post_meta($post_ID, 'sentmails',true);
+      echo abs(substr_count($sent,',')); 
+    }  
+  }
+  
+  
 /* Adds a box to the main column on the Post and Page edit screens */
 function newsletter_add_custom_box() {
     add_meta_box( 
@@ -417,7 +437,7 @@ function news_carnet_adresse(){
 <table class="widefat" style="margin-top: 1em;">
             <thead>
                 <tr>
-                  <th scope="col" colspan="2">Carnet d'adresse</th>
+                  <th scope="col" colspan="2"><?php _e('Carnet d\'adresse', 'eelv_lettreinfo' ) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -435,10 +455,10 @@ function news_carnet_adresse(){
     $grp_id = $_GET['delgroupe'];
     $query="DELETE FROM $newsletter_tb_name WHERE `id`='$grp_id' OR `parent`='$grp_id'";
     if(false===$wpdb->query($query)){
-      ?><div class="updated"><p><strong>Une erreur s'est produite, aucun groupe n'a &eacute;t&eacute; supprim&eacute; !</strong></p></div><?php
+      ?><div class="updated"><p><strong><?php _e('Une erreur s\'est produite, aucun groupe n\'a &eacute;t&eacute; supprim&eacute; !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
     }
     else{
-      ?><div class="updated"><p><strong>Suppression effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
+      ?><div class="updated"><p><strong><?php _e('Suppression effectu&eacute;e avec succ&egrave;s !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
     }
     $grp_id='';
   }
@@ -457,10 +477,10 @@ function news_carnet_adresse(){
       }
       $query="DELETE FROM $newsletter_tb_name WHERE $ac";
       if(false===$wpdb->query($query)){
-        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; supprim&eacute; !</strong></p></div><?php
+        ?><div class="updated"><p><strong><?php _e('Une erreur s\'est produite, aucun contact n\'a &eacute;t&eacute; supprim&eacute; !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
       }
       else{
-        ?><div class="updated"><p><strong>Suppression de <?=$nb?> contact(s) effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
+        ?><div class="updated"><p><strong><?php printf(__('Suppression de %s contact(s) effectu&eacute;e avec succ&egrave;s !', 'eelv_lettreinfo' ),$nb) ?></strong></p></div><?php
       }
     }
   }
@@ -479,10 +499,10 @@ function news_carnet_adresse(){
       }
       $query="UPDATE $newsletter_tb_name SET `parent`='".str_replace("'","''",$_GET['ngrp'])."' WHERE $ac";
       if(false===$wpdb->query($query)){
-        ?><div class="updated"><p><strong>Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; d&eacute;plac&eacute; !</strong></p></div><?php
+        ?><div class="updated"><p><strong><?php _e('Une erreur s\'est produite, aucun contact n\'a &eacute;t&eacute; d&eacute;plac&eacute; !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
       }
       else{
-        ?><div class="updated"><p><strong>D&eacute;placement de <?=$nb?> contact(s) effectu&eacute;e avec succ&egrave;s !</strong></p></div><?php
+        ?><div class="updated"><p><strong><?php printf(__('D&eacute;placement de %s contact(s) effectu&eacute;e avec succ&egrave;s !', 'eelv_lettreinfo' ),$nb) ?></strong></p></div><?php
       }
     }
   }
@@ -512,7 +532,7 @@ function news_carnet_adresse(){
       $query="INSERT INTO $newsletter_tb_name (`nom`) VALUES ('".str_replace("'","''",$grp_nom)."')";
     }
     if(false===$wpdb->query($query)){
-      ?><div class="updated"><p><strong>Une erreur s'est produite...</strong></p></div><?php
+      ?><div class="updated"><p><strong><?php _e('Une erreur s\'est produite...', 'eelv_lettreinfo' ) ?></strong></p></div><?php
     }
     else{
       $for='liste';
@@ -549,12 +569,12 @@ function news_carnet_adresse(){
           $query.="";
         break;
         case 'file':
-          ?><div class="updated"><p><strong>Fonctionnalit&eacute; en cours de d&eacute;veloppement</strong></p></div><?php
+          ?><div class="updated"><p><strong><?php _e('Fonctionnalit&eacute; en cours de d&eacute;veloppement', 'eelv_lettreinfo' ) ?></strong></p></div><?php
         break;
       }
     }
     if($query!='' && false===$wpdb->query($query)){
-      ?><div class="updated"><p><strong>Erreur d'enregistrement !</strong></p></div><?php
+      ?><div class="updated"><p><strong><?php _e('Erreur d\'enregistrement !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
     }
     elseif($query!=''){
       ?><div class="updated"><p><strong><?php _e('Enregistrement sauvegard&eacute;.', 'eelv_lettreinfo' ); ?></strong></p></div><?php
@@ -573,7 +593,7 @@ function news_carnet_adresse(){
       $action="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=$grp_id";
     }
     ?>
-        Edition Groupe
+        <?php _e('&Eacute;dition Groupe', 'eelv_lettreinfo' ) ?>
         <form action='<?=$action;?>' method="post">
           <div id="titlediv">
                 <div id="titlewrap">               
@@ -582,7 +602,7 @@ function news_carnet_adresse(){
                 <input type='submit' value='Enregistrer' class="button-primary"/>
            </div>
         </form>
-        <p>    <a href="edit.php?post_type=newsletter&page=news_carnet_adresse" class="button add-new-h2">annuler</a></p>
+        <p>    <a href="edit.php?post_type=newsletter&page=news_carnet_adresse" class="button add-new-h2"><?php _e('annuler', 'eelv_lettreinfo' ) ?></a></p>
         <?php
   }
   if($for=='liste'){
@@ -591,7 +611,7 @@ function news_carnet_adresse(){
     if(!is_numeric($grp_id)){ // groupes
       $GRPS = news_liste_groupes();    
       $nb_groups = sizeof($GRPS);
-      ?><h3 class="sectiontitle title3">Groupes</h3>  <a href="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=new" class="button add-new-h2">Nouveau groupe</a>    <?php
+      ?><h3 class="sectiontitle title3"><?php _e('Groupes', 'eelv_lettreinfo' ) ?></h3>  <a href="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=new" class="button add-new-h2"><?php _e('Nouveau groupe', 'eelv_lettreinfo' ) ?></a>    <?php
       if($nb_groups>0){?>  
             
            
@@ -604,9 +624,9 @@ function news_carnet_adresse(){
           <tr>
             <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>'><b><?=$groupe->nom?></b></a></td>
                         <td><b><?=$nbinsc?></b></td>
-            <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>' class="button">Liste</a></td>
-                        <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=<?=$groupe->id?>' class="button">Renomer</a></td>
-                        <td><a onclick="confsup('edit.php?post_type=newsletter&page=news_carnet_adresse&delgroupe=<?=$groupe->id?>',1)" class="button">Supprimer</a></td>
+            <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>' class="button"><?php _e('Liste', 'eelv_lettreinfo' ) ?></a></td>
+                        <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=<?=$groupe->id?>' class="button"><?php _e('Renomer', 'eelv_lettreinfo' ) ?></a></td>
+                        <td><a onclick="confsup('edit.php?post_type=newsletter&page=news_carnet_adresse&delgroupe=<?=$groupe->id?>',1)" class="button"><?php _e('Supprimer', 'eelv_lettreinfo' ) ?></a></td>
           </tr>      
         <?php }  ?>
         </table>
@@ -762,7 +782,7 @@ function news_envoi(){
     }
     else{
       ?>
-            Aucune lettre n'est en cours. pour en cr&eacute;er une <a href="post-new.php?post_type=newsletter" class="button">cliquez ici</a>
+           <?php _e('Aucune lettre n\'est en cours. pour en cr&eacute;er une', 'eelv_lettreinfo' ) ?> <a href="post-new.php?post_type=newsletter" class="button"><?php _e('cliquez ici', 'eelv_lettreinfo' ) ?></a>
       <?php    
     }
   }
@@ -802,14 +822,21 @@ function news_envoi(){
             <table><tr>
             <td>
               <h3 class="sectiontitle title3"><?php _e('Entêtes', 'eelv_lettreinfo' ) ?></h3>
-              <label for="sujet"><?php _e('Sujet', 'eelv_lettreinfo' ) ?>               
-                <input type="text" name="eelv_news_sujet" size="30" tabindex="1" value="<?=$post->post_title?>" id="sujet" autocomplete="off" required="required"/></label> 
+              <p><label for="sujet"><?php _e('Sujet', 'eelv_lettreinfo' ) ?>               
+                <input type="text" name="eelv_news_sujet" size="30" tabindex="1" value="<?=$post->post_title?>" id="sujet" autocomplete="off" required="required"/></label> </p>
                 
-                <label for="exp"><?php _e('Exp&eacute;diteur ', 'eelv_lettreinfo' ) ?>              
-                <input type="text" name="eelv_news_exp" size="30" tabindex="1" value="<?=$default_exp?>" id="exp" autocomplete="off" required="required"/></label> 
+               <p><label for="exp"><?php _e('Exp&eacute;diteur ', 'eelv_lettreinfo' ) ?>              
+                <input type="text" name="eelv_news_exp" size="30" tabindex="1" value="<?=$default_exp?>" id="exp" autocomplete="off" required="required"/></label> </p>
                 
-                <label for="mel"><?php _e('Adresse de r&eacute;ponse ', 'eelv_lettreinfo' ) ?>              
-                <input type="email" name="eelv_news_mel" size="30" tabindex="1" value="<?=$default_mel?>" id="mel" autocomplete="off" required="required"/></label> 
+                <p><label for="mel"><?php _e('Adresse de r&eacute;ponse ', 'eelv_lettreinfo' ) ?>         
+                <input type="email" name="eelv_news_mel" size="30" tabindex="1" value="<?=$default_mel?>" id="mel" autocomplete="off" required="required"/></label></p>
+                
+                <p><label for="stat"><?php _e('Statut de l\'archive', 'eelv_lettreinfo' ) ?>            
+                <select name="eelv_news_stat" id="stat" required="required">
+                	<option value='publish'><?php _e('publi&eacute;e', 'eelv_lettreinfo' ) ?></option>
+                	<option value='private'><?php _e('priv&eacute;', 'eelv_lettreinfo' ) ?></option>
+                </select>
+                </label> </p>
             </td>
             <td>
       <h3 class="sectiontitle title3"><?php _e('Destinataires', 'eelv_lettreinfo' ) ?></h3>
@@ -897,8 +924,8 @@ function news_envoi(){
       
       $contacts=implode(',',array_unique(explode(',',$contacts)));
       
-      if(0=== $archive = wp_insert_post( array('post_type'=>'newsletter_archive','post_title' => $post->post_title,  'post_content' => $post->post_content,  'post_status' => 'publish'))){
-        echo"Erreur d'enregistrement dans la base de donn&eacute;es !";
+      if(0=== $archive = wp_insert_post( array('post_type'=>'newsletter_archive','post_title' => $post->post_title,  'post_content' => $post->post_content,  'post_status' => $_POST['eelv_news_stat']))){
+        echo __("Erreur d'enregistrement dans la base de donn&eacute;es !",'eelv_lettreinfo');
       }
       else{
         add_post_meta($archive, 'sujet', $_POST['eelv_news_sujet']);
@@ -916,12 +943,12 @@ function news_envoi(){
         );
         // Update the post into the database
         wp_update_post( $my_postu );*/
-        echo"Envoi en cours...
+        echo __('Envoi en cours...','eelv_lettreinfo')."
         <script>
         document.location='edit.php?post_type=newsletter_archive';
         </script>
-        Pour consulter le statut d'envoi, veuillez vous rendr aux
-        <a href='edit.php?post_type=newsletter_archive'>archives</a>
+        ".__("Pour consulter le statut d'envoi, veuillez vous rendre aux",'eelv_lettreinfo')."
+        <a href='edit.php?post_type=newsletter_archive'>".__('archives','eelv_lettreinfo')."</a>
         ";
       }
     }
@@ -946,18 +973,18 @@ function newsletter_save_postdata( $post_id ) {
     $env=true;
     if(get_the_ID()==0){
       $env=false;
-      echo"<p>Votre lettre d'info n'est pas encore enregistr&eacute;</p>";
+      echo"<p>".__("Votre lettre d'info n'est pas encore enregistr&eacute;",'eelv_lettreinfo')."</p>";
     }
     if(get_the_title()==''){
       $env=false;
-      echo"<p>Votre lettre d'info n'a pas de titre</p>";
+      echo"<p>".__("Votre lettre d'info n'a pas de titre",'eelv_lettreinfo')."</p>";
     }
     if(!$my_temp){
       $env=false;
-      echo"<p>Aucun habillage n'a &eacute;t&eacute; s&eacute;lectionn&eacute;</p>";
+      echo"<p>".__("Aucun habillage n'a &eacute;t&eacute; s&eacute;lectionn&eacute;",'eelv_lettreinfo')."</p>";
     }
     if($env==true){
-      echo'<p><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'" class="button-primary">Pr&eacute;visualiser et envoyer</a></p>';
+      echo'<p><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'" class="button-primary">'.__('Pr&eacute;visualiser et envoyer','eelv_lettreinfo').'</a></p>';
     }
   }
 function newsletter_admin() {
@@ -1247,7 +1274,7 @@ function newsletter_checkdb(){
 ///////////////////////////////////// SEMI CRON AUTO SEND
 function newsletter_autosend(){
   global $newsletter_tb_name,$wpdb,$newsletter_plugin_url,$eelv_nl_default_themes;
-  $querystr = "SELECT $wpdb->posts.`ID` FROM $wpdb->posts,$wpdb->postmeta WHERE post_status = 'publish' AND post_type = 'newsletter_archive'  AND $wpdb->postmeta.`post_id`=$wpdb->posts.`ID` AND $wpdb->postmeta.`meta_key`='destinataires' AND $wpdb->postmeta.`meta_value`!=''";
+  $querystr = "SELECT $wpdb->posts.`ID` FROM $wpdb->posts,$wpdb->postmeta WHERE (post_status = 'publish' OR post_status = 'private') AND post_type = 'newsletter_archive'  AND $wpdb->postmeta.`post_id`=$wpdb->posts.`ID` AND $wpdb->postmeta.`meta_key`='destinataires' AND $wpdb->postmeta.`meta_value`!=''";
   $IDS = $wpdb->get_col($querystr);  
   $send_nb = sizeof($IDS);
   if($send_nb>0){
@@ -1470,7 +1497,7 @@ function newsletter_page_configuration() {
         <table class="widefat" style="margin-top: 1em;">
              <thead>
                 <tr>
-                  <th scope="col">Aide</th>
+                  <th scope="col"><?php _e('Aide', 'eelv_lettreinfo' ) ?></th>
                 </tr>
             </thead>
             <tbody>
@@ -1579,7 +1606,7 @@ function widget_eelv_lettreinfo_insc_control(){
     }
   $eelv_li_xs_title= get_option('eelv_li_xs_title');
   ?>
-  <p><label for='eelv_cal_xs_title'>Titre<br/>
+  <p><label for='eelv_cal_xs_title'><?php _e('Titre', 'eelv_lettreinfo' ) ?><br/>
   <input type='text' name='eelv_li_xs_title' id='eelv_li_xs_title' value='<?=$eelv_li_xs_title?>'/></label>
   </p>
   <?php
@@ -1612,5 +1639,9 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 add_action( 'admin_init', 'newsletter_autosend' );
 add_filter( 'archive_template', 'eelv_lettrinfo_get_custom_archive_template' );
 add_filter( 'single_template', 'eelv_lettrinfo_get_custom_single_template' );
+
 add_filter('manage_newsletter_posts_columns', 'lettreinfo_columns_head');  
 add_action('manage_newsletter_posts_custom_column', 'lettreinfo_columns_content', 10, 2); 
+
+add_filter('manage_newsletter_archive_posts_columns', 'lettreinfo_archives_columns_head');  
+add_action('manage_newsletter_archive_posts_custom_column', 'lettreinfo_archives_columns_content', 10, 2); 
