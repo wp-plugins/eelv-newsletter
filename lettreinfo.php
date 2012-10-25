@@ -3,11 +3,12 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.6.5
+Version: 2.6.6
 Author: Bastien Ho,  EELV
 License: CC
 */
 
+  // ID for DB version
 $eelv_newsletter_version = "2.6.5";
 
 $newsletter_tb_name = 'eelv_'.$wpdb->blogid. "_newsletter_adr";
@@ -36,8 +37,8 @@ $newsletter_sql = "CREATE TABLE " . $newsletter_tb_name . " (
 function eelvnewsletter_install() {
     global $eelv_newsletter_version,$newsletter_tb_name,$newsletter_sql;
   require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-   dbDelta($newsletter_sql);
-   add_option("eelv_newsletter_version", $eelv_newsletter_version);
+  dbDelta($newsletter_sql);
+  add_site_option("eelv_newsletter_version", $eelv_newsletter_version);
 }
 
 // UPDATE PLUGIN
@@ -46,7 +47,7 @@ $installed_ver = get_option( "eelv_newsletter_version" );
 if( $installed_ver != $eelv_newsletter_version ) {
    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
   dbDelta($newsletter_sql);
-  update_option( "eelv_newsletter_version", $eelv_newsletter_version );
+  update_site_option( "eelv_newsletter_version", $eelv_newsletter_version );
 }
 
 
@@ -55,7 +56,8 @@ if( $installed_ver != $eelv_newsletter_version ) {
 function eelvnewsletter_update_db_check() {
   global $eelv_newsletter_version;
     if (get_site_option('eelv_newsletter_version') != $eelv_newsletter_version) {
-        eelvnewsletter_install();
+      update_site_option( "eelv_newsletter_version", $eelv_newsletter_version );
+      eelvnewsletter_install();
     }
 }
 
@@ -159,7 +161,7 @@ register_post_type('newsletter_archive', array(  'label' => 'Archives','descript
       $dest = get_post_meta($post_ID, 'destinataires',true);
       echo abs(substr_count($dest,',')); 
     }
-	if ($column_name == 'sent') {  
+  if ($column_name == 'sent') {  
       $sent = get_post_meta($post_ID, 'sentmails',true);
       echo abs(substr_count($sent,',')); 
     }  
@@ -833,8 +835,8 @@ function news_envoi(){
                 
                 <p><label for="stat"><?php _e('Statut de l\'archive', 'eelv_lettreinfo' ) ?>            
                 <select name="eelv_news_stat" id="stat" required="required">
-                	<option value='publish'><?php _e('publi&eacute;e', 'eelv_lettreinfo' ) ?></option>
-                	<option value='private'><?php _e('priv&eacute;', 'eelv_lettreinfo' ) ?></option>
+                  <option value='publish'><?php _e('publi&eacute;e', 'eelv_lettreinfo' ) ?></option>
+                  <option value='private'><?php _e('priv&eacute;', 'eelv_lettreinfo' ) ?></option>
                 </select>
                 </label> </p>
             </td>
@@ -1184,8 +1186,8 @@ function newsletter_archive_admin_queue() {
     <?php if($dest!=''){ ?>
     <a href='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>'><?=__('Envoi automatique d\'une nouvelle salve','eelv_lettreinfo')?></a>
     <script>
-	document.location='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
-	</script>
+  document.location='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
+  </script>
     <?php }
 }
 ///////////////////////////////////// CHECK DB
@@ -1305,11 +1307,11 @@ function newsletter_autosend(){
         $mime_boundary="----=_NextPart_".md5(time());
         $headers .= 'MIME-Version: 1.0'.$eol;
         $headers .= "Content-Type: text/html; charset=\"utf-8\"; Content-Transfer-Encoding: quoted-printable; boundary=\"".$mime_boundary."\"".$eol;
-        //print_r($dests);		
-		$newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
-		if($newsletter_admin_surveillance!=''){
-			mail($newsletter_admin_surveillance,'[EELV-newsletter:envoi] '.$sujet,$content,$headers);
-		}
+        //print_r($dests);    
+    $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+    if($newsletter_admin_surveillance!=''){
+      mail($newsletter_admin_surveillance,'[EELV-newsletter:envoi] '.$sujet,$content,$headers);
+    }
         while($dest = array_shift($dests)){
          $dest=trim($dest);
           
@@ -1356,14 +1358,14 @@ function newsletter_autosend(){
 /*****************************************************************************************************************************************
                                                                      C O N F I G U R A T I O N                                            *****************************************************************************************************************************************/
 function newsletter_network_configuration(){
-	if( $_REQUEST[ 'type' ] == 'update' ) {    
+  if( $_REQUEST[ 'type' ] == 'update' ) {    
       update_site_option( 'newsletter_admin_surveillance', $_REQUEST['newsletter_admin_surveillance'] );      
       ?>
       <div class="updated"><p><strong><?php _e('Options sauvegard&eacute;es.', 'eelv_lettreinfo' ); ?></strong></p></div>
       <?php 
     }
-	 $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
-	?>  
+   $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+  ?>  
         <div class="wrap">
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
         <h2><?=_e('Lettre d\'information', 'eelv_lettreinfo' )?></h2>

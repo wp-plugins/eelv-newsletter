@@ -58,6 +58,9 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+V 2.6.6
+* Bug fix: Performances optimisation 
+
 V 2.6.5
 * Bug fix: broken link for stylesheet
 
