@@ -3,9 +3,9 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.6.6
-Author: Bastien Ho,  EELV
-License: CC
+Version: 2.6.7
+Author: Bastien Ho, Ecolosites // EELV
+License: CC BY-NC v3.0
 */
 
   // ID for DB version
@@ -992,7 +992,7 @@ function newsletter_save_postdata( $post_id ) {
 function newsletter_admin() {
   global $wpdb, $eelv_nl_content_themes;
   //newsletter_checkdb();
-  ///print_r($eelv_nl_content_themes);
+  //print_r($eelv_nl_content_themes);
   ?>
     <table><tr>
     <td valign="top">

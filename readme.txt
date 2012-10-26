@@ -58,24 +58,27 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+v 2.6.7
+* Add: Custom content now works for creation, not just edit newsletter
+
 V 2.6.6
-* Bug fix: Performances optimisation 
+* Fix: Performances optimisation 
 
 V 2.6.5
-* Bug fix: broken link for stylesheet
+* Fix: broken link for stylesheet
 
 V 2.6.4
-* Enhance: Added : custom column for archives to display queue and sent
-* Enhance: Choice of the archive status : publish or private (for tests) 
-* Enhance: Again some lines for completing translation, soon soon!
+* Add: custom column for archives to display queue and sent
+* Add: Choice of the archive status : publish or private (for tests) 
+* Add: Again some lines for completing translation, soon soon!
 
 V 2.6.3
-* Enhance: Added : custom email to receive a copy of any campaign send (manage it in the network admin)
-* Enhance: Performances optimisation 
-* Enhance: Add some lines for completing translation, not finished yet !
+* Add: custom email to receive a copy of any campaign send (manage it in the network admin)
+* Add: Performances optimisation 
+* Add: Add some lines for completing translation, not finished yet !
 
 V 2.6.2
-* Bug fix: broken link for status icons
+* Fix: broken link for status icons
 
 v 2.6
 * Publication in the wordpress repository
