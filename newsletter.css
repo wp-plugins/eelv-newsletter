@@ -2,6 +2,9 @@
 Plugin Name: EELV Gestionnaire de newsletter
 Version: 0.1
 */
+body#newsletter_archive{
+	text-align:center;	
+}
 #wpbody-content { 
 margin-bottom:40px;
  }
@@ -73,7 +76,11 @@ margin-bottom:40px;
   border:#FF9 1px solid;
 }
 /*********************/
-
+.eelvnl{
+	text-align:left;
+	width:700px;
+	margin:auto;
+}
 .eelvnl_content{
     background:#FFF;
     width:100%;

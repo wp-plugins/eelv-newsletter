@@ -20,7 +20,7 @@ get_header(); ?>
 				<?php while ( have_posts() ) : the_post(); ?>
 				<li class="eelvnl_archives">
 					<article id="post-<?php the_ID(); ?>">
-						<a href="<?php the_permalink()?>" title="<? the_title ?>">
+						<a href="<?php the_permalink()?>" title="<? the_title ?>" target="_blank">
 							<header class="entry-header">
 								<h3 class="entry-title"><?php the_title(); ?></h3>
 							</header><!-- .entry-header -->

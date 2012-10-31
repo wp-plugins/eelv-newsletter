@@ -58,6 +58,10 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+v 2.6.8
+* Add: Archives are displayed in a new, blank and clean page
+* Fix: Select-box to insert pages into a newsletter was listing posts
+
 v 2.6.7
 * Add: Custom content now works for creation, not just edit newsletter
 
