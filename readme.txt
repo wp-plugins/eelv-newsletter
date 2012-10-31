@@ -58,7 +58,10 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
-v 2.6.8
+v 2.7.1
+* Fix: Sql error [Multiple primary key defined] dbdelta
+
+v 2.7.0
 * Add: Archives are displayed in a new, blank and clean page
 * Fix: Select-box to insert pages into a newsletter was listing posts
 
