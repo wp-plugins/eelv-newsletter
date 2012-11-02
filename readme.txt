@@ -58,39 +58,39 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
-v 2.7.2
+= 2.7.2 =
 * Add: enhanced english translation
 
-v 2.7.1
+= 2.7.1 =
 * Fix: Sql error [Multiple primary key defined] dbdelta
 
-v 2.7.0
+= 2.7.0 =
 * Add: Archives are displayed in a new, blank and clean page
 * Fix: Select-box to insert pages into a newsletter was listing posts
 
-v 2.6.7
+= 2.6.7 =
 * Add: Custom content now works for creation, not just edit newsletter
 
-V 2.6.6
+= 2.6.6 =
 * Fix: Performances optimisation 
 
-V 2.6.5
+= 2.6.5 =
 * Fix: broken link for stylesheet
 
-V 2.6.4
+= 2.6.4 =
 * Add: custom column for archives to display queue and sent
 * Add: Choice of the archive status : publish or private (for tests) 
 * Add: Some more lines for completing translation, soon soon!
 
-V 2.6.3
+= 2.6.3 =
 * Add: custom email to receive a copy of any campaign send (manage it in the network admin)
 * Add: Performances optimisation 
 * Add: Add some lines for completing translation, not finished yet !
 
-V 2.6.2
+= 2.6.2 =
 * Fix: broken link for status icons
 
-v 2.6
+= 2.6 =
 * Publication in the wordpress repository
 
 == Upgrade notice ==
@@ -99,5 +99,8 @@ No particular informations
 
 == Languages ==
 
-Français	fr_FR	100%
-English		en_US	65%
+= Français  =
+* fr_FR : 100%
+
+= English =
+* en_US	: 65%
