@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eelv_lettreinfo\n"
 "POT-Creation-Date: 2012-10-22 17:42+0100\n"
-"PO-Revision-Date: 2012-10-22 17:50+0100\n"
+"PO-Revision-Date: 2012-11-02 17:14+0100\n"
 "Last-Translator: Bastien HO <bastienho@urbancube.fr>\n"
 "Language-Team:  <ecolosites@eelv.fr>\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,7 @@ msgstr ""
 
 #: ../lettreinfo.php:107
 msgid "Rechercher"
-msgstr ""
+msgstr "Search"
 
 #: ../lettreinfo.php:108
 msgid "No template Found"
@@ -103,15 +103,15 @@ msgstr ""
 
 #: ../lettreinfo.php:118
 msgid "Editer archive"
-msgstr ""
+msgstr "Edit archive"
 
 #: ../lettreinfo.php:119
 msgid "Nouvelle archive"
-msgstr ""
+msgstr "New archive"
 
 #: ../lettreinfo.php:121
 msgid "Voir archive"
-msgstr ""
+msgstr "Preview archive"
 
 #: ../lettreinfo.php:122
 msgid "Rechercher une archive"
@@ -142,7 +142,6 @@ msgid "Pas encore pr&egrave;te..."
 msgstr "Not ready yet"
 
 #: ../lettreinfo.php:153
-#, fuzzy
 msgid "Outils d'&eacute;ditions"
 msgstr "Edit tools"
 
@@ -180,29 +179,29 @@ msgstr "Reload parameters"
 
 #: ../lettreinfo.php:259 ../lettreinfo.php:273 ../lettreinfo.php:285
 msgid "Erreur d'enregistrement !"
-msgstr ""
+msgstr "An error occured !"
 
 #: ../lettreinfo.php:262
 msgid "Vous avez bien &eacute;t&eacute; r&eacute;-inscrit(e)."
-msgstr ""
+msgstr "You have been successfully re-registered"
 
 #: ../lettreinfo.php:266
 msgid "Votre email est d&eacute;jà enregistr&eacute; dans notre liste d'envoi."
-msgstr ""
+msgstr "Your email is already registered in our mailing-list."
 
 #: ../lettreinfo.php:276
 msgid "Merci, vous avez bien &eacute;t&eacute; inscrit(e)"
-msgstr ""
+msgstr "Thnak you for your suscription"
 
 #: ../lettreinfo.php:288
 msgid "Merci, vous avez bien &eacute;t&eacute; d&eacute;sinscrit(e)"
-msgstr ""
+msgstr "Thank you, your email have been deleted from our mailing-list"
 
 #: ../lettreinfo.php:292
 msgid ""
 "Votre email n'est pas enregistr&eacute; dans notre liste d'envoi. Aucune "
 "d&eacute;sinscription n'est n&eacute;cessaire."
-msgstr ""
+msgstr "Your email does'nt appear in our mailing list. No unsuscribe needed"
 
 #: ../lettreinfo.php:299
 msgid "adresse non valide"
@@ -210,7 +209,7 @@ msgstr "invalid adress"
 
 #: ../lettreinfo.php:312
 msgid "Inscription &agrave; la newsletter :"
-msgstr ""
+msgstr "Suscribe our newsletter"
 
 #: ../lettreinfo.php:316
 msgid " S'inscrire"
@@ -238,11 +237,11 @@ msgstr "ok"
 
 #: ../lettreinfo.php:353
 msgid "Derni&egrave;res Lettres d\\'information"
-msgstr ""
+msgstr "Last newsletters"
 
 #: ../lettreinfo.php:519 ../lettreinfo.php:560
 msgid "Enregistrement sauvegard&eacute;."
-msgstr ""
+msgstr "Record saved"
 
 #: ../lettreinfo.php:626 ../lettreinfo.php:818
 msgid "Groupes"
@@ -250,11 +249,11 @@ msgstr "Groups"
 
 #: ../lettreinfo.php:635
 msgid "Action group&eacute;e"
-msgstr ""
+msgstr "Bulk actions"
 
 #: ../lettreinfo.php:644
 msgid "d&eacute;placer dans :"
-msgstr ""
+msgstr "Move to : "
 
 #: ../lettreinfo.php:646
 msgid "Supprimer"
@@ -262,7 +261,7 @@ msgstr "Delete"
 
 #: ../lettreinfo.php:648
 msgid "Retour"
-msgstr ""
+msgstr "Back"
 
 #: ../lettreinfo.php:649
 msgid "Nouveau destinataire"
@@ -290,37 +289,36 @@ msgstr ""
 
 #: ../lettreinfo.php:738 ../lettreinfo.php:1169 ../lettreinfo.php:1342
 #: ../lettreinfo.php:1398
-#, fuzzy
 msgid "Lettre d'information"
 msgstr "Newsletter"
 
 #: ../lettreinfo.php:794
 msgid "Aperçu"
-msgstr ""
+msgstr "Preview"
 
 #: ../lettreinfo.php:799
 msgid "Modifier"
-msgstr ""
+msgstr "Edit"
 
 #: ../lettreinfo.php:804
 msgid "Entêtes"
-msgstr ""
+msgstr "Headers"
 
 #: ../lettreinfo.php:805
 msgid "Sujet"
-msgstr ""
+msgstr "Subject"
 
 #: ../lettreinfo.php:808
 msgid "Exp&eacute;diteur "
-msgstr ""
+msgstr "Sender name"
 
 #: ../lettreinfo.php:811
 msgid "Adresse de r&eacute;ponse "
-msgstr ""
+msgstr "Reply email"
 
 #: ../lettreinfo.php:836
 msgid "Utilisateurs du site"
-msgstr ""
+msgstr "blog users"
 
 #: ../lettreinfo.php:854
 msgid "Destinataires suppl&eacute;mentaires"
@@ -328,7 +326,7 @@ msgstr ""
 
 #: ../lettreinfo.php:989
 msgid "Ins&eacute;rer du contenu"
-msgstr ""
+msgstr "Insert some content"
 
 #: ../lettreinfo.php:1073 ../lettreinfo.php:1430
 msgid "Articles"
@@ -347,7 +345,6 @@ msgid "Envoi automatique d'une nouvelle salve"
 msgstr ""
 
 #: ../lettreinfo.php:1174
-#, fuzzy
 msgid "V&eacute;rification"
 msgstr "Reload parameters"
 
@@ -376,14 +373,12 @@ msgid "Adresse de r&eacute;ponse par d&eacute;faut :"
 msgstr ""
 
 #: ../lettreinfo.php:1427
-#, fuzzy
 msgid "Page de d&eacute;sinscription :"
-msgstr "Unsuscribe"
+msgstr "Unsuscribe page"
 
 #: ../lettreinfo.php:1448
-#, fuzzy
 msgid "Afficher en page d'accueil:"
-msgstr "View newsletter"
+msgstr "Show in the homepage:"
 
 #: ../lettreinfo.php:1451
 msgid "oui"
@@ -419,7 +414,7 @@ msgstr ""
 
 #: ../lettreinfo.php:1489
 msgid "Email invalide:"
-msgstr ""
+msgstr "Invalid email"
 
 #: ../lettreinfo.php:1490
 msgid "Envoi &eacute;chou&eacute;:"

@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.7.1
+Version: 2.7.2
 Author: Bastien Ho, Ecolosites // EELV
 License: CC BY-NC v3.0
 */
@@ -21,56 +21,57 @@ $newsletter_sql = "CREATE TABLE " . $newsletter_tb_name . " (
 `parent` mediumint(9) DEFAULT 0 NOT NULL,
 `nom` VARCHAR(255) DEFAULT '' NOT NULL,
 `email` VARCHAR(255) DEFAULT '' NOT NULL,
-PRIMARY KEY (id))";
+PRIMARY KEY  (`id`)
+);";
 /* INSTALLATION DES TABLES  */
 function eelvnewsletter_install() {
-global $eelv_newsletter_version,$newsletter_tb_name,$newsletter_sql;
-require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-dbDelta($newsletter_sql);
-add_site_option("eelv_newsletter_version", $eelv_newsletter_version);
+	global $eelv_newsletter_version,$newsletter_tb_name,$newsletter_sql;
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	dbDelta($newsletter_sql);
+	add_option("eelv_newsletter_version", $eelv_newsletter_version);
 }
 // UPDATE PLUGIN
 $installed_ver = get_option( "eelv_newsletter_version" );
 if( $installed_ver != $eelv_newsletter_version ) {
-require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-dbDelta($newsletter_sql);
-update_site_option( "eelv_newsletter_version", $eelv_newsletter_version );
+	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	dbDelta($newsletter_sql);
+	update_option( "eelv_newsletter_version", $eelv_newsletter_version );
 }
 // WP 3.1 patch upgrade
 function eelvnewsletter_update_db_check() {
-global $eelv_newsletter_version;
-if (get_site_option('eelv_newsletter_version') != $eelv_newsletter_version) {
-update_site_option( "eelv_newsletter_version", $eelv_newsletter_version );
-eelvnewsletter_install();
-}
+	global $eelv_newsletter_version;
+	if (get_option('eelv_newsletter_version') != $eelv_newsletter_version) {
+		update_option( "eelv_newsletter_version", $eelv_newsletter_version );
+		eelvnewsletter_install();
+	}
 }
 if(false===$wpdb->query("SHOW COLUMNS FROM ".$newsletter_tb_name) ){
-eelvnewsletter_install();
+	eelvnewsletter_install();
 }
 // FONCTIONS
 add_action( 'admin_enqueue_scripts', 'eelv_nl_my_admin_enqueue_scripts' );
 function eelv_nl_my_admin_enqueue_scripts() {
 if ( 'newsletter_archive' == get_post_type() )
-wp_dequeue_script( 'autosave' );
+	wp_dequeue_script( 'autosave' );
 }
 function newsletter_BO(){
-global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
-load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv_lettreinfo/languages' );
-register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => true,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'labels' => array (
-'name' => __("Lettre d'info",'eelv_lettreinfo'),
-'singular_name' => __("Lettre d'info",'eelv_lettreinfo'),
-'menu_name' => __("Lettre d'info",'eelv_lettreinfo'),
-'add_new' => __('ajouter','eelv_lettreinfo'),
-'add_new_item' => __('Ajouter','eelv_lettreinfo'),
-'edit' => __('Editer','eelv_lettreinfo'),
-'edit_item' => __('Editer','eelv_lettreinfo'),
-'new_item' => __('Nouvelle','eelv_lettreinfo'),
-'view' => __('Afficher','eelv_lettreinfo'),
-'view_item' => __('Afficher Lettre d\'info','eelv_lettreinfo'),
-'search_items' => __('Chercher','eelv_lettreinfo'),
-'not_found' => __('No newsletter Found','eelv_lettreinfo'),
-'not_found_in_trash' => __('No newsletter Found in Trash','eelv_lettreinfo'),
-'parent' => __('Parent newsletter','eelv_lettreinfo'),
+	global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
+	load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv_lettreinfo/languages' );
+	register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => true,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'labels' => array (
+	'name' => __("Lettre d'info",'eelv_lettreinfo'),
+	'singular_name' => __("Lettre d'info",'eelv_lettreinfo'),
+	'menu_name' => __("Lettre d'info",'eelv_lettreinfo'),
+	'add_new' => __('ajouter','eelv_lettreinfo'),
+	'add_new_item' => __('Ajouter','eelv_lettreinfo'),
+	'edit' => __('Editer','eelv_lettreinfo'),
+	'edit_item' => __('Editer','eelv_lettreinfo'),
+	'new_item' => __('Nouvelle','eelv_lettreinfo'),
+	'view' => __('Afficher','eelv_lettreinfo'),
+	'view_item' => __('Afficher Lettre d\'info','eelv_lettreinfo'),
+	'search_items' => __('Chercher','eelv_lettreinfo'),
+	'not_found' => __('No newsletter Found','eelv_lettreinfo'),
+	'not_found_in_trash' => __('No newsletter Found in Trash','eelv_lettreinfo'),
+	'parent' => __('Parent newsletter','eelv_lettreinfo'),
 ),) );
 register_post_type('newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
 'name' => __('Habillage','eelv_lettreinfo'),

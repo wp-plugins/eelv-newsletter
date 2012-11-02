@@ -34,7 +34,7 @@ Network admins can also setup an email to receive each newsletter sent by the se
 
 1. Upload `eelv_newsletter` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress admin
-3. Create a new page and insert the short code [eelv_news_form]
+3. Create a new page and insert the short code `[eelv_news_form]`
 4. You can edit defaults settings in Newsletter > Configuration and help
 
 == Frequently asked questions ==
@@ -47,8 +47,8 @@ Yes, email registered in the black list, won't receive any newsletter from your 
 
 Yes, skins are registered as post-type. 
 * Site admins can create skins into newsletter > skins
-* To create skins automaticly on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: $eelv_nl_default_themes['your skin name']='Your skin HTML here';
-* To add a default content to this skin, add an item to the default content variable. ex : $eelv_nl_content_themes['your skin name']='Your content here';
+* To add skins on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: `$eelv_nl_default_themes['your skin name']='Your skin HTML here';`
+* To add a default content to this skin, add an item to the default content variable. ex : `$eelv_nl_content_themes['your skin name']='Your content here';`
 
 
 == Screenshots ==
@@ -57,6 +57,9 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter.png
 http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
+
+v 2.7.2
+* Add: enhanced english translation
 
 v 2.7.1
 * Fix: Sql error [Multiple primary key defined] dbdelta
@@ -77,7 +80,7 @@ V 2.6.5
 V 2.6.4
 * Add: custom column for archives to display queue and sent
 * Add: Choice of the archive status : publish or private (for tests) 
-* Add: Again some lines for completing translation, soon soon!
+* Add: Some more lines for completing translation, soon soon!
 
 V 2.6.3
 * Add: custom email to receive a copy of any campaign send (manage it in the network admin)
@@ -93,3 +96,8 @@ v 2.6
 == Upgrade notice ==
 
 No particular informations
+
+== Languages ==
+
+Français	fr_FR	100%
+English		en_US	65%
