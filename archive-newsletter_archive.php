@@ -3,10 +3,10 @@
  * @package WordPress
  * @subpackage Genese
  */
-function custom_excerpt_length( $length ) {
+function eelv_nl_custom_excerpt_length( $length ) {
 	return 100;
 }
-add_filter( 'excerpt_length', 'custom_excerpt_length', 999 );
+add_filter( 'excerpt_length', 'eelv_nl_custom_excerpt_length', 999 );
 get_header(); ?>
 <section id="primary" class='eelvnl'>
 			

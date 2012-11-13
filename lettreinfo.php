@@ -2,8 +2,8 @@
 /*
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
-Description:  Add a registration form on FrontOffice, a newsletter adminer on BackOffice
-Version: 2.7.2
+Description:  Add a registration form on frontOffice, a newsletter adminer on BackOffice
+Version: 2.7.3
 Author: Bastien Ho, Ecolosites // EELV
 License: CC BY-NC v3.0
 */
@@ -73,50 +73,51 @@ function newsletter_BO(){
 	'not_found_in_trash' => __('No newsletter Found in Trash','eelv_lettreinfo'),
 	'parent' => __('Parent newsletter','eelv_lettreinfo'),
 ),) );
-register_post_type('newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
-'name' => __('Habillage','eelv_lettreinfo'),
-'singular_name' => __('Habillage','eelv_lettreinfo'),
-'menu_name' => __('Habillages','eelv_lettreinfo'),
-'add_new_item' => __('Ajouter','eelv_lettreinfo'),
-'edit' => __('Editer','eelv_lettreinfo'),
-'edit_item' => __('Editer','eelv_lettreinfo'),
-'new_item' => __('Nouveau','eelv_lettreinfo'),
-'view' => __('Afficher','eelv_lettreinfo'),
-'view_item' => __('Voir','eelv_lettreinfo'),
-'search_items' => __('Rechercher','eelv_lettreinfo'),
-'not_found' => __('No template Found','eelv_lettreinfo'),
-'not_found_in_trash' => __('No template Found in Trash','eelv_lettreinfo'),
-'parent' => __('Parent template','eelv_lettreinfo'),
+register_post_type(
+	'newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+	'name' => __('Habillage','eelv_lettreinfo'),
+	'singular_name' => __('Habillage','eelv_lettreinfo'),
+	'menu_name' => __('Habillages','eelv_lettreinfo'),
+	'add_new_item' => __('Ajouter','eelv_lettreinfo'),
+	'edit' => __('Editer','eelv_lettreinfo'),
+	'edit_item' => __('Editer','eelv_lettreinfo'),
+	'new_item' => __('Nouveau','eelv_lettreinfo'),
+	'view' => __('Afficher','eelv_lettreinfo'),
+	'view_item' => __('Voir','eelv_lettreinfo'),
+	'search_items' => __('Rechercher','eelv_lettreinfo'),
+	'not_found' => __('No template Found','eelv_lettreinfo'),
+	'not_found_in_trash' => __('No template Found in Trash','eelv_lettreinfo'),
+	'parent' => __('Parent template','eelv_lettreinfo'),
 ),) );
 register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
-'name' => __('Archives','eelv_lettreinfo'),
-'singular_name' => __('Archive','eelv_lettreinfo'),
-'menu_name' => __('Archives','eelv_lettreinfo'),
-'add_new_item' => __('Ajouter','eelv_lettreinfo'),
-'edit' => __('Editer','eelv_lettreinfo'),
-'edit_item' => __('Editer archive','eelv_lettreinfo'),
-'new_item' => __('Nouvelle archive','eelv_lettreinfo'),
-'view' => __('Afficher','eelv_lettreinfo'),
-'view_item' => __('Voir archive','eelv_lettreinfo'),
-'search_items' => __('Rechercher une archive','eelv_lettreinfo'),
-'not_found' => __('Aucun envoi n\'a encore &eacute;t&eacute; effectu&eacute;','eelv_lettreinfo'),
-'not_found_in_trash' => __('No archive Found in Trash','eelv_lettreinfo'),
-'parent' => __('Parent archive','eelv_lettreinfo'),
+	'name' => __('Archives','eelv_lettreinfo'),
+	'singular_name' => __('Archive','eelv_lettreinfo'),
+	'menu_name' => __('Archives','eelv_lettreinfo'),
+	'add_new_item' => __('Ajouter','eelv_lettreinfo'),
+	'edit' => __('Editer','eelv_lettreinfo'),
+	'edit_item' => __('Editer archive','eelv_lettreinfo'),
+	'new_item' => __('Nouvelle archive','eelv_lettreinfo'),
+	'view' => __('Afficher','eelv_lettreinfo'),
+	'view_item' => __('Voir archive','eelv_lettreinfo'),
+	'search_items' => __('Rechercher une archive','eelv_lettreinfo'),
+	'not_found' => __('Aucun envoi n\'a encore &eacute;t&eacute; effectu&eacute;','eelv_lettreinfo'),
+	'not_found_in_trash' => __('No archive Found in Trash','eelv_lettreinfo'),
+	'parent' => __('Parent archive','eelv_lettreinfo'),
 ),) );
 require_once($lettreinfo_plugin_path.'/templates.php');
 }
 // ADD NEW COLUMN  
 function lettreinfo_columns_head($defaults) {  
-$defaults['envoyer'] = __('Envoyer','eelv_lettreinfo');  
-return $defaults;  
+	$defaults['envoyer'] = __('Envoyer','eelv_lettreinfo');  
+	return $defaults;  
 }  
 // COLUMN CONTENT  
 function lettreinfo_columns_content($column_name, $post_ID) {  
-if ($column_name == 'envoyer') {  
-$my_temp=get_post(get_post_meta(get_the_ID(), 'nl_template',true));
-if(get_the_ID()!=0 && get_the_title()!='' && get_the_content()!=''  && $my_temp){
-echo $my_temp->post_title;
-echo '<br/><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'">'.__('Pr&eacute;visualiser et envoyer','eelv_lettreinfo').'</a>';
+	if ($column_name == 'envoyer') {  
+	$my_temp=get_post(get_post_meta(get_the_ID(), 'nl_template',true));
+	if(get_the_ID()!=0 && get_the_title()!='' && get_the_content()!=''  && $my_temp){
+	echo $my_temp->post_title;
+	echo '<br/><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'">'.__('Pr&eacute;visualiser et envoyer','eelv_lettreinfo').'</a>';
 }
 else{
 echo __('Pas encore pr&ecirc;te...','eelv_lettreinfo');
@@ -125,81 +126,81 @@ echo __('Pas encore pr&ecirc;te...','eelv_lettreinfo');
 }
 // ADD NEW COLUMN (ARCHIVES) 
 function lettreinfo_archives_columns_head($defaults) {  
-$defaults['queue'] = __('File d\'attente','eelv_lettreinfo'); 
-$defaults['sent'] = __('Envoy&eacute;(s)','eelv_lettreinfo');  
-return $defaults;  
+	$defaults['queue'] = __('File d\'attente','eelv_lettreinfo'); 
+	$defaults['sent'] = __('Envoy&eacute;(s)','eelv_lettreinfo');  
+	return $defaults;  
 }  
 // COLUMN CONTENT  (ARCHIVES) 
 function lettreinfo_archives_columns_content($column_name, $post_ID) {  
-if ($column_name == 'queue') {  
-$dest = get_post_meta($post_ID, 'destinataires',true);
-echo abs(substr_count($dest,',')); 
-}
-if ($column_name == 'sent') {  
-$sent = get_post_meta($post_ID, 'sentmails',true);
-echo abs(substr_count($sent,',')); 
-}  
+	if ($column_name == 'queue') {  
+		$dest = get_post_meta($post_ID, 'destinataires',true);
+		echo abs(substr_count($dest,',')); 
+	}
+	if ($column_name == 'sent') {  
+		$sent = get_post_meta($post_ID, 'sentmails',true);
+		echo abs(substr_count($sent,',')); 
+	}  
 }
 /* Adds a box to the main column on the Post and Page edit screens */
 function newsletter_add_custom_box() {
-add_meta_box( 
-'news-carnet-adresse',
-__( "Outils d'&eacute;ditions", 'eelv_lettreinfo' ),
-'newsletter_admin',
-'newsletter' 
-);
-add_meta_box( 
-'news-envoi-edit',
-__( "Envoyer", 'eelv_lettreinfo' ),
-'newsletter_admin_prev',
-'newsletter',
-'side' 
-);
-add_meta_box( 
-'news-convert-post',
-__( "Envoyer en lettre d'info", 'eelv_lettreinfo' ),
-'news_transform',
-'post',
-'side' 
-); 
-add_meta_box( 
-'news-archive_viewer',
-__( "Aper&ccedil;u", 'eelv_lettreinfo' ),
-'newsletter_archive_admin',
-'newsletter_archive' 
-);
-add_meta_box( 
-'news-archive_viewerdest',
-__( "Destinataires", 'eelv_lettreinfo' ),
-'newsletter_archive_admin_dest',
-'newsletter_archive' 
-);
-add_meta_box( 
-'news-archive_viewerqueue',
-__( "Fil d'attente", 'eelv_lettreinfo' ),
-'newsletter_archive_admin_queue',
-'newsletter_archive' 
-); 
+	add_meta_box( 
+		'news-carnet-adresse',
+		__( "Outils d'&eacute;ditions", 'eelv_lettreinfo' ),
+		'newsletter_admin',
+		'newsletter' 
+	);
+	add_meta_box( 
+		'news-envoi-edit',
+		__( "Envoyer", 'eelv_lettreinfo' ),
+		'newsletter_admin_prev',
+		'newsletter',
+		'side' 
+	);
+	add_meta_box( 
+		'news-convert-post',
+		__( "Envoyer en lettre d'info", 'eelv_lettreinfo' ),
+		'news_transform',
+		'post',
+		'side' 
+	); 
+	add_meta_box( 
+		'news-archive_viewer',
+		__( "Aper&ccedil;u", 'eelv_lettreinfo' ),
+		'newsletter_archive_admin',
+		'newsletter_archive' 
+	);
+	add_meta_box( 
+		'news-archive_viewerdest',
+		__( "Destinataires", 'eelv_lettreinfo' ),
+		'newsletter_archive_admin_dest',
+		'newsletter_archive' 
+	);
+	add_meta_box( 
+		'news-archive_viewerqueue',
+		__( "Fil d'attente", 'eelv_lettreinfo' ),
+		'newsletter_archive_admin_queue',
+		'newsletter_archive' 
+	); 
 }
 // Ajout du menu et sous menu
 function eelv_news_ajout_menu() {
-add_submenu_page('edit.php?post_type=newsletter', __('Carnet d\'adresses', 'eelv_lettreinfo' ), __('Carnet d\'adresses', 'eelv_lettreinfo' ), 7, 'news_carnet_adresse', 'news_carnet_adresse');
-add_submenu_page('edit.php?post_type=newsletter', __('Envoi', 'eelv_lettreinfo' ), __('Envoi', 'eelv_lettreinfo' ), 7, 'news_envoi', 'news_envoi');
-add_submenu_page('edit.php?post_type=newsletter', __('Configuration/aide', 'eelv_lettreinfo' ), __('Configuration/aide', 'eelv_lettreinfo' ), 7, 'newsletter_page_configuration', 'newsletter_page_configuration');
-add_submenu_page('edit.php?post_type=newsletter', __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), 7, 'newsletter_checkdb', 'newsletter_checkdb');
+	add_submenu_page('edit.php?post_type=newsletter', __('Carnet d\'adresses', 'eelv_lettreinfo' ), __('Carnet d\'adresses', 'eelv_lettreinfo' ), 7, 'news_carnet_adresse', 'news_carnet_adresse');
+	add_submenu_page('edit.php?post_type=newsletter', __('Envoi', 'eelv_lettreinfo' ), __('Envoi', 'eelv_lettreinfo' ), 7, 'news_envoi', 'news_envoi');
+	add_submenu_page('edit.php?post_type=newsletter', __('Configuration/aide', 'eelv_lettreinfo' ), __('Configuration/aide', 'eelv_lettreinfo' ), 7, 'newsletter_page_configuration', 'newsletter_page_configuration');
+	add_submenu_page('edit.php?post_type=newsletter', __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), 7, 'newsletter_checkdb', 'newsletter_checkdb');
 }
 // Ajout du menu d'option sur le r&eacute;seau
 function eelv_news_ajout_network_menu() {
-add_submenu_page('settings.php', __('Lettre d\'info', 'eelv_lettreinfo' ), __('Lettre d\'info', 'eelv_lettreinfo' ), 'Super Admin', 'newsletter_network_configuration', 'newsletter_network_configuration');
-//add_submenu_page('tpe', 'Historique', 'Historique', 'Super Admin', 'eelv_tpe_liste', 'tpe_supercommandes_liste');    
+	add_submenu_page('settings.php', __('Lettre d\'info', 'eelv_lettreinfo' ), __('Lettre d\'info', 'eelv_lettreinfo' ), 'Super Admin', 'newsletter_network_configuration', 'newsletter_network_configuration');
+	//add_submenu_page('tpe', 'Historique', 'Historique', 'Super Admin', 'eelv_tpe_liste', 'tpe_supercommandes_liste');    
 }
 function get_news_meta($id){
-global $wpdb,$newsletter_tb_name ;
-$ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='$id'");
-if(is_array($ret) && sizeof($ret)>0){
-return $ret[0];  
-}
-return false;
+	global $wpdb,$newsletter_tb_name ;
+	$ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='$id'");
+	if(is_array($ret) && sizeof($ret)>0){
+	return $ret[0];  
+	}
+	return false;
 }
 function nl_content($post_id,$type='newsletter'){
 //global $wpdb;

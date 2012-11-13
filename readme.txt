@@ -1,4 +1,4 @@
-=== EELV newsletter ===
+=== EELV Newsletter ===
 Contributors: 8457, ecolosites
 Donate link: 
 Tags: newsletter, email
@@ -15,9 +15,8 @@ a newsletter adminer on BackOffice :
 - archives
 
 == Description ==
-
-Add a registration form on FrontOffice
-a newsletter adminer on BackOffice :
+<pre>
+Add a registration form on FrontOffice, a newsletter adminer on BackOffice :
 - manage skins
 - address book
 - archives
@@ -29,7 +28,7 @@ Go to the configuration page on the wordpress admin to manage defaults values fo
 You can create skins or use the default skin. The default skin automaticly load the 3 latest posts into your newsletter.
 
 Network admins can also setup an email to receive each newsletter sent by the server
-
+</pre>
 == Installation ==
 
 1. Upload `eelv_newsletter` to the `/wp-content/plugins/` directory
@@ -40,15 +39,15 @@ Network admins can also setup an email to receive each newsletter sent by the se
 == Frequently asked questions ==
 
 = Does the adress book has a blacklist ? =
-
 Yes, email registered in the black list, won't receive any newsletter from your site.
 
 = Can I create my own skins ? =
-
-Yes, skins are registered as post-type. 
-* Site admins can create skins into newsletter > skins
-* To add skins on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: `$eelv_nl_default_themes['your skin name']='Your skin HTML here';`
-* To add a default content to this skin, add an item to the default content variable. ex : `$eelv_nl_content_themes['your skin name']='Your content here';`
+Yes, skins are registered as post-type.
+<ol> 
+<li>Site admins can create skins into newsletter > skins</li>
+<li>To add skins on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: `$eelv_nl_default_themes['your skin name']='Your skin HTML here';`</li>
+<li>To add a default content to this skin, add an item to the default content variable. ex : `$eelv_nl_content_themes['your skin name']='Your content here';`</li>
+</ol>
 
 
 == Screenshots ==
@@ -57,6 +56,9 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter.png
 http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
+
+= 2.7.3 =
+* Fix: rename some functions for preventing uncompability
 
 = 2.7.2 =
 * Add: enhanced english translation
