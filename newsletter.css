@@ -87,8 +87,8 @@ margin-bottom:40px;
     text-align:center;
 }
 .eelvnl_wrapper{
-  width: 600px; 
-    margin:20px auto;
+  width: auto; 
+  margin:20px auto;
 }
 .eelvnl_wrapper:after{
   content:" ";

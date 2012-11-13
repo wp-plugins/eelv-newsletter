@@ -1,5 +1,5 @@
 === EELV Newsletter ===
-Contributors: 8457, ecolosites
+Contributors: bastho, ecolosites
 Donate link: 
 Tags: newsletter, email
 Requires at least: 3.1
@@ -56,6 +56,9 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter.png
 http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
+
+= 2.7.4 =
+* Fix: Archive display centered
 
 = 2.7.3 =
 * Fix: rename some functions for preventing uncompability
