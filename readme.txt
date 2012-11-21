@@ -57,14 +57,19 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+= 2.8.0 =
+* Add : Higlight unsuscribe link in configuration page
+* Add : Enhanced english translation
+* Fix : Minor HTML bugs in back-office
+
 = 2.7.4 =
 * Fix: Archive display centered
 
 = 2.7.3 =
-* Fix: rename some functions for preventing uncompability
+* Fix: Rename some functions for preventing uncompability
 
 = 2.7.2 =
-* Add: enhanced english translation
+* Add: Enhanced english translation
 
 = 2.7.1 =
 * Fix: Sql error [Multiple primary key defined] dbdelta
