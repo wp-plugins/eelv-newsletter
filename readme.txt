@@ -57,6 +57,10 @@ http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
 
 == Changelog ==
 
+= 2.9.0 =
+* Add : Optionnal share links
+* Add : Enhanced english translation
+
 = 2.8.0 =
 * Add : Higlight unsuscribe link in configuration page
 * Add : Enhanced english translation
