@@ -15,20 +15,26 @@ a newsletter adminer on BackOffice :
 - archives
 
 == Description ==
-<pre>
-Add a registration form on FrontOffice, a newsletter adminer on BackOffice :
-- manage skins
-- address book
-- archives
+= Add a registration form on FrontOffice, a newsletter adminer on BackOffice :=
+* manage skins
+* address book
+* archives
 
-the plugin allows to use shortcodes into the newsletters
+= Freely manage content =
+* shortcuts to add last posts or pages preview
+* the plugin allows to use shortcodes into the newsletters
 
-Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
+= Suscribe / unsuscribe form =
+* Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page
+(the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
 
-You can create skins or use the default skin. The default skin automaticly load the 3 latest posts into your newsletter.
+= Use skins =
+* You can create skins or use the default skin.
+* The default skin automaticly load the 3 latest posts into your newsletter.
 
-Network admins can also setup an email to receive each newsletter sent by the server
-</pre>
+= Sending alert =
+* Network admins can also setup an email to receive each newsletter sent by the server, for preventing spam usage or support users
+
 == Installation ==
 
 1. Upload `eelv_newsletter` to the `/wp-content/plugins/` directory
@@ -52,8 +58,8 @@ Yes, skins are registered as post-type.
 
 == Screenshots ==
 
-http://ecolosites.eelv.fr/files/2012/10/newsletter.png
-http://ecolosites.eelv.fr/files/2012/10/newsletter2.png
+<img src="http://ecolosites.eelv.fr/files/2012/10/newsletter.png" alt="newsletter.png"/>
+<img src="http://ecolosites.eelv.fr/files/2012/10/newsletter2.png" alt="newsletter.png"/>
 
 == Changelog ==
 
