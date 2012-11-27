@@ -15,7 +15,7 @@ a newsletter adminer on BackOffice :
 - archives
 
 == Description ==
-= Add a registration form on FrontOffice, a newsletter adminer on BackOffice :=
+= Add a registration form on FrontOffice, a newsletter adminer on BackOffice : =
 * manage skins
 * address book
 * archives
