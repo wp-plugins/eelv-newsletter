@@ -63,6 +63,11 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.0.0 =
+* Add : Reading tracking : try to know if sent emails is readen by recepient (optional)
+* Add : Enhanced status icons
+* Add : Enhanced english translation
+
 = 2.9.0 =
 * Add : Optionnal share links
 * Add : Enhanced english translation
