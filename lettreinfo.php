@@ -2,8 +2,8 @@
   /*
   Plugin Name: EELV Newsletter
   Plugin URI: http://ecolosites.eelv.fr
-  Description:  Add a registration form on frontOffice, a newsletter adminer on BackOffice
-  Version: 3.0.0
+  Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
+  Version: 3.1.0
   Author: bastho, ecolosites // EELV
   Author URI: http://ecolosites.eelv.fr
   License: CC BY-NC v3.0
@@ -132,6 +132,7 @@
   function lettreinfo_archives_columns_head($defaults) {  
     $defaults['queue'] = __('File d\'attente','eelv_lettreinfo'); 
     $defaults['sent'] = __('Envoy&eacute;(s)','eelv_lettreinfo');  
+    $defaults['read'] = __('Lu(s)','eelv_lettreinfo');  
     return $defaults;  
   }  
   // COLUMN CONTENT  (ARCHIVES) 
@@ -143,6 +144,16 @@
     if ($column_name == 'sent') {  
       $sent = get_post_meta($post_ID, 'sentmails',true);
       echo abs(substr_count($sent,',')); 
+    }  
+    if ($column_name == 'read') {  
+      $spy = get_post_meta($post_ID, 'nl_spy',true);
+	  if($spy==1){
+		  $sent = get_post_meta($post_ID, 'sentmails',true);
+		  echo abs(substr_count($sent,':3')); 
+	  }
+	  else{
+		 _e('suivi d&eacute;sactiv&eacute;','eelv_lettreinfo'); 
+	  }
     }  
   }
   /* Adds a box to the main column on the Post and Page edit screens */
@@ -1504,54 +1515,57 @@ function newsletter_page_configuration() {
       </div>
       <?php
   }  
-  function eelv_lettrinfo_locate_plugin_template($template_names, $load = false, $require_once = true ){
+function eelv_lettrinfo_locate_plugin_template($template_names, $load = false, $require_once = true ){
   if ( !is_array($template_names) )
   return '';     
-                      $located = '';     
-                      $this_plugin_dir = WP_PLUGIN_DIR.'/'.str_replace( basename( __FILE__), "", plugin_basename(__FILE__) );     
-                      foreach ( $template_names as $template_name ) {
-                        if ( !$template_name )
-                          continue;
-                        if ( file_exists(STYLESHEETPATH . '/' . $template_name)) {
-                          $located = STYLESHEETPATH . '/' . $template_name;
-                          break;
-                        } else if ( file_exists(TEMPLATEPATH . '/' . $template_name) ) {
-                          $located = TEMPLATEPATH . '/' . $template_name;
-                          break;
-                        } else if ( file_exists( $this_plugin_dir .  $template_name) ) {
-                          $located =  $this_plugin_dir . $template_name;
-                          break;
-                        }
-                      }     
-                      if ( $load && '' != $located )
-                        load_template( $located, $require_once );     
-                      return $located;
-                    }
-                    function eelv_lettrinfo_get_custom_archive_template($template){
-                      $templates = array('archive-newsletter_archive.php', 'archive.php');
-                      $template = eelv_lettrinfo_locate_plugin_template($templates);
-                      return $template;
-                    }
-                    function eelv_lettrinfo_get_custom_single_template($template){
-                      global $wp_query;
-                      $object = $wp_query->get_queried_object();
-                      if ( 'newsletter_archive' == $object->post_type ) {
-                        $templates = array('single-' . $object->post_type . '.php', 'single.php');
-                        $template = eelv_lettrinfo_locate_plugin_template($templates);
-                      }
-                      return $template;
-                    }
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////// WIDGET
-                    wp_register_sidebar_widget(
-                      'widget_eelv_lettreinfo_insc',        // your unique widget id
-                      __('EELV Inscription &agrave; la Lettre d\'info','eelv_lettreinfo'),          // widget name
-                      'widget_eelv_lettreinfo_side',  // callback function
-                      array(                  // options
-                        'description' => __('Formulaire d\'inscription/d&eacute;sinscription et archives de la Lettre d\'info','eelv_lettreinfo')
-                      )
-                    );
-                    function widget_eelv_lettreinfo_side($params) {
-                      $eelv_li_xs_title= get_option('eelv_li_xs_title')?>
+  $located = '';     
+  $this_plugin_dir = WP_PLUGIN_DIR.'/'.str_replace( basename( __FILE__), "", plugin_basename(__FILE__) );     
+  foreach ( $template_names as $template_name ) {
+	if ( !$template_name )
+	  continue;
+	if ( file_exists(STYLESHEETPATH . '/' . $template_name)) {
+	  $located = STYLESHEETPATH . '/' . $template_name;
+	  break;
+	} else if ( file_exists(TEMPLATEPATH . '/' . $template_name) ) {
+	  $located = TEMPLATEPATH . '/' . $template_name;
+	  break;
+	} else if ( file_exists( $this_plugin_dir .  $template_name) ) {
+	  $located =  $this_plugin_dir . $template_name;
+	  break;
+	}
+  }     
+  if ( $load && '' != $located )
+	load_template( $located, $require_once );     
+  return $located;
+}
+function eelv_lettrinfo_get_custom_archive_template($template){
+  global $wp_query;
+  if($wp_query->get_queried_object()->query_var=='newsletter_archive') {  
+	  $templates = array('archive-newsletter_archive.php', 'archive.php');
+	  $template = eelv_lettrinfo_locate_plugin_template($templates);
+  }
+  return $template;
+}
+function eelv_lettrinfo_get_custom_single_template($template){
+  global $wp_query;
+  $object = $wp_query->get_queried_object();
+  if ( 'newsletter_archive' == $object->post_type ) {
+	$templates = array('single-' . $object->post_type . '.php', 'single.php');
+	$template = eelv_lettrinfo_locate_plugin_template($templates);
+  }
+  return $template;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////////// WIDGET
+wp_register_sidebar_widget(
+  'widget_eelv_lettreinfo_insc',        // your unique widget id
+  __('EELV Inscription &agrave; la Lettre d\'info','eelv_lettreinfo'),          // widget name
+  'widget_eelv_lettreinfo_side',  // callback function
+  array(                  // options
+	'description' => __('Formulaire d\'inscription/d&eacute;sinscription et archives de la Lettre d\'info','eelv_lettreinfo')
+  )
+);
+function widget_eelv_lettreinfo_side($params) {
+  $eelv_li_xs_title= get_option('eelv_li_xs_title')?>
       <?php echo $params['before_widget']; ?>
       <?php echo $params['before_title'];?>
       <?php echo  $eelv_li_xs_title; ?>

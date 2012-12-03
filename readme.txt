@@ -63,6 +63,10 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.1.0 =
+* Add : Reading tracking : now appears in archives list
+* Fix : Archive front page override other post-types 
+
 = 3.0.0 =
 * Add : Reading tracking : try to know if sent emails is readen by recepient (optional)
 * Add : Enhanced status icons
