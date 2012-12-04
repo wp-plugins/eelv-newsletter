@@ -1,16 +1,16 @@
 <?php
-  /*
-  Plugin Name: EELV Newsletter
-  Plugin URI: http://ecolosites.eelv.fr
-  Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-  Version: 3.1.0
-  Author: bastho, ecolosites // EELV
-  Author URI: http://ecolosites.eelv.fr
-  License: CC BY-NC v3.0
-  */
+/*
+Plugin Name: EELV Newsletter
+Plugin URI: http://ecolosites.eelv.fr
+Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
+Version: 3.1.2
+Author: bastho, ecolosites // EELV
+Author URI: http://ecolosites.eelv.fr
+License: CC BY-NC v3.0
+*/
   // ID for DB version
-  $eelv_newsletter_version = "2.6.5";
-  $newsletter_tb_name = 'eelv_'.$wpdb->blogid. "_newsletter_adr";
+  $eelv_newsletter_version = '2.6.5';
+  $newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
   $wproles=array('Super Admin','Administrator','Editor','Author','Contributor','Subscriber');
   global $wpdb, $eelv_nl_default_themes, $eelv_nl_content_themes, $lettreinfo_plugin_path, $newsletter_plugin_url;
   $newsletter_plugin_url = plugins_url();
@@ -31,24 +31,24 @@
     global $eelv_newsletter_version,$newsletter_tb_name,$newsletter_sql;
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($newsletter_sql);
-    add_option("eelv_newsletter_version", $eelv_newsletter_version);
+    add_option('eelv_newsletter_version', $eelv_newsletter_version);
   }
   // UPDATE PLUGIN
   $installed_ver = get_option( "eelv_newsletter_version" );
   if( $installed_ver != $eelv_newsletter_version ) {
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($newsletter_sql);
-    update_option( "eelv_newsletter_version", $eelv_newsletter_version );
+    update_option( 'eelv_newsletter_version', $eelv_newsletter_version );
   }
   // WP 3.1 patch upgrade
   function eelvnewsletter_update_db_check() {
     global $eelv_newsletter_version;
     if (get_option('eelv_newsletter_version') != $eelv_newsletter_version) {
-      update_option( "eelv_newsletter_version", $eelv_newsletter_version );
+      update_option( 'eelv_newsletter_version', $eelv_newsletter_version );
       eelvnewsletter_install();
     }
   }
-  if(false===$wpdb->query("SHOW COLUMNS FROM ".$newsletter_tb_name) ){
+  if(false===$wpdb->query('SELECT `id` FROM '.$newsletter_tb_name.' LIMIT 0,1') ){
     eelvnewsletter_install();
   }
   // FONCTIONS
@@ -149,7 +149,9 @@
       $spy = get_post_meta($post_ID, 'nl_spy',true);
 	  if($spy==1){
 		  $sent = get_post_meta($post_ID, 'sentmails',true);
-		  echo abs(substr_count($sent,':3')); 
+		  $lus = abs(substr_count($sent,':3'));
+		  $tot = abs(substr_count($sent,','));
+		  echo $lus.' ('.round($lus/$tot*100).'%)'; 
 	  }
 	  else{
 		 _e('suivi d&eacute;sactiv&eacute;','eelv_lettreinfo'); 
@@ -199,10 +201,10 @@
   }
   // Ajout du menu et sous menu
   function eelv_news_ajout_menu() {
-    add_submenu_page('edit.php?post_type=newsletter', __('Carnet d\'adresses', 'eelv_lettreinfo' ), __('Carnet d\'adresses', 'eelv_lettreinfo' ), 7, 'news_carnet_adresse', 'news_carnet_adresse');
-    add_submenu_page('edit.php?post_type=newsletter', __('Envoi', 'eelv_lettreinfo' ), __('Envoi', 'eelv_lettreinfo' ), 7, 'news_envoi', 'news_envoi');
-    add_submenu_page('edit.php?post_type=newsletter', __('Configuration/aide', 'eelv_lettreinfo' ), __('Configuration/aide', 'eelv_lettreinfo' ), 7, 'newsletter_page_configuration', 'newsletter_page_configuration');
-    add_submenu_page('edit.php?post_type=newsletter', __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), 7, 'newsletter_checkdb', 'newsletter_checkdb');
+    add_submenu_page('edit.php?post_type=newsletter', __('Carnet d\'adresses', 'eelv_lettreinfo' ), __('Carnet d\'adresses', 'eelv_lettreinfo' ), 'manage_options', 'news_carnet_adresse', 'news_carnet_adresse');
+    add_submenu_page('edit.php?post_type=newsletter', __('Envoi', 'eelv_lettreinfo' ), __('Envoi', 'eelv_lettreinfo' ), 'manage_options', 'news_envoi', 'news_envoi');
+    add_submenu_page('edit.php?post_type=newsletter', __('Configuration/aide', 'eelv_lettreinfo' ), __('Configuration/aide', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_page_configuration', 'newsletter_page_configuration');
+    add_submenu_page('edit.php?post_type=newsletter', __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), __('V&eacute;rifier les parametres', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_checkdb', 'newsletter_checkdb');
   }
   // Ajout du menu d'option sur le r&eacute;seau
   function eelv_news_ajout_network_menu() {
@@ -510,13 +512,12 @@
                 else{
                   switch($_POST['import_type']){
                     case 'unite':
-                      $query="INSERT INTO $newsletter_tb_name (`parent`,`nom`,`email`) 
+                      $query="INSERT INTO ".$newsletter_tb_name." (`parent`,`nom`,`email`) 
                         VALUES ('$grp_id','".str_replace("'","''",$con_nom)."','".str_replace("'","''",$con_email)."')";
                       break;
                     case 'masse':
-                      $imp = split("[,;\n
-                        ]",stripslashes($_POST['con_mul'].','));
-                      $query="INSERT INTO $newsletter_tb_name (`parent`,`nom`,`email`) VALUES ";
+                      $imp = preg_split('/[,;\n\t]/',stripslashes($_POST['con_mul'].','));
+                      $query='INSERT INTO '.$newsletter_tb_name.' (`parent`,`nom`,`email`) VALUES ';
                       foreach($imp as $entry){
                         $entry=trim($entry);
                         if (filter_var($entry, FILTER_VALIDATE_EMAIL)) {
@@ -863,7 +864,7 @@
                             }
                           }
                           // UNITE
-                          $temp = split("[\n;,]",$_POST['dests']);
+                          $temp = preg_split('/[;,\n\t]/',$_POST['dests']);
                           foreach($temp as $contact){
                             if(trim($contact)!=''){
                               $contacts.=trim($contact).',';  
@@ -1116,7 +1117,10 @@ if($templates_nb>0){
                       $post_id = get_the_ID(); //$_GET['id'];
                       $sent = get_post_meta($post_id, 'sentmails',true);
 					  $nl_spy=get_post_meta($post_id, 'nl_spy',true);
+					  $lus = abs(substr_count($sent,':3'));
+		  			 $tot = abs(substr_count($sent,','));
                       ?>    
+                    <p><?php  printf(__('%s d\'ouverture','eelv_lettreinfo'),round($lus/$tot*100).'%'); ?></p>
       <p><ul id="eelv_nl_sentlist"><?php 
                       echo '<li data-email="'.str_replace(
                         array(

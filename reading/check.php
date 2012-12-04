@@ -35,7 +35,7 @@ if(is_user_logged_in() && isset($_REQUEST['m']) && isset($_REQUEST['i'])){
 		elseif ( strpos($read['user_agent'], 'MSIE 9' ) !== FALSE ) { $attr.='ie9'; }
 		elseif ( strpos($read['user_agent'], 'MSIE 10' ) !== FALSE ) { $attr.='ie10'; }
 		elseif ( strpos($read['user_agent'], 'MSIE' ) !== FALSE ) { $attr.='ie'; }
-		else { echo "robot"; }
+		else { $attr.="robot"; }
 		
 		if ( strpos($read['user_agent'], 'tablet' ) !== FALSE || strpos($read['user_agent'], 'Tablet' ) !== FALSE  ) { $attr.=' Tablet'; }
 		elseif ( strpos($read['user_agent'], 'mobile' ) !== FALSE || strpos($read['user_agent'], 'Mobile' ) !== FALSE ) { $attr.=' Mobile '; }
