@@ -63,6 +63,9 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.1.3 =
+* Minor add : Enhanced english translation
+
 = 3.1.2 =
 * Minor add : Shows percentage rate of reading
 * Fix : Issue while checking reading status of an email
@@ -138,4 +141,6 @@ No particular informations
 * fr_FR : 100%
 
 = English =
-* en_US	: 65%
+* en	: 95%
+* en_EN	: 95%
+* en_US	: 95%
