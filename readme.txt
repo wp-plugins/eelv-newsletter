@@ -1,6 +1,6 @@
 === EELV Newsletter ===
 Contributors: bastho, ecolosites
-Donate link: 
+Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email
 Requires at least: 3.1
 Tested up to: 3.4
