@@ -63,6 +63,9 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.1.4 =
+* Minor add : duplicate en_US translation to en_UK
+
 = 3.1.3 =
 * Minor add : Enhanced english translation
 
@@ -142,5 +145,5 @@ No particular informations
 
 = English =
 * en	: 95%
-* en_EN	: 95%
+* en_UK	: 95%
 * en_US	: 95%
