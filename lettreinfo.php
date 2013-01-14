@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.1.4
+Version: 3.1.5
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -93,7 +93,7 @@ License: CC BY-NC v3.0
         'not_found_in_trash' => __('No template Found in Trash','eelv_lettreinfo'),
         'parent' => __('Parent template','eelv_lettreinfo'),
       ),) );
-    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
       'name' => __('Archives','eelv_lettreinfo'),
       'singular_name' => __('Archive','eelv_lettreinfo'),
       'menu_name' => __('Archives','eelv_lettreinfo'),
@@ -561,7 +561,7 @@ License: CC BY-NC v3.0
               <div id="titlewrap">               
                 <input type="text" name="grp_nom" size="30" tabindex="1" value="<?=$grp_nom;?>" id="title" autocomplete="off"/>                
               </div>
-              <input type='submit' value='Enregistrer' class="button-primary"/>
+              <input type='submit' value='<?php _e('Enregistrer', 'eelv_lettreinfo' ) ?>' class="button-primary"/>
             </div>
           </form>
           <p>    <a href="edit.php?post_type=newsletter&page=news_carnet_adresse" class="button add-new-h2"><?php _e('annuler', 'eelv_lettreinfo' ) ?></a></p>
@@ -1485,6 +1485,11 @@ function newsletter_page_configuration() {
                       }
                       ?>
                 </select>
+                </td>
+              </tr>
+               <tr>
+                <td colspan="2">
+                  <input type='submit' value='<?php _e('Enregistrer', 'eelv_lettreinfo' ) ?>' class="button-primary"/>
                 </td>
               </tr>
             </tbody>

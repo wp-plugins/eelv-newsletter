@@ -63,6 +63,9 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.1.5 =
+* Fix : bug in configuration page
+
 = 3.1.4 =
 * Minor add : duplicate en_US translation to en_UK
 
