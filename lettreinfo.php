@@ -236,6 +236,9 @@ License: CC BY-NC v3.0
     $content=str_replace('[desinsc_url]',"<a href='".$desinsc_url."' target='_blank' class='nl_a'>".$desinsc_url."</a>",$content);
     return apply_filters('the_content',$content);
   }
+  function eelv_newsletter_sharelinks($title,$link){
+						return "<div style='width:550px; margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Partager sur :', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode($link)."&t=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".$title."%20".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode($link)."&title=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a></div>&nbsp;\n";	
+ }
   /////////////////////////////////////////////FEUILLE DE STYLE + VALIDATION FORMULAIRE
   function style_newsletter(){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
@@ -300,6 +303,7 @@ License: CC BY-NC v3.0
   ////////////////////////////////////////////////////////////////////////////////////////////////////// FRONT OFFICE
   function get_news_form($id=''){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
+	$eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
     ?>
 <form action="#" method="post" id="newsform<?=$id?>" class="newsform" onsubmit="if(this.news_email.value=='' || this.news_email.value=='newsletter : votre email'){ return false; }">
   <div>
@@ -309,7 +313,9 @@ License: CC BY-NC v3.0
     <div id='news_hidden_option<?=$id?>' class='news_hidden_option'>
       <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__(" S'inscrire", 'eelv_lettreinfo')?></label>
       <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Se d&eacute;sinscrire", 'eelv_lettreinfo')?></label>
+      <?php if($eelv_li_xs_archives==0){ ?>
       <p><a href="/newsletter_archive/"><?=__("Derni&egrave;res Lettres d'info", 'eelv_lettreinfo')?></a></p>
+      <?php } ?>
     </div>
     <?php if($news_reg_return!=''){?>
     <div class='news_return' id='news_return<?=$id?>' onclick="document.getElementById('news_return<?=$id?>').style.display='none';">
@@ -739,7 +745,16 @@ License: CC BY-NC v3.0
   $post_id = $_GET['post'];
                         $post = get_post( $post_id );
                         if(isset($_GET['convert']) && is_numeric($_GET['convert'])){
-                          if(0!== $new_post = wp_insert_post( array('post_type'=>'newsletter','post_title' => $post->post_title,  'post_content' => $post->post_content,  'post_status' => 'publish'))){
+							
+							$content=$post->post_content;
+							if(isset($_GET['add_title'])){
+								$content='<h1>'.$post->post_title.'</h1>'.$content;	
+							}
+							if(isset($_GET['add_sharelinks'])){
+								$content.=eelv_newsletter_sharelinks($post->post_title,$post->guid);	
+							}
+							
+                          if(0!== $new_post = wp_insert_post( array('post_type'=>'newsletter','post_title' => $post->post_title,  'post_content' => $content,  'post_status' => 'publish'))){
                             add_post_meta($new_post, 'nl_template', $_GET['convert']);
                             $post_id=$new_post;        
                             $post = get_post( $new_post);
@@ -933,6 +948,8 @@ License: CC BY-NC v3.0
                         echo'<p><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'" class="button-primary">'.__('Pr&eacute;visualiser et envoyer','eelv_lettreinfo').'</a></p>';
                       }
                     }
+					
+					
                     function newsletter_admin() {
                       global $wpdb, $eelv_nl_content_themes;
                       //newsletter_checkdb();
@@ -1035,9 +1052,7 @@ License: CC BY-NC v3.0
   <a href='".get_post_permalink()."' style='text-decoration:none;color:#666666;'>".substr(strip_tags(get_the_content()),0,300)."...</a>
   </div>&nbsp;
   "; ?></textarea>
-      <textarea id="nl_share_<?php the_ID();?>" style="display:none"><?php echo"<div style='width:550px; margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Partager sur :', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode(get_post_permalink())."&t=".get_the_title()."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".get_the_title()."%20".urlencode(get_post_permalink())."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode(get_post_permalink())."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode(get_post_permalink())."&title=".get_the_title()."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a>
-  </div>&nbsp;
-  "; ?></textarea>
+      <textarea id="nl_share_<?php the_ID();?>" style="display:none"><?php echo eelv_newsletter_sharelinks(get_the_title(),get_post_permalink()); ?></textarea>
       <?php 
                           $optis.='<option value="'.get_the_ID().'">'.substr(get_the_title(),0,70).'</option>';
                         } ?> 
@@ -1589,13 +1604,22 @@ function widget_eelv_lettreinfo_side($params) {
                     register_widget_control('widget_eelv_lettreinfo_insc','widget_eelv_lettreinfo_insc_control');
                     function widget_eelv_lettreinfo_insc_control(){
                       if( isset($_POST['eelv_li_xs_title']) ){
-                        update_option('eelv_li_xs_title', $_POST['eelv_cal_xs_title']);
+                        update_option('eelv_li_xs_title', stripslashes($_POST['eelv_li_xs_title']));
+                        update_option('eelv_li_xs_archives', $_POST['eelv_li_xs_archives']);
                         echo 'Options sauvegard&eacute;es<br/>';
                       }
                       $eelv_li_xs_title= get_option('eelv_li_xs_title');
+                      $eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
                       ?>
-      <p><label for='eelv_cal_xs_title'><?php _e('Titre', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_title' id='eelv_li_xs_title' value='<?=$eelv_li_xs_title?>'/></label>
+      <p><label for='eelv_li_xs_title'><?php _e('Titre', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_title' id='eelv_li_xs_title' value="<?=$eelv_li_xs_title?>"/></label>
+      </p>
+      <p><label for='eelv_li_xs_archives'><?php _e('Cacher le lien vers les archives', 'eelv_lettreinfo' ) ?><br/>
+        <select name='eelv_li_xs_archives' id='eelv_li_xs_archives'>
+            <option value="0" <?php if($eelv_li_xs_archives==0){ echo'selected'; } ?>><?php _e('Non', 'eelv_lettreinfo' ) ?></option>
+            <option value="1" <?php if($eelv_li_xs_archives==1){ echo'selected'; } ?>><?php _e('Oui', 'eelv_lettreinfo' ) ?></option>
+        </select>
+        </label>
       </p>
       <?php
   }
@@ -1604,13 +1628,39 @@ function widget_eelv_lettreinfo_side($params) {
   $querystr = "SELECT `ID` FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'newsletter_template' ORDER BY `post_title`";
   $IDS = $wpdb->get_col($querystr);  
   $templates_nb = sizeof($IDS);
-  if($templates_nb>0){
-	foreach($IDS as $item_id){ ?>
-<p><a href="edit.php?post_type=newsletter&page=news_envoi&post=<?=get_the_ID()?>&convert=<?=$item_id?>"> <?=get_the_title($item_id);?></a></p> 
+  if($templates_nb>0){ ?>
+  
+  <input type="hidden" id="eelv_nl_convert_link" value="edit.php?post_type=newsletter&page=news_envoi&post=<?=get_the_ID()?>"/>
+	<?php foreach($IDS as $item_id){ ?>
+<p><label for="eelv_nl_convert_id_<?=$item_id?>"><input type="radio" id="eelv_nl_convert_id_<?=$item_id?>" name="eelv_nl_convert_id" value="<?=$item_id?>"/> <?=get_the_title($item_id);?></label></p> 
 <?php } ?>
+	<hr/>
+    <p><label for="eelv_nl_convert_title"><input type="checkbox" id="eelv_nl_convert_title"  value="1"/> <?php _e("Ajouter le titre au contenu",'eelv_lettreinfo'); ?></label></p>
+    <p><label for="eelv_nl_convert_share"><input type="checkbox" id="eelv_nl_convert_share"  value="1"/> <?php _e("Ajouter les boutons de partage",'eelv_lettreinfo'); ?></label></p>
+    
+    
+    <p><a id="eelv_nl_convert_a" class="button"> <?php _e("Pr&eacute;visualiser et envoyer",'eelv_lettreinfo'); ?></a></p>
+    <script>
+	jQuery(document).ready(function(e) {
+		jQuery('#eelv_nl_convert_a').click(function(){
+			var lien=jQuery('#eelv_nl_convert_link').attr('value');
+			lien+='&convert=';
+			lien+=jQuery('input[type=radio][name=eelv_nl_convert_id]:checked').attr('value');
+			if(jQuery('#eelv_nl_convert_title').is(':checked')==true){
+				lien+='&add_title=1';
+			}
+			if(jQuery('#eelv_nl_convert_share').is(':checked')==true){
+				lien+='&add_sharelinks=1';
+			}
+			//console.log(lien);
+			document.location=lien;
+			return false;
+		});
+	});
+	</script>
 <?php
   }else{
-	echo __("aucun habillage disponible",'eelv_lettreinfo');  
+	_e("aucun habillage disponible",'eelv_lettreinfo');  
   }  
 }
 ///////////////////////////////////////////////////////////////////////// INSERTION DANS WORDPRESS

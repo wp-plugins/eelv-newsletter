@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email
 Requires at least: 3.1
-Tested up to: 3.4
+Tested up to: 3.5
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
@@ -62,6 +62,10 @@ Yes, skins are registered as post-type.
 <img src="http://ecolosites.eelv.fr/files/2012/10/newsletter2.png" alt="newsletter.png"/>
 
 == Changelog ==
+
+= 3.2.0 =
+* Add : Title and share-links options for converting posts into newsletters
+* Add : Option for hidding archives link under subscription form
 
 = 3.1.5 =
 * Fix : bug in configuration page
