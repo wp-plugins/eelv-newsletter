@@ -63,6 +63,9 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.2.1 =
+* Fix : CSS fix in admin
+
 = 3.2.0 =
 * Add : Title and share-links options for converting posts into newsletters
 * Add : Option for hidding archives link under subscription form

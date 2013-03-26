@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.1.5
+Version: 3.2.1
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -1601,13 +1601,13 @@ function widget_eelv_lettreinfo_side($params) {
       <?php
                     }
                     
-                    register_widget_control('widget_eelv_lettreinfo_insc','widget_eelv_lettreinfo_insc_control');
-                    function widget_eelv_lettreinfo_insc_control(){
-                      if( isset($_POST['eelv_li_xs_title']) ){
-                        update_option('eelv_li_xs_title', stripslashes($_POST['eelv_li_xs_title']));
-                        update_option('eelv_li_xs_archives', $_POST['eelv_li_xs_archives']);
-                        echo 'Options sauvegard&eacute;es<br/>';
-                      }
+ register_widget_control('widget_eelv_lettreinfo_insc','widget_eelv_lettreinfo_insc_control');
+ function widget_eelv_lettreinfo_insc_control(){
+   if( isset($_POST['eelv_li_xs_title']) ){
+	    update_option('eelv_li_xs_title', stripslashes($_POST['eelv_li_xs_title']));
+	    update_option('eelv_li_xs_archives', $_POST['eelv_li_xs_archives']);
+	    echo 'Options sauvegard&eacute;es<br/>';
+   }
                       $eelv_li_xs_title= get_option('eelv_li_xs_title');
                       $eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
                       ?>

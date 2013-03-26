@@ -20,7 +20,7 @@ margin-bottom:40px;
 }
 .eelv_news label{
   display:block;
-  height:35px;
+  min-height:35px;
 }
 .eelv_news label input[type=text],.eelv_news label input[type=email]{
   float:right;
