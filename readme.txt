@@ -63,6 +63,9 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 3.2.2 =
+* Fix : Check if apply_filter('the_content') doesn't make content empty
+
 = 3.2.1 =
 * Fix : CSS fix in admin
 
