@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email
 Requires at least: 3.1
-Tested up to: 3.5
+Tested up to: 3.5.1
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
@@ -62,6 +62,14 @@ Yes, skins are registered as post-type.
 <img src="http://ecolosites.eelv.fr/files/2012/10/newsletter2.png" alt="newsletter.png"/>
 
 == Changelog ==
+
+= 3.3.0 =
+* Add : Move plugin to English and then retranslate it into french... :-/
+* Add : Change newsletter skin directly from send page
+* Add : Send a confirmation e-mail to (un)suscribers
+* Add : Some help and legend
+* Fix : Replace deprecated functions
+* Fix : Remove some php warnings 
 
 = 3.2.2 =
 * Fix : Check if apply_filter('the_content') doesn't make content empty
