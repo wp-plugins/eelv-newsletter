@@ -64,8 +64,7 @@ Yes, skins are registered as post-type.
 == Changelog ==
 
 = 3.3.1 =
-* Fix : Remove HTML tags from suscribe-from alerts 
-
+* Fix : Remove HTML tags from suscribe-from alerts, JS XSS vulnerability fix
 
 = 3.3.0 =
 * Add : Move plugin to English and then retranslate it into french... :-/
