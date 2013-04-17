@@ -338,7 +338,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
          }
       }
       else{
-        $news_reg_return.= strip_tags($email).' : '.__('invalid address', 'eelv_lettreinfo');
+        $news_reg_return.= '<b>'.htmlspecialchars(strip_tags($email)).'</b> : '.__('invalid address', 'eelv_lettreinfo');
       }
     }
   }
