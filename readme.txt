@@ -67,6 +67,9 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 
+= 3.3.3 =
+* Add : Display an alert for new available options
+
 = 3.3.2 =
 * Add : Adjust capabilities for Admins, Editors (can'nt edit confuguration or reload parameters) and Authors (can'nt send newsletters)
 

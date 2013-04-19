@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.3.2
+Version: 3.3.3
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -16,6 +16,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	
   // ID for DB version
   $eelv_newsletter_version = '2.6.5';
+  $eelv_newsletter_options_version = 2;
   $newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
   global $wpdb, $eelv_nl_default_themes, $eelv_nl_content_themes, $lettreinfo_plugin_path, $newsletter_plugin_url;
   $newsletter_plugin_url = plugins_url();
@@ -68,7 +69,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   function newsletter_BO(){
     global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
     
-    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => true,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'menu_icon'=>plugin_dir_url( __FILE__ ).'img/mail.png','labels' => array (
+    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => false,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'menu_icon'=>plugin_dir_url( __FILE__ ).'img/mail.png','labels' => array (
       'name' => __("Newsletter",'eelv_lettreinfo'),
       'singular_name' => __("Newsletter",'eelv_lettreinfo'),
       'menu_name' => __("Newsletter",'eelv_lettreinfo'),
@@ -85,7 +86,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       'parent' => __('Parent newsletter','eelv_lettreinfo'),
     ),) );
     register_post_type(
-      'newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+      'newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => false,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
         'name' => __('Skin','eelv_lettreinfo'),
         'singular_name' => __('Skin','eelv_lettreinfo'),
         'menu_name' => __('Skins','eelv_lettreinfo'),
@@ -100,7 +101,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
         'not_found_in_trash' => __('No template Found in Trash','eelv_lettreinfo'),
         'parent' => __('Parent template','eelv_lettreinfo'),
       ),) );
-    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
       'name' => __('Archives','eelv_lettreinfo'),
       'singular_name' => __('Archive','eelv_lettreinfo'),
       'menu_name' => __('Archives','eelv_lettreinfo'),
@@ -1550,14 +1551,27 @@ function newsletter_network_configuration(){
       </div>
       <?php
 }
+function eelv_newsletter_addAlert() { 
+	global $eelv_newsletter_options_version;
+	$cu = wp_get_current_user();
+    if ($cu->has_cap('manage_options') && get_option( 'newsletter_options_version')!=$eelv_newsletter_options_version) {
+  ?>
+	<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
+		<?php _e('New options are available for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
+	<?php
+	}
+} 
+add_action('admin_head','eelv_newsletter_addAlert');
+
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function newsletter_page_configuration() {
-  global $newsletter_plugin_url,$wpdb;
+  global $newsletter_plugin_url,$wpdb, $eelv_newsletter_options_version;
   if( $_REQUEST[ 'type' ] == 'update' ) {    
 	update_option( 'newsletter_default_exp', $_REQUEST['newsletter_default_exp'] );
 	update_option( 'newsletter_default_mel', $_REQUEST['newsletter_default_mel'] );
 	update_option( 'newsletter_desinsc_url', $_REQUEST['newsletter_desinsc_url'] );
 	update_option( 'newsletter_reply_url', $_REQUEST['newsletter_reply_url'] );
+	update_option( 'newsletter_options_version', $_REQUEST['newsletter_options_version'] );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
@@ -1584,11 +1598,13 @@ function newsletter_page_configuration() {
 	  $msg_unsuscribe_title = $newsletter_msg['unsuscribe_title'];
 	  $msg_unsuscribe = $newsletter_msg['unsuscribe'];
   ?>  
+  
       <div class="wrap">
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
         <h2><?=_e('Newsletter', 'eelv_lettreinfo' )?></h2>
         <form name="typeSite" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">  
           <input type="hidden" name="type" value="update">
+          <input type="hidden" name="newsletter_options_version" value="<?=$eelv_newsletter_options_version?>"/>
           <table class="widefat" style="margin-top: 1em;">
             <thead>
               <tr>
