@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.3.1
+Version: 3.3.2
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -68,7 +68,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   function newsletter_BO(){
     global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
     
-    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => true,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'menu_icon'=>plugin_dir_url( __FILE__ ).'img/mail.png','labels' => array (
+    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => true,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'menu_icon'=>plugin_dir_url( __FILE__ ).'img/mail.png','labels' => array (
       'name' => __("Newsletter",'eelv_lettreinfo'),
       'singular_name' => __("Newsletter",'eelv_lettreinfo'),
       'menu_name' => __("Newsletter",'eelv_lettreinfo'),
@@ -85,7 +85,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       'parent' => __('Parent newsletter','eelv_lettreinfo'),
     ),) );
     register_post_type(
-      'newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+      'newsletter_template', array(  'label' => 'Mod&egrave;les','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','revisions'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
         'name' => __('Skin','eelv_lettreinfo'),
         'singular_name' => __('Skin','eelv_lettreinfo'),
         'menu_name' => __('Skins','eelv_lettreinfo'),
@@ -100,7 +100,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
         'not_found_in_trash' => __('No template Found in Trash','eelv_lettreinfo'),
         'parent' => __('Parent template','eelv_lettreinfo'),
       ),) );
-    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
+    register_post_type('newsletter_archive', array(  'label' => 'Archives','description' => '','public' => true,'show_ui' => true,'show_in_menu' => false,'capability_type' => 'edit_posts','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor'),'show_in_menu' => 'edit.php?post_type=newsletter','labels' => array (
       'name' => __('Archives','eelv_lettreinfo'),
       'singular_name' => __('Archive','eelv_lettreinfo'),
       'menu_name' => __('Archives','eelv_lettreinfo'),
@@ -208,8 +208,8 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   }
   // Ajout du menu et sous menu
   function eelv_news_ajout_menu() {
-  	add_submenu_page('edit.php?post_type=newsletter', __('Adress book', 'eelv_lettreinfo' ), __('Adress book', 'eelv_lettreinfo' ), 'manage_options', 'news_carnet_adresse', 'news_carnet_adresse');
-    add_submenu_page('edit.php?post_type=newsletter', __('Send', 'eelv_lettreinfo' ), __('Send', 'eelv_lettreinfo' ), 'manage_options', 'news_envoi', 'news_envoi');
+  	add_submenu_page('edit.php?post_type=newsletter', __('Address book', 'eelv_lettreinfo' ), __('Address book', 'eelv_lettreinfo' ), 'publish_posts', 'news_carnet_adresse', 'news_carnet_adresse');
+    add_submenu_page('edit.php?post_type=newsletter', __('Send', 'eelv_lettreinfo' ), __('Send', 'eelv_lettreinfo' ), 'publish_posts', 'news_envoi', 'news_envoi');
     add_submenu_page('edit.php?post_type=newsletter', __('Configuration/help', 'eelv_lettreinfo' ), __('Configuration/help', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_page_configuration', 'newsletter_page_configuration');
     add_submenu_page('edit.php?post_type=newsletter', __('Reload parameters', 'eelv_lettreinfo' ), __('Reload parameters', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_checkdb', 'newsletter_checkdb');
   }

@@ -63,6 +63,13 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= Todo =
+* Add : thumbnail size configuration
+* Add : Archive widget
+
+= 3.3.2 =
+* Add : Adjust capabilities for Admins, Editors (can'nt edit confuguration or reload parameters) and Authors (can'nt send newsletters)
+
 = 3.3.1 =
 * Fix : Remove HTML tags from suscribe-from alerts, JS XSS vulnerability fix
 
