@@ -1554,7 +1554,7 @@ function newsletter_network_configuration(){
 function eelv_newsletter_addAlert() { 
 	global $eelv_newsletter_options_version;
 	$cu = wp_get_current_user();
-    if ($cu->has_cap('manage_options') && get_option( 'newsletter_options_version')!=$eelv_newsletter_options_version) {
+    if ($cu->has_cap('manage_options') && get_option( 'newsletter_options_version')!=$eelv_newsletter_options_version && !is_network_admin()) {
   ?>
 	<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
 		<?php _e('New options are available for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>

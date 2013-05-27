@@ -66,6 +66,10 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add : thumbnail size configuration
 * Add : Archive widget
+* Add : Answer functionnality
+
+= 3.3.4 =
+* Fix : Hide new available options from network
 
 = 3.3.3 =
 * Add : Display an alert for new available options
