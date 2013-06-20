@@ -113,3 +113,27 @@ margin-bottom:40px;
   text-align:left;
   box-shadow:#CCC 0px 5px 20px;
 }
+
+/****************************/
+.nl_message{
+	display:block;
+	padding:1em;
+	margin:0.3em auto;
+	border-radius:5px;
+	font-weight:700;
+	border-width:1px;
+	border-style:solid;
+	border-color:#BB9;
+	color:#009;
+	text-align:center;
+}
+.nl_confirm{
+	color:#090;
+	background:#DFD;
+	border-color:#BEB;
+}
+.nl_alert{
+	color:#900;
+	background:#FDD;
+	border-color:#EBB;
+}

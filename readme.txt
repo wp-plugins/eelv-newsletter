@@ -13,20 +13,36 @@ a newsletter adminer on BackOffice :
 - manage skins
 - address book
 - archives
+- answers
 
 == Description ==
 = Add a registration form on FrontOffice, a newsletter adminer on BackOffice : =
 * manage skins
 * address book
 * archives
+* answers
 
 = Freely manage content =
 * shortcuts to add last posts or pages preview
 * the plugin allows to use shortcodes into the newsletters
 
 = Suscribe / unsuscribe form =
+* Create a new page and put the shortcode [eelv_news_form] in the content.
 * Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page
 (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
+
+= Answer functionnality =
+* Create a new page and put the shortcode [nl_reply_form] in the content.
+* Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the answer page
+(the page wich contains the shortcode [nl_reply_form] to allow visitors to answer your newsletter)
+* add answer links in your newsletters by adding the shortcode [nl_reply_link], you can add as many links as you want.
+Attributes your anwser links are rep="the_answer_code" val="the link's text"
+example: 
+<h4>Do you like this plugin ?</h3>
+<p>`[nl_reply_link val="Yes I do" rep="yes"]`</p>
+<p>`[nl_reply_link val="it's fine" rep="fine"]`</p>
+<p>`[nl_reply_link val="Not at all" rep="no"]`</p>
+Links will be automaticly created with the e-mail address of the receipient. If the link is broken, with not enougth datas, a form will be displayed to complete it.
 
 = Use skins =
 * You can create skins or use the default skin.
@@ -66,7 +82,11 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add : thumbnail size configuration
 * Add : Archive widget
-* Add : Answer functionnality
+
+= 3.4.0 =
+* Add : Answer functionnality : requires to create an anwser page with the shortcode [nl_reply_form]
+* Fix : enhance archives columns view
+* Fix : spy image headers
 
 = 3.3.4 =
 * Fix : Hide new available options from network

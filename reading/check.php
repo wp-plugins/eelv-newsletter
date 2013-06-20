@@ -1,10 +1,5 @@
 <?php
-require_once("../../../../wp-config.php");
-$wp->init();
-$wp->parse_request();
-$wp->query_posts();
-$wp->register_globals();
-$wp->send_headers();
+require_once("wp.php");
 
 if(is_user_logged_in() && isset($_REQUEST['m']) && isset($_REQUEST['i'])){	
 	$reads = get_post_meta($_REQUEST['i'], 'eelv_nl_read_'.$_REQUEST['m']);
