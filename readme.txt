@@ -83,6 +83,10 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 
+= 3.4.1 =
+* Fix : french translation fix
+* Fix : edit options version
+
 = 3.4.0 =
 * Add : Answer functionnality : requires to create an anwser page with the shortcode [nl_reply_form]
 * Fix : enhance archives columns view

@@ -16,7 +16,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	
   // ID for DB version
   $eelv_newsletter_version = '2.6.5';
-  $eelv_newsletter_options_version = 2;
+  $eelv_newsletter_options_version = 3;
   $newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
   global $wpdb, $eelv_nl_default_themes, $eelv_nl_content_themes, $lettreinfo_plugin_path, $newsletter_plugin_url;
   $newsletter_plugin_url = plugins_url();
