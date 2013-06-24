@@ -815,7 +815,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   }
   }
   else{
-  							$post_id = $_GET['post'];
+  						$post_id = $_GET['post'];
                         $post = get_post( $post_id );
                         if(isset($_GET['convert']) && is_numeric($_GET['convert'])){
 							
@@ -841,6 +841,19 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 							update_post_meta($post->ID,'nl_template',$_GET['settemplate']);
 						}
                         $content=nl_content($post_id); 
+						
+						$reply_url = get_option( 'newsletter_reply_url','');
+						if(empty($reply_url)){					?>
+							<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
+							<?php _e('Missing parameter "Answer page" for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
+							<?php
+						}
+						$desinsc_url = get_option( 'newsletter_desinsc_url' );
+						if(empty($desinsc_url)){					?>
+							<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
+							<?php _e('Missing parameter "Unsuscribe page" for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
+							<?php
+						}
 						
 
                         $template_id = get_post_meta($post->ID,'nl_template',true);
@@ -1616,7 +1629,7 @@ function newsletter_page_configuration() {
 		'unsuscribe_title'=>$_REQUEST['newsletter_msg_unsuscribe_title'] ,
 		'unsuscribe'=>$_REQUEST['newsletter_msg_unsuscribe'] 
 	));
-	update_option( 'affichage_NL_hp', $_REQUEST['affichage_NL_hp'] );
+	//update_option( 'affichage_NL_hp', $_REQUEST['affichage_NL_hp'] );
 	?>
 <div class="updated"><p><strong><?php _e('Options saved', 'eelv_lettreinfo' ); ?></strong></p></div>
 <?php 
@@ -1625,7 +1638,7 @@ function newsletter_page_configuration() {
   $default_mel = get_option( 'newsletter_default_mel' );
   $desinsc_url = get_option( 'newsletter_desinsc_url' );
   $reply_url = get_option( 'newsletter_reply_url' );
-  $affichage_NL_hp = get_option( 'affichage_NL_hp' );
+  //$affichage_NL_hp = get_option( 'affichage_NL_hp' );
   
   $newsletter_msg = get_option( 'newsletter_msg' );
 	  $msg_sender = $newsletter_msg['sender'];
@@ -1763,18 +1776,20 @@ function newsletter_page_configuration() {
             <tbody>
               <tr>
                 <td>
-                  <?php _e('Shortcods used:', 'eelv_lettreinfo' ) ?>
+                  <p><a href="https://ecolosites.eelv.fr/tag/newsletter/" target="_blank">EELV Newsletter</a></p>
+                  <p><?php _e('Shortcods used:', 'eelv_lettreinfo' ) ?></p>
                   <ul>
                     <li><?php _e('Insert suscribe form in a page :', 'eelv_lettreinfo' ) ?><strong>[eelv_news_form]</strong></li>
                   	<li><?php _e('Insert answer form in a page :','eelv_lettreinfo')?> <strong>[nl_reply_form]</strong></li>
                   	<li><?php _e('Insert answer link in a newsletter :','eelv_lettreinfo')?> <strong>[nl_reply_link rep="rep" val="val"]</strong></li>
                   </ul>
-                  <?php _e('Skins shortcodes', 'eelv_lettreinfo' ) ?>        
+                  <p><?php _e('Skins shortcodes', 'eelv_lettreinfo' ) ?></p>        
                   <ul>
                     <li><?php _e('Insert newsletter content in a skin :', 'eelv_lettreinfo' ) ?><strong>[newsletter]</strong></li>
-                    <li><?php _e('Insert newsletter content in a skin :', 'eelv_lettreinfo' ) ?><strong>[desinsc_url]</strong></li>
+                    <li><?php _e('Insert an unsuscribe link :', 'eelv_lettreinfo' ) ?><strong>[desinsc_url]</strong></li>
                   </ul>
-                  <?php _e('Legend of sending symbols:', 'eelv_lettreinfo' ) ?><ul>
+                  <p><?php _e('Legend of sending symbols:', 'eelv_lettreinfo' ) ?></p>
+                  <ul>
                   <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg"/> <?php _e('Invalid email', 'eelv_lettreinfo' ) ?></li>
                   <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/0.jpg"/> <?php _e('Sending failed', 'eelv_lettreinfo' ) ?></li>
                   <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/1.jpg"/> <?php _e('Newsletter successfully sent', 'eelv_lettreinfo' ) ?></li>

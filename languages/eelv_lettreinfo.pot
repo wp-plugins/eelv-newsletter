@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eelv_lettreinfo\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-06-20 18:12+0100\n"
-"PO-Revision-Date: 2013-06-20 18:12+0100\n"
+"POT-Creation-Date: 2013-06-24 10:18+0100\n"
+"PO-Revision-Date: 2013-06-24 10:18+0100\n"
 "Last-Translator: Bastien Ho <bastienho@eelv.fr>\n"
 "Language-Team:  <ecolosites@eelv.fr>\n"
 "MIME-Version: 1.0\n"
@@ -34,8 +34,8 @@ msgid "EELV Newsletter"
 msgstr ""
 
 #: ../lettreinfo.php:74 ../lettreinfo.php:75 ../lettreinfo.php:76
-#: ../lettreinfo.php:243 ../lettreinfo.php:495 ../lettreinfo.php:828
-#: ../lettreinfo.php:1427 ../lettreinfo.php:1599 ../lettreinfo.php:1679
+#: ../lettreinfo.php:243 ../lettreinfo.php:456 ../lettreinfo.php:789
+#: ../lettreinfo.php:1401 ../lettreinfo.php:1573 ../lettreinfo.php:1653
 msgid "Newsletter"
 msgstr ""
 
@@ -48,7 +48,7 @@ msgid "Add"
 msgstr ""
 
 #: ../lettreinfo.php:79 ../lettreinfo.php:80 ../lettreinfo.php:95
-#: ../lettreinfo.php:96 ../lettreinfo.php:110 ../lettreinfo.php:900
+#: ../lettreinfo.php:96 ../lettreinfo.php:110 ../lettreinfo.php:874
 #, fuzzy
 msgid "Edit"
 msgstr "Edit"
@@ -82,8 +82,8 @@ msgstr ""
 msgid "Parent newsletter"
 msgstr ""
 
-#: ../lettreinfo.php:91 ../lettreinfo.php:92 ../lettreinfo.php:901
-#: ../lettreinfo.php:1098
+#: ../lettreinfo.php:91 ../lettreinfo.php:92 ../lettreinfo.php:875
+#: ../lettreinfo.php:1072
 msgid "Skin"
 msgstr ""
 
@@ -140,11 +140,11 @@ msgid "Parent archive"
 msgstr ""
 
 #: ../lettreinfo.php:124 ../lettreinfo.php:197 ../lettreinfo.php:237
-#: ../lettreinfo.php:990
+#: ../lettreinfo.php:964
 msgid "Send"
 msgstr ""
 
-#: ../lettreinfo.php:133 ../lettreinfo.php:1086 ../lettreinfo.php:1927
+#: ../lettreinfo.php:133 ../lettreinfo.php:1060 ../lettreinfo.php:1904
 msgid "Preview and send"
 msgstr ""
 
@@ -168,11 +168,11 @@ msgstr ""
 msgid "Answers"
 msgstr ""
 
-#: ../lettreinfo.php:172 ../lettreinfo.php:941
+#: ../lettreinfo.php:172 ../lettreinfo.php:915
 msgid "deactivated"
 msgstr ""
 
-#: ../lettreinfo.php:183 ../lettreinfo.php:1418
+#: ../lettreinfo.php:183 ../lettreinfo.php:1392
 msgid "No question"
 msgstr ""
 
@@ -184,15 +184,15 @@ msgstr ""
 msgid "Send as newsletter"
 msgstr ""
 
-#: ../lettreinfo.php:211 ../lettreinfo.php:895
+#: ../lettreinfo.php:211 ../lettreinfo.php:869
 msgid "Preview"
 msgstr ""
 
-#: ../lettreinfo.php:217 ../lettreinfo.php:946
+#: ../lettreinfo.php:217 ../lettreinfo.php:920
 msgid "Recipients"
 msgstr ""
 
-#: ../lettreinfo.php:236 ../lettreinfo.php:1441
+#: ../lettreinfo.php:236 ../lettreinfo.php:1415
 msgid "Address book"
 msgstr ""
 
@@ -200,7 +200,7 @@ msgstr ""
 msgid "Configuration/help"
 msgstr ""
 
-#: ../lettreinfo.php:239 ../lettreinfo.php:1431
+#: ../lettreinfo.php:239 ../lettreinfo.php:1405
 msgid "Reload parameters"
 msgstr ""
 
@@ -209,7 +209,7 @@ msgid "Share on : "
 msgstr ""
 
 #: ../lettreinfo.php:321 ../lettreinfo.php:338 ../lettreinfo.php:353
-#: ../lettreinfo.php:658 ../lettreinfo.php:1028
+#: ../lettreinfo.php:619 ../lettreinfo.php:1002
 msgid "An error occured !"
 msgstr ""
 
@@ -241,473 +241,493 @@ msgstr ""
 msgid "Suscribe our newsletter"
 msgstr ""
 
-#: ../lettreinfo.php:384 ../lettreinfo.php:452
+#: ../lettreinfo.php:384 ../lettreinfo.php:413
 #, fuzzy
 msgid "Suscribe"
 msgstr "Suscribe"
 
-#: ../lettreinfo.php:385 ../lettreinfo.php:457
+#: ../lettreinfo.php:385 ../lettreinfo.php:418
 #, fuzzy
 msgid "Unsuscribe"
 msgstr "Suscribe"
 
-#: ../lettreinfo.php:387 ../lettreinfo.php:465
+#: ../lettreinfo.php:387 ../lettreinfo.php:426
 msgid "Last newsletters"
 msgstr ""
 
-#: ../lettreinfo.php:447
+#: ../lettreinfo.php:408
 #, fuzzy
 msgid "Your email:"
 msgstr "Your email:"
 
-#: ../lettreinfo.php:460 ../lettreinfo.php:1445 ../lettreinfo.php:1461
-#: ../reply.php:126
+#: ../lettreinfo.php:421 ../lettreinfo.php:1419 ../lettreinfo.php:1435
+#: ../reply.php:127
 msgid "ok"
 msgstr "ok"
 
-#: ../lettreinfo.php:498
+#: ../lettreinfo.php:459
 msgid "Do you really want to move selected contacts to :"
 msgstr ""
 
-#: ../lettreinfo.php:505
+#: ../lettreinfo.php:466
 msgid "Do you really want to remove selected contacts ?"
 msgstr ""
 
-#: ../lettreinfo.php:528
+#: ../lettreinfo.php:489
 msgid "Adress book"
 msgstr ""
 
-#: ../lettreinfo.php:545
+#: ../lettreinfo.php:506
 msgid "An error occured, no group has been deleted !"
 msgstr ""
 
-#: ../lettreinfo.php:548
+#: ../lettreinfo.php:509
 msgid "Successful deletion !"
 msgstr ""
 
-#: ../lettreinfo.php:567
+#: ../lettreinfo.php:528
 msgid "An error occured, no contact has been deleted !"
 msgstr ""
 
-#: ../lettreinfo.php:570
+#: ../lettreinfo.php:531
 #, php-format
 msgid "%s contacts deleted !"
 msgstr ""
 
-#: ../lettreinfo.php:589
+#: ../lettreinfo.php:550
 msgid "An error occured, no contact has been moved !"
 msgstr ""
 
-#: ../lettreinfo.php:592
+#: ../lettreinfo.php:553
 #, php-format
 msgid "%s contacts succesfully moved !"
 msgstr ""
 
-#: ../lettreinfo.php:617
+#: ../lettreinfo.php:578
 msgid "An error occured..."
 msgstr ""
 
-#: ../lettreinfo.php:621 ../lettreinfo.php:661
+#: ../lettreinfo.php:582 ../lettreinfo.php:622
 msgid "Record saved"
 msgstr ""
 
-#: ../lettreinfo.php:653
+#: ../lettreinfo.php:614
 msgid "Functionality under development"
 msgstr ""
 
-#: ../lettreinfo.php:676
+#: ../lettreinfo.php:637
 #, fuzzy
 msgid "Edit group"
 msgstr "Edit"
 
-#: ../lettreinfo.php:682 ../lettreinfo.php:1791
+#: ../lettreinfo.php:643 ../lettreinfo.php:1765
 msgid "Save options"
 msgstr ""
 
-#: ../lettreinfo.php:685
+#: ../lettreinfo.php:646
 msgid "cancel"
 msgstr ""
 
-#: ../lettreinfo.php:693 ../lettreinfo.php:720 ../lettreinfo.php:949
+#: ../lettreinfo.php:654 ../lettreinfo.php:681 ../lettreinfo.php:923
 msgid "Groups"
 msgstr ""
 
-#: ../lettreinfo.php:693
+#: ../lettreinfo.php:654
 msgid "New group"
 msgstr ""
 
-#: ../lettreinfo.php:704
+#: ../lettreinfo.php:665
 msgid "List"
 msgstr ""
 
-#: ../lettreinfo.php:705
+#: ../lettreinfo.php:666
 msgid "Rename"
 msgstr ""
 
-#: ../lettreinfo.php:706 ../lettreinfo.php:738
+#: ../lettreinfo.php:667 ../lettreinfo.php:699
 msgid "Delete"
 msgstr ""
 
-#: ../lettreinfo.php:727
+#: ../lettreinfo.php:688
 msgid "Bulk actions"
 msgstr ""
 
-#: ../lettreinfo.php:736
+#: ../lettreinfo.php:697
 msgid "Move to : "
 msgstr ""
 
-#: ../lettreinfo.php:740
+#: ../lettreinfo.php:701
 msgid "Back"
 msgstr ""
 
-#: ../lettreinfo.php:741
+#: ../lettreinfo.php:702
 msgid "New recipient"
 msgstr ""
 
-#: ../lettreinfo.php:760
+#: ../lettreinfo.php:721
 msgid "No recipient have been selected"
 msgstr ""
 
-#: ../lettreinfo.php:779
+#: ../lettreinfo.php:740
 msgid "Edit contact"
 msgstr ""
 
-#: ../lettreinfo.php:780
+#: ../lettreinfo.php:741
 msgid "Name"
 msgstr ""
 
-#: ../lettreinfo.php:782 ../lettreinfo.php:1388
+#: ../lettreinfo.php:743 ../lettreinfo.php:1362
 msgid "E-mail"
 msgstr ""
 
-#: ../lettreinfo.php:789
+#: ../lettreinfo.php:750
 msgid "Mass copy"
 msgstr ""
 
-#: ../lettreinfo.php:790 ../lettreinfo.php:986
+#: ../lettreinfo.php:751 ../lettreinfo.php:960
 msgid "Return separated email address"
 msgstr ""
 
-#: ../lettreinfo.php:852
+#: ../lettreinfo.php:813
 msgid "No letter is in progress. to create one"
 msgstr ""
 
-#: ../lettreinfo.php:852
+#: ../lettreinfo.php:813
 msgid "click here"
 msgstr ""
 
-#: ../lettreinfo.php:925
+#: ../lettreinfo.php:848
+msgid ""
+"Missing parameter \"Answer page\" for your Newsletter, please go to the "
+"configuration page"
+msgstr ""
+
+#: ../lettreinfo.php:854
+msgid ""
+"Missing parameter \"Unsuscribe page\" for your Newsletter, please go to the "
+"configuration page"
+msgstr ""
+
+#: ../lettreinfo.php:899
 msgid "Headers"
 msgstr ""
 
-#: ../lettreinfo.php:926
+#: ../lettreinfo.php:900
 msgid "Subject"
 msgstr ""
 
-#: ../lettreinfo.php:928
+#: ../lettreinfo.php:902
 msgid "Sender name"
 msgstr ""
 
-#: ../lettreinfo.php:930
+#: ../lettreinfo.php:904
 #, fuzzy
 msgid "Reply email"
 msgstr "Your email:"
 
-#: ../lettreinfo.php:932
+#: ../lettreinfo.php:906
 msgid "Archive stat"
 msgstr ""
 
-#: ../lettreinfo.php:934
+#: ../lettreinfo.php:908
 msgid "Published"
 msgstr ""
 
-#: ../lettreinfo.php:935
+#: ../lettreinfo.php:909
 msgid "private"
 msgstr ""
 
-#: ../lettreinfo.php:938
+#: ../lettreinfo.php:912
 msgid "Reading tracking"
 msgstr ""
 
-#: ../lettreinfo.php:940
+#: ../lettreinfo.php:914
 msgid "try to know if emails is readen"
 msgstr ""
 
-#: ../lettreinfo.php:967
+#: ../lettreinfo.php:941
 msgid "blog users"
 msgstr ""
 
-#: ../lettreinfo.php:984
+#: ../lettreinfo.php:958
 msgid "Additional recipients"
 msgstr ""
 
-#: ../lettreinfo.php:1049
+#: ../lettreinfo.php:1023
 msgid "Sending..."
 msgstr ""
 
-#: ../lettreinfo.php:1053
+#: ../lettreinfo.php:1027
 msgid "To view the delivery status, please go to"
 msgstr ""
 
-#: ../lettreinfo.php:1054
+#: ../lettreinfo.php:1028
 msgid "archives"
 msgstr ""
 
-#: ../lettreinfo.php:1075
+#: ../lettreinfo.php:1049
 msgid "Your newsletter has'nt been saved yet"
 msgstr ""
 
-#: ../lettreinfo.php:1079
+#: ../lettreinfo.php:1053
 msgid "Your newsletter has no title"
 msgstr ""
 
-#: ../lettreinfo.php:1083
+#: ../lettreinfo.php:1057
 msgid "No skin applied"
 msgstr ""
 
-#: ../lettreinfo.php:1117
+#: ../lettreinfo.php:1091
 msgid "Insert some content"
 msgstr ""
 
-#: ../lettreinfo.php:1170
+#: ../lettreinfo.php:1144
 msgid ""
 "Do you want to load this skin's default content ?\\n\\nWarning!\\n\\nYou "
 "will loose the current content."
 msgstr ""
 
-#: ../lettreinfo.php:1181
+#: ../lettreinfo.php:1155
 msgid "Posts"
 msgstr ""
 
-#: ../lettreinfo.php:1203
+#: ../lettreinfo.php:1177
 msgid "Pages"
 msgstr ""
 
-#: ../lettreinfo.php:1225 ../lettreinfo.php:1924
+#: ../lettreinfo.php:1199 ../lettreinfo.php:1901
 msgid "Add share links"
 msgstr ""
 
-#: ../lettreinfo.php:1243
+#: ../lettreinfo.php:1217
 msgid "The skin has gone away ! Do you want to apply another one ?"
 msgstr ""
 
-#: ../lettreinfo.php:1263
+#: ../lettreinfo.php:1237
 msgid "Sent by"
 msgstr ""
 
-#: ../lettreinfo.php:1264
+#: ../lettreinfo.php:1238
 msgid "Last sent"
 msgstr ""
 
-#: ../lettreinfo.php:1276
+#: ../lettreinfo.php:1250
 #, php-format
 msgid "%s opened"
 msgstr ""
 
-#: ../lettreinfo.php:1290
+#: ../lettreinfo.php:1264
 msgid "No reading-tracking"
 msgstr ""
 
-#: ../lettreinfo.php:1343
+#: ../lettreinfo.php:1317
 msgid "Read on :"
 msgstr ""
 
-#: ../lettreinfo.php:1344
+#: ../lettreinfo.php:1318
 msgid "On :"
 msgstr ""
 
-#: ../lettreinfo.php:1345
+#: ../lettreinfo.php:1319
 msgid "From IP address :"
 msgstr ""
 
-#: ../lettreinfo.php:1349
+#: ../lettreinfo.php:1323
 msgid "Unread"
 msgstr ""
 
-#: ../lettreinfo.php:1371
+#: ../lettreinfo.php:1345
 msgid "Automatically sending a new burst"
 msgstr ""
 
-#: ../lettreinfo.php:1389
+#: ../lettreinfo.php:1363
 msgid "Answer"
 msgstr ""
 
-#: ../lettreinfo.php:1390
+#: ../lettreinfo.php:1364
 msgid "Date"
 msgstr ""
 
-#: ../lettreinfo.php:1414
+#: ../lettreinfo.php:1386
 msgid "No answer"
 msgstr ""
 
-#: ../lettreinfo.php:1442
+#: ../lettreinfo.php:1416
 msgid "Uncategorized group :"
 msgstr ""
 
-#: ../lettreinfo.php:1449 ../lettreinfo.php:1465
+#: ../lettreinfo.php:1423 ../lettreinfo.php:1439
 msgid "Created"
 msgstr ""
 
-#: ../lettreinfo.php:1457
+#: ../lettreinfo.php:1431
 msgid "Red list group :"
 msgstr ""
 
-#: ../lettreinfo.php:1470
+#: ../lettreinfo.php:1444
 msgid "Default skins"
 msgstr ""
 
-#: ../lettreinfo.php:1523
+#: ../lettreinfo.php:1497
 msgid "Click here if you cannot read this e-mail"
 msgstr ""
 
-#: ../lettreinfo.php:1538
+#: ../lettreinfo.php:1512
 msgid "Sending"
 msgstr ""
 
-#: ../lettreinfo.php:1592 ../lettreinfo.php:1660
+#: ../lettreinfo.php:1566 ../lettreinfo.php:1634
 msgid "Options saved"
 msgstr ""
 
-#: ../lettreinfo.php:1605 ../lettreinfo.php:1686
+#: ../lettreinfo.php:1579 ../lettreinfo.php:1660
 msgid "Configuration "
 msgstr ""
 
-#: ../lettreinfo.php:1611
+#: ../lettreinfo.php:1585
 msgid "Send a copy of each burst of shipments to:"
 msgstr ""
 
-#: ../lettreinfo.php:1619
+#: ../lettreinfo.php:1593
 msgid "Save"
 msgstr ""
 
-#: ../lettreinfo.php:1635
+#: ../lettreinfo.php:1609
 msgid ""
 "New options are available for your Newsletter, please go to the "
 "configuration page"
 msgstr ""
 
-#: ../lettreinfo.php:1692
+#: ../lettreinfo.php:1666
 msgid "Default sender name:"
 msgstr ""
 
-#: ../lettreinfo.php:1699
+#: ../lettreinfo.php:1673
 msgid "Default reply address:"
 msgstr ""
 
-#: ../lettreinfo.php:1706
+#: ../lettreinfo.php:1680
 msgid "Unsuscribe page"
 msgstr ""
 
-#: ../lettreinfo.php:1728
+#: ../lettreinfo.php:1702
 msgid "Reply page"
 msgstr ""
 
-#: ../lettreinfo.php:1749
+#: ../lettreinfo.php:1723
 msgid "Confirmation e-mails "
 msgstr ""
 
-#: ../lettreinfo.php:1755
+#: ../lettreinfo.php:1729
 #, fuzzy
 msgid "Sender email:"
 msgstr "Your email:"
 
-#: ../lettreinfo.php:1762
+#: ../lettreinfo.php:1736
 msgid "Suscribe subject:"
 msgstr ""
 
-#: ../lettreinfo.php:1769
+#: ../lettreinfo.php:1743
 msgid "Suscribe Message:"
 msgstr ""
 
-#: ../lettreinfo.php:1776
+#: ../lettreinfo.php:1750
 msgid "Unuscribe subject:"
 msgstr ""
 
-#: ../lettreinfo.php:1783
+#: ../lettreinfo.php:1757
 msgid "Unsuscribe message:"
 msgstr ""
 
-#: ../lettreinfo.php:1799
+#: ../lettreinfo.php:1773
 msgid "Help"
 msgstr ""
 
-#: ../lettreinfo.php:1805
+#: ../lettreinfo.php:1780
 msgid "Shortcods used:"
 msgstr ""
 
-#: ../lettreinfo.php:1807
+#: ../lettreinfo.php:1782
 msgid "Insert suscribe form in a page :"
 msgstr ""
 
-#: ../lettreinfo.php:1808
+#: ../lettreinfo.php:1783
 msgid "Insert answer form in a page :"
 msgstr ""
 
-#: ../lettreinfo.php:1810
+#: ../lettreinfo.php:1784
+msgid "Insert answer link in a newsletter :"
+msgstr ""
+
+#: ../lettreinfo.php:1786
 msgid "Skins shortcodes"
 msgstr ""
 
-#: ../lettreinfo.php:1812 ../lettreinfo.php:1813
+#: ../lettreinfo.php:1788
 msgid "Insert newsletter content in a skin :"
 msgstr ""
 
-#: ../lettreinfo.php:1815
+#: ../lettreinfo.php:1789
+msgid "Insert an unsuscribe link :"
+msgstr ""
+
+#: ../lettreinfo.php:1791
 msgid "Legend of sending symbols:"
 msgstr ""
 
-#: ../lettreinfo.php:1816
+#: ../lettreinfo.php:1793
 msgid "Invalid email"
 msgstr ""
 
-#: ../lettreinfo.php:1817
+#: ../lettreinfo.php:1794
 msgid "Sending failed"
 msgstr ""
 
-#: ../lettreinfo.php:1818
+#: ../lettreinfo.php:1795
 msgid "Newsletter successfully sent"
 msgstr ""
 
-#: ../lettreinfo.php:1819
+#: ../lettreinfo.php:1796
 msgid "Address on the list of unsubscribed:"
 msgstr ""
 
-#: ../lettreinfo.php:1820
+#: ../lettreinfo.php:1797
 msgid "Email has been readen"
 msgstr ""
 
-#: ../lettreinfo.php:1870 ../lettreinfo.php:1887
+#: ../lettreinfo.php:1847 ../lettreinfo.php:1864
 msgid "Suscribe newsletter"
 msgstr ""
 
-#: ../lettreinfo.php:1873
+#: ../lettreinfo.php:1850
 msgid "Form / unsubscribe and archives NewsLetter"
 msgstr ""
 
-#: ../lettreinfo.php:1897
+#: ../lettreinfo.php:1874
 msgid "Title"
 msgstr ""
 
-#: ../lettreinfo.php:1900
+#: ../lettreinfo.php:1877
 msgid "Hide archives link"
 msgstr ""
 
-#: ../lettreinfo.php:1902
+#: ../lettreinfo.php:1879
 msgid "No"
 msgstr ""
 
-#: ../lettreinfo.php:1903
+#: ../lettreinfo.php:1880
 msgid "Yes"
 msgstr ""
 
-#: ../lettreinfo.php:1923
+#: ../lettreinfo.php:1900
 msgid "Add title to content"
 msgstr ""
 
-#: ../lettreinfo.php:1949
+#: ../lettreinfo.php:1926
 msgid "No skin available"
 msgstr ""
 
-#: ../reply.php:38 ../reply.php:106 ../reply.php:142
+#: ../reply.php:38 ../reply.php:107 ../reply.php:143
 msgid "Invalid answer link"
 msgstr ""
 
@@ -725,19 +745,19 @@ msgstr ""
 msgid "Please access this page only by following a reply link"
 msgstr ""
 
-#: ../reply.php:95 ../reply.php:117
+#: ../reply.php:95 ../reply.php:118
 msgid "Visible link"
 msgstr ""
 
-#: ../reply.php:96 ../reply.php:118
+#: ../reply.php:96 ../reply.php:119
 msgid "reply_code"
 msgstr ""
 
-#: ../reply.php:123
+#: ../reply.php:124
 msgid "Please fill your email"
 msgstr ""
 
-#: ../reply.php:138
+#: ../reply.php:139
 msgid "Allready answered"
 msgstr ""
 

@@ -26,7 +26,7 @@ add_shortcode('li_form_reponse',array( 'EelvNlReply', 'form'));*/
 		if($meta){
 			$answer = $meta[0];
 			if(sizeof($meta>1)){
-				$querystr = "DELTE FROM `$wpdb->postmeta` WHERE `post_id` = '$postid' AND `meta_key`='eelv_nl_reply' AND `meta_value`LIKE'%:\"$email\";%' AND `meta_id`!='".$answer->meta_id."'";
+				$querystr = "DELETE FROM `$wpdb->postmeta` WHERE `post_id` = '$postid' AND `meta_key`='eelv_nl_reply' AND `meta_value`LIKE'%:\"$email\";%' AND `meta_id`!='".$answer->meta_id."'";
         		$clean = $wpdb->get_col($querystr);				
 			}
 			return $answer;
@@ -100,7 +100,8 @@ add_shortcode('li_form_reponse',array( 'EelvNlReply', 'form'));*/
 		 global $dest;
   		$reply_url = get_option( 'newsletter_reply_url','');
 		 if($nl>0){
-		 	$ret.=' <a href="'.$reply_url.'?nl='.$nl.'&r='.$rep.'&m='.$dest.'">'.$val.'</a> ';
+		 	$reply_url.=strpos($reply_url,'?')>-1 ? '&' : '?';
+		 	$ret.=' <a href="'.$reply_url.'nl='.$nl.'&r='.$rep.'&m='.$dest.'">'.$val.'</a> ';
 		 }
 		else{
 		 	$ret.='<span class="nl_message nl_alert">'.__('Invalid answer link','eelv_lettreinfo').'</span>';

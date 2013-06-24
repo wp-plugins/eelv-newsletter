@@ -83,6 +83,13 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 
+= 3.4.2 =
+* Add : Check for missing parameters in sending form
+* Fix : Help page duplicate content
+* Fix : Translation fix
+* Fix : SQL syntax error in answer page
+* Fix : PHP warning in configuration page
+
 = 3.4.1 =
 * Fix : french translation fix
 * Fix : edit options version
