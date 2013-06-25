@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.4.2
+Version: 3.4.3
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -251,6 +251,43 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
     }
     return false;
   }
+  function nl_plain_txt($str){
+  	$str = strip_tags($str,'<a>');
+	$str=str_replace('</a>','</a>'."\n",$str);
+	$str=str_replace('&#038;','&',$str);
+		preg_match_all('/<a (.+)?href=[\'"](.*)[\'"][.+]?>(.*)<\/a>/',$str,$links);  
+		if(is_array($links)){
+			foreach($links[0] as $id=>$link){
+				$lien  = strip_tags($links[2][$id]);
+				if(-1 < $p = strpos($lien,'"')) $lien  = substr($lien,0,$p);
+				if(-1 < $p = strpos($lien,'\'')) $lien  = substr($lien,0,$p);
+				$lien  = str_replace(' ','%20',$lien);
+				$str=str_replace($link,$links[3][$id].' : '.$lien.' ',$str);
+			}
+		}		
+		$str=str_replace("\n\n\n","\n\n",$str);
+		return $str;
+	}
+	function nl_mime_txt($str,$boundary='',$eol="\n"){
+		$message = '';
+		/*$message .= 'MIME-Version: 1.0'.$eol;
+		$message .= 'Content-Type: multipart/alternative;'.$eol;
+		$message .= 'boundary="'.$boundary.'"'.$eol.$eol;*/
+		$message .= 'This is a multi-part message in MIME format'.$eol.$eol;
+		
+		$message .= '--'.$boundary.$eol;
+		$message .= 'Content-Type: text/plain; charset=utf-8'.$eol;
+		$message .= 'Content-Transfer-Encoding: 8bit'.$eol.$eol;
+		$message .= nl_plain_txt($str).$eol;
+		
+		$message .= '--'.$boundary.$eol;
+		$message .= 'Content-Type: text/html; charset=utf-8'.$eol;
+		$message .= 'Content-Transfer-Encoding: 8bit'.$eol.$eol;
+		$message .= '<html><body>'.$str.'</body></html>'.$eol;
+		
+		$message .= '--'.$boundary.'--'.$eol;
+		return $message;
+	}
   
   add_shortcode( 'nl_date' , 'nl_short_date' );
   function nl_short_date(){
@@ -841,6 +878,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 							update_post_meta($post->ID,'nl_template',$_GET['settemplate']);
 						}
                         $content=nl_content($post_id); 
+						$preview = apply_filters('the_content',$content);
 						
 						$reply_url = get_option( 'newsletter_reply_url','');
 						if(empty($reply_url)){					?>
@@ -866,11 +904,15 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                           $user_info = get_userdata(get_current_user_id());
                           /////////////////////////////////// CHOIX DES DESTINATAIRES
                           ?>
+                          <?php add_thickbox(); ?>
           <h3 class="sectiontitle title3"><?php _e('Preview', 'eelv_lettreinfo' ) ?></h3>
+          <div id="eelv_news_prevlink" style="display:none;">
+		     <p>
+		        <?php _e('This is only a preview link', 'eelv_lettreinfo' ); ?></a>
+			</p>
+		</div>
           <div class='eelv_news_frame' id="nl_preview">
-            <?php
-  echo $content;
-                          ?></div>
+            <?php echo $preview; ?></div>
           <a href="post.php?post=<?=$post_id?>&action=edit" class="button"><?php _e('Edit', 'eelv_lettreinfo' ) ?></a> 
           <?php _e('Skin', 'eelv_lettreinfo' ) ?>: 
           <select name="newslettertemplate" onchange="document.location='edit.php?post_type=newsletter&page=news_envoi&post=<?=$post_id?>&settemplate='+this.value+'#nl_preview';">
@@ -1211,7 +1253,13 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                       $lastsend = get_post_meta($post_id, 'lastsend',true);  
                       // $post = get_post( $post_id);
                       $template =  get_post(get_post_meta($post_id,'nl_template',true));
-                      $content=nl_content($post_id );   ?>
+                      $content=apply_filters('the_content',nl_content($post_id ));   ?>
+                      <div id="eelv_news_prevlink" style="display:none;">
+		     <p>
+		        <?php _e('This is only a preview link', 'eelv_lettreinfo' ); ?></a>
+		        </p>
+		     </div>
+			
       <h2><?=$sujet?></h2>
       <?php if(!$template){ ?>
       <?php _e('The skin has gone away ! Do you want to apply another one ?', 'eelv_lettreinfo' ) ?>
@@ -1472,6 +1520,7 @@ if($templates_nb>0){
               </td></tr></tbody></table></div>
       <?php
                     }
+                    
                     ///////////////////////////////////// SEMI CRON AUTO SEND
                     function newsletter_autosend(){
                       global $newsletter_tb_name,$wpdb,$newsletter_plugin_url,$eelv_nl_default_themes,$nl_id,$dest;
@@ -1494,7 +1543,7 @@ if($templates_nb>0){
                           $template=get_post($my_temp);
                           if($template){
                           	
-                            $content = "<center><a href='".home_url()."/?post_type=newsletter_archive&p=".$nl_id."' target='_blank'><font size='1'>".__('Click here if you cannot read this e-mail','eelv_lettreinfo')."</font></a></center>".nl_content($nl_id);
+                            $content = '<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>'.nl_content($nl_id);
                             $prov = getenv("SERVER_NAME");
                             $eol="\n";
                             $now = time();
@@ -1503,13 +1552,14 @@ if($templates_nb>0){
                             $headers .= "Return-Path: $expediteur <$reponse>".$eol;    
                             $headers .= "Message-ID: <".$nl_id."@".$prov.">".$eol;
                             $headers .= "X-Mailer: PHP v".phpversion().$eol;         
-                            $mime_boundary="----=_NextPart_".md5(time());
+                            //$boundary="----=_NextPart_".md5(time());        
+                            $boundary='-----='.md5(time());
                             $headers .= 'MIME-Version: 1.0'.$eol;
-                            $headers .= "Content-Type: text/html; charset=\"utf-8\"; Content-Transfer-Encoding: quoted-printable; boundary=\"".$mime_boundary."\"".$eol;
+                            $headers .= "Content-Type:  multipart/alternative; boundary=\"".$boundary."\"".$eol;
                             //print_r($dests);    
                             $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
                             if($newsletter_admin_surveillance!=''){
-                              mail($newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$content,$headers);
+                              mail($newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,nl_mime_txt($content,$boundary,$eol),$headers);
                             }
                             
                             while($dest = array_shift($dests)){
@@ -1523,7 +1573,9 @@ if($templates_nb>0){
 									if($nl_spy==1){
 										  $the_content.='<a href="'.get_bloginfo('url').'"><img src="'.$newsletter_plugin_url.'/eelv-newsletter/reading/'.base64_encode($dest.'!'.$nl_id).'/logo.png" border="none" alt="'.get_bloginfo('url').'"/></a>';
 									  }
-                                    if(mail($dest,$sujet,$the_content,$headers)){  // Envoi OK
+									
+									
+                                    if(mail($dest,$sujet,nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
                                       $sent = $dest.':1,'.$sent;
                                     }
                                     else{                    // Envoi KO

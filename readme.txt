@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email
 Requires at least: 3.1
-Tested up to: 3.5.1
+Tested up to: 3.5.2
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
@@ -82,6 +82,12 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add : thumbnail size configuration
 * Add : Archive widget
+
+= 3.4.3 =
+* Add : Mime format for correct plain text displaying
+* Add : show a thickbox for answer links in a preview page
+* Fix : shows a correction
+* Fix : alerts text correction
 
 = 3.4.2 =
 * Add : Check for missing parameters in sending form

@@ -103,6 +103,9 @@ add_shortcode('li_form_reponse',array( 'EelvNlReply', 'form'));*/
 		 	$reply_url.=strpos($reply_url,'?')>-1 ? '&' : '?';
 		 	$ret.=' <a href="'.$reply_url.'nl='.$nl.'&r='.$rep.'&m='.$dest.'">'.$val.'</a> ';
 		 }
+		 elseif(is_admin()){
+		 	$ret.='<a href="#TB_inline?width=400&height=150&inlineId=eelv_news_prevlink" class="thickbox">'.__('Preview link:','eelv_lettreinfo').' '.$val.'</a>';
+		 }
 		else{
 		 	$ret.='<span class="nl_message nl_alert">'.__('Invalid answer link','eelv_lettreinfo').'</span>';
 		 }
@@ -136,7 +139,7 @@ add_shortcode('li_form_reponse',array( 'EelvNlReply', 'form'));*/
 			}
 			elseif(!defined('NL_HAS_REPLY_PAGE')){
 			 	define('NL_HAS_REPLY_PAGE',true);
-			 	$ret.='<span class="nl_message nl_allready">'.__('Allready answered','eelv_lettreinfo').'</span>';
+			 	$ret.='<span class="nl_message nl_confirm">'.__('Thank you for your answer','eelv_lettreinfo').'</span>';
 			}
 		}	
 		else{

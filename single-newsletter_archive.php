@@ -43,7 +43,7 @@
                 	<h1 class="entry-title"><?php the_title(); ?></h1>
 					
 					<?php //$template =  get_post(get_post_meta(get_the_ID(),'nl_template',true)); ?>
-                    <?php echo nl_content(get_the_ID()); //str_replace('[newsletter]',nl2br(trim(get_the_content())),$template->post_content); ?>
+                    <?php echo apply_filters('the_content',nl_content(get_the_ID())); //str_replace('[newsletter]',nl2br(trim(get_the_content())),$template->post_content); ?>
 					</div>
                     
                     </div>
