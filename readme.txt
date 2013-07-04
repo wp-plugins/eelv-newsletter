@@ -46,7 +46,7 @@ a newsletter adminer on BackOffice :
 * add answer links in your newsletters by adding the shortcode [nl_reply_link], you can add as many links as you want.
 Attributes your anwser links are rep="the_answer_code" val="the link's text"
 example: 
-<h4>Do you like this plugin ?</h3>
+<h4>Do you like this plugin ?</h4>
 <p>`[nl_reply_link val="Yes I do" rep="yes"]`</p>
 <p>`[nl_reply_link val="it's fine" rep="fine"]`</p>
 <p>`[nl_reply_link val="Not at all" rep="no"]`</p>
