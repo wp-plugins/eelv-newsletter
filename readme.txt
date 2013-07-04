@@ -30,6 +30,14 @@ a newsletter adminer on BackOffice :
 * Create a new page and put the shortcode [eelv_news_form] in the content.
 * Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page
 (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
+* available attributes :
+<ul>
+<li>group=1 (Int, define in wich address book group to register e-mail addresses)</li>
+<li>suscribe=1 (bool)</li>
+<li>unsuscribe=1 (bool)</li>
+<li>archives=1 (Bool, displays or not the archives link)</li>
+<li>archives_title="Last newsletters"</li>
+</ul>
 
 = Answer functionnality =
 * Create a new page and put the shortcode [nl_reply_form] in the content.
@@ -82,6 +90,14 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add : thumbnail size configuration
 * Add : Archive widget
+* Add : Drag'n'drop editor tool
+
+= 3.5.0 =
+* Add : News-type taxonomy
+* Add : Group destination for suscribe-form (shortcode attribute)
+* Fix : Minor Cross Site Scripting (XSS) in group management page
+* Fix : better HTML syntax in suscribe form
+* Fix : some words
 
 = 3.4.3 =
 * Add : Mime format for correct plain text displaying
@@ -112,7 +128,7 @@ Yes, skins are registered as post-type.
 * Add : Display an alert for new available options
 
 = 3.3.2 =
-* Add : Adjust capabilities for Admins, Editors (can'nt edit confuguration or reload parameters) and Authors (can'nt send newsletters)
+* Add : Adjust capabilities for Admins, Editors (can'nt edit configuration or reload parameters) and Authors (can'nt send newsletters)
 
 = 3.3.1 =
 * Fix : Remove HTML tags from suscribe-from alerts, JS XSS vulnerability fix

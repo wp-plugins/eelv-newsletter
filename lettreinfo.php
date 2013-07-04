@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: EELV Newsletter
-Plugin URI: http://ecolosites.eelv.fr
+Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.4.3
+Version: 3.5.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -117,7 +117,36 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       'not_found_in_trash' => __('No archive Found in Trash','eelv_lettreinfo'),
       'parent' => __('Parent archive','eelv_lettreinfo'),
     ),) );
+	
+  register_taxonomy('newsletter_archives_types',array('newsletter_archive'),array(
+    'hierarchical' => true,
+    'show_ui' => true,
+    'query_var' => true,
+    'public'=>true,
+    'show_in_nav_menus'=>true,
+    'show_admin_column'=>true,
+    'rewrite' => array( 'slug' => 'newsletter_archive' ),
+    'labels' => array(
+	    'name' => __('News types','eelv_lettreinfo'),
+	    'singular_name' => __('News type','eelv_lettreinfo'),
+	    'search_items' =>  __('Search news type','eelv_lettreinfo'),
+	    'all_items' => __('All news types','eelv_lettreinfo'),
+	    'parent_item' => __('News type parent','eelv_lettreinfo'),
+	    'parent_item_colon' => __('news type parent','eelv_lettreinfo'),
+	    'edit_item' => __('Edit news type','eelv_lettreinfo'), 
+	    'update_item' => __('Update news type','eelv_lettreinfo'),
+	    'add_new_item' => __('Add new news type','eelv_lettreinfo'),
+	    'new_item_name' => __('New news type','eelv_lettreinfo'),
+	    'menu_name' => __('News types','eelv_lettreinfo'),
+	  )
+  ));
+  
     require_once($lettreinfo_plugin_path.'/templates.php');
+  }
+  
+  add_action('admin_menu', 'register_newsletter_submenu_page');
+  function register_newsletter_submenu_page() {
+  	add_submenu_page( 'edit.php?post_type=newsletter', __('News types','eelv_lettreinfo'), __('News types','eelv_lettreinfo'), 'post', 'edit-tags.php?taxonomy=newsletter_archives_types');
   }
   // ADD NEW COLUMN  
   function lettreinfo_columns_head($defaults) {  
@@ -346,14 +375,25 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	  $suscribe = $msg['suscribe'];
 	  $unsuscribe_title = $msg['unsuscribe_title'];
 	  $unsuscribe = $msg['unsuscribe'];
+	  $suscribegrp = isset($_POST['news_grp']) && is_numeric($_POST['news_grp']) ? $_POST['news_grp'] : 1;
+	  
+	  if($suscribegrp>2){
+	  	  $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='".$suscribegrp."' AND `parent`='0'");
+		  if(!is_array($ret) || sizeof($ret)==0){
+		    $suscribegrp=1;
+		  }
+	  }
+	  
+	  
+	  
 	  
         switch($_POST['news_action']){
           case '1':
-            $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
+            $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'");
             if(is_array($ret) && sizeof($ret)>0){
               $ret = $ret[0];
-              if($ret->parent==2){
-                $query="UPDATE $newsletter_tb_name SET `parent`='1' WHERE `email`='".str_replace("'","''",$email)."'";
+              if($ret->parent==2){ // Red list
+                $query="UPDATE $newsletter_tb_name SET `parent`='".$suscribegrp."' WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'";
                 if($query!='' && false===$wpdb->query($query)){
                   $news_reg_return.=__("An error occured !", 'eelv_lettreinfo') ;
                 }
@@ -370,7 +410,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
             }
             else{
               $query="INSERT INTO $newsletter_tb_name (`parent`,`nom`,`email`) 
-                VALUES (1,'".str_replace("'","''",substr($email,0,strpos($email,'@')))."','".str_replace("'","''",$email)."')";
+                VALUES (".$suscribegrp.",'".str_replace("'","''",substr($email,0,strpos($email,'@')))."','".str_replace("'","''",$email)."')";
               if($query!='' && false==$wpdb->query($query)){
                 $news_reg_return.=__("An error occured !", 'eelv_lettreinfo');
               }
@@ -436,32 +476,50 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 
 /** Inscription form **/
 add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
-  function get_news_large_form(){
+  function get_news_large_form($atts){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
+	extract(shortcode_atts(array(
+		      'group'=>1,
+		      'suscribe'=>1,
+		      'unsuscribe' => 1,
+		      'archives' => 1,
+		      'archives_title' => __("Last newsletters", 'eelv_lettreinfo')
+	     ), $atts));
     $ret='
-      <form action="#" method="post" id="newslform" onsubmit="if(this.news_email.value=="" || this.news_email.value=="newsletter : votre email"){ return false; }">
-      <div>
+      <form action="#" method="post" class="newslform" onsubmit="if(this.news_email.value=="" || this.news_email.value=="newsletter : votre email"){ return false; }">
+      <fieldset>
+      <input type="hidden" name="news_grp" value="'.$group.'" />
       <p>
-      <label for="news_l_email">'.__('Your email:', 'eelv_lettreinfo').'</label>
-      <input type="text" name="news_email" id="news_l_email" value="" />
-      </p>        
-      <p>
-      <label for="news_l_option_1">
-      <input type="radio" name="news_action" value="1" id="news_l_option_1" checked="checked"/> '.__("Suscribe", 'eelv_lettreinfo').'
-      </label>
-      </p>
-      <p>        
-      <label for="news_l_option_2">
-      <input type="radio" name="news_action" value="0"  id="news_l_option_2"/> '.__('Unsuscribe', 'eelv_lettreinfo').'
-      </label>
-      </p>
-      <p><input type="submit" value="'.__('ok', 'eelv_lettreinfo').'"/></p>';
-    if($news_reg_return!=''){
+	      <label for="news_l_email">'.__('Your email:', 'eelv_lettreinfo').'
+	      	<input type="text" name="news_email" id="news_l_email" value="" />
+	      </label>
+      </p> ';
+	  if($suscribe==1){
+		  $ret.='       
+	      <p>
+		      <label for="news_l_option_1">
+		      	<input type="radio" name="news_action" value="1" id="news_l_option_1" checked="checked"/> '.__("Suscribe", 'eelv_lettreinfo').'
+		      </label>
+	      </p>';
+      }
+	  if($unsuscribe==1){	
+		  $ret.='
+	      <p>        
+		      <label for="news_l_option_2">
+		      	<input type="radio" name="news_action" value="0"  id="news_l_option_2"/> '.__('Unsuscribe', 'eelv_lettreinfo').'
+		      </label>
+	      </p>';
+	  }
+	  $ret.='
+      <p><input type="submit" value="'.__('ok', 'eelv_lettreinfo').'" class="btn"/></p>';
+    if($news_reg_return!='' && isset($_POST['news_grp']) && $_POST['news_grp']==$group){
       $ret.='<div class="news_retour">'.$news_reg_return.'</div>';            
     }
-    $ret.='
-      <p><a href="/newsletter_archive/">'.__("Last newsletters", 'eelv_lettreinfo').'</a></p>
-      </div>
+	if($archives==1){
+		$ret.='<p><a href="/newsletter_archive/">'.$archives_title.'</a></p>';
+	}
+    $ret.='      
+      </fieldset>
       </form>';
     return $ret;
   }
@@ -523,7 +581,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   <table class="widefat" style="margin-top: 1em;">
     <thead>
       <tr>
-        <th scope="col" colspan="2"><?php _e('Adress book', 'eelv_lettreinfo' ) ?></th>
+        <th scope="col" colspan="2"><?php _e('Address book', 'eelv_lettreinfo' ) ?></th>
       </tr>
     </thead>
     <tbody>
@@ -641,7 +699,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                             ('$grp_id','".str_replace("'","''",substr($entry,0,strpos($entry,'@')))."','".str_replace("'","''",$entry)."'),";
                         }
                         elseif($entry!=''){
-                          echo"<p>$entry : adresse non valide</p>";  
+                          echo'<p>'.htmlentities(strip_tags($entry)).' : '.__('invalid address', 'eelv_lettreinfo').'</p>';  
                         }
                       }
                       $query = substr($query,0,-1);
@@ -663,7 +721,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
               }
               // Edition de groupe
               if($for=='groupe'){
-                $grp_nom = 'Nouveau groupe';
+                $grp_nom = __('New group', 'eelv_lettreinfo');
                 $action="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=new";
                 if(is_numeric($grp_id)){
                   $news_info = get_news_meta($grp_id);
@@ -945,18 +1003,40 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                   <input type="text" name="eelv_news_exp" size="30" tabindex="1" value="<?=$default_exp?>" id="exp" autocomplete="off" required/></label> </p>
                 <p><label for="mel"><?php _e('Reply email', 'eelv_lettreinfo' ) ?>         
                   <input type="email" name="eelv_news_mel" size="30" tabindex="1" value="<?=$default_mel?>" id="mel" autocomplete="off" required/></label></p>
+                
                 <p><label for="stat"><?php _e('Archive stat', 'eelv_lettreinfo' ) ?>            
                   <select name="eelv_news_stat" id="stat" required>
                     <option value='publish'><?php _e('Published', 'eelv_lettreinfo' ) ?></option>
                     <option value='private'><?php _e('private', 'eelv_lettreinfo' ) ?></option>
                   </select>
-                  </label> </p>
+                  </label> 
+                </p>
+                
+                <p>
+                	<?php _e('Archive news types', 'eelv_lettreinfo' ) ?> 
+                	<ul>
+			       <?php 
+				   	$types = get_terms(array('newsletter_archives_types'),array( 'hide_empty' => 0 ));
+					foreach($types as $type){ ?>
+			       		<li><label for='type_<?=$type->term_id?>'>
+                          <input type="checkbox" name='types[<?=$type->term_id?>]' id='type_<?=$type->term_id?>' value='<?=$type->slug?>'/>
+                          <?=$type->name?>
+                        </label></li>
+			       <?php  } ?>
+				       <li><label for='type_new'>
+				       	<?php _e('New type:', 'eelv_lettreinfo' ) ?>
+                          <input type="text" name='types[]' id='type_new' value=''/>
+                        </label></li>
+			       </ul>
+                </p>
+                  
                  <p><label for="spy"><?php _e('Reading tracking', 'eelv_lettreinfo' ) ?>            
                   <select name="eelv_news_spy" id="spy" required>
                     <option value='1'><?php _e('try to know if emails is readen', 'eelv_lettreinfo' ) ?></option>
                     <option value='0'><?php _e('deactivated', 'eelv_lettreinfo' ) ?></option>
                   </select>
-                  </label> </p>
+                  </label> 
+                  </p>
               </td>
               <td>
                 <h3 class="sectiontitle title3"><?php _e('Recipients', 'eelv_lettreinfo' ) ?></h3>
@@ -1053,6 +1133,10 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                             add_post_meta($archive, 'lastsend', date('Y-m-d H:i:s'));
                             add_post_meta($archive, 'nl_spy', $_POST['eelv_news_spy']);
 							
+							if(isset($_POST['types'])){
+								$types = $_POST['types'];
+								wp_set_object_terms( $archive, $types,'newsletter_archives_types' );
+							}
 							
 						  
                             /* $my_postu = array(
