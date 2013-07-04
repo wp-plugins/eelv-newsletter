@@ -1,7 +1,7 @@
 === EELV Newsletter ===
 Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
-Tags: newsletter, email
+Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.1
 Tested up to: 3.5.2
 Stable tag: /trunk
@@ -16,7 +16,7 @@ a newsletter adminer on BackOffice :
 - answers
 
 == Description ==
-= Add a registration form on FrontOffice, a newsletter adminer on BackOffice : =
+= Add a registration form on FrontOffice, a newsletter manager on BackOffice : =
 * manage skins
 * address book
 * archives
@@ -51,6 +51,10 @@ example:
 <p>`[nl_reply_link val="it's fine" rep="fine"]`</p>
 <p>`[nl_reply_link val="Not at all" rep="no"]`</p>
 Links will be automaticly created with the e-mail address of the receipient. If the link is broken, with not enougth datas, a form will be displayed to complete it.
+
+= Reading tracking =
+* Check if your newsletters are readen or not
+* Clean your address book
 
 = Use skins =
 * You can create skins or use the default skin.
