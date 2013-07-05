@@ -98,6 +98,9 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.5.1 =
+* Fix : User role setting for news-types
+
 = 3.5.0 =
 * Add : News-type taxonomy
 * Add : Group destination for suscribe-form (shortcode attribute)
