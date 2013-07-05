@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.1
+Version: 3.5.2
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -118,7 +118,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       'parent' => __('Parent archive','eelv_lettreinfo'),
     ),) );
 	
-  register_taxonomy('newsletter_archives_types',array('newsletter_archive'),array(
+  register_taxonomy('newsletter_archives_types',array('newsletter','newsletter_archive'),array(
     'hierarchical' => true,
     'show_ui' => true,
     'query_var' => true,
@@ -259,7 +259,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   }
   // Ajout du menu et sous menu
   function eelv_news_ajout_menu() {
-    add_submenu_page( 'edit.php?post_type=newsletter', __('News types','eelv_lettreinfo'), __('News types','eelv_lettreinfo'), 'publish_posts', 'edit-tags.php?taxonomy=newsletter_archives_types');
+    //add_submenu_page( 'edit.php?post_type=newsletter', __('News types','eelv_lettreinfo'), __('News types','eelv_lettreinfo'), 'publish_posts', 'edit-tags.php?taxonomy=newsletter_archives_types');
     add_submenu_page('edit.php?post_type=newsletter', __('Address book', 'eelv_lettreinfo' ), __('Address book', 'eelv_lettreinfo' ), 'publish_posts', 'news_carnet_adresse', 'news_carnet_adresse');
     add_submenu_page('edit.php?post_type=newsletter', __('Send', 'eelv_lettreinfo' ), __('Send', 'eelv_lettreinfo' ), 'publish_posts', 'news_envoi', 'news_envoi');
     add_submenu_page('edit.php?post_type=newsletter', __('Configuration/help', 'eelv_lettreinfo' ), __('Configuration/help', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_page_configuration', 'newsletter_page_configuration');

@@ -14,6 +14,7 @@ a newsletter adminer on BackOffice :
 - address book
 - archives
 - answers
+- tracking
 
 == Description ==
 = Add a registration form on FrontOffice, a newsletter manager on BackOffice : =
@@ -97,6 +98,9 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
+
+= 3.5.2 =
+* Fix : Keeps newsletter submenu opened on news-type page
 
 = 3.5.1 =
 * Fix : User role setting for news-types
