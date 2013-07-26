@@ -99,6 +99,9 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.5.3 =
+* Fix : Adjust color of red-list emails
+
 = 3.5.2 =
 * Fix : Keeps newsletter submenu opened on news-type page
 
