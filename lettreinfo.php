@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.3
+Version: 3.5.4
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -350,11 +350,11 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 		return "<div style='width:550px; margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Share on : ', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode($link)."&t=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".$title."%20".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode($link)."&title=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a></div>&nbsp;\n";	
  }
   /////////////////////////////////////////////FEUILLE DE STYLE + VALIDATION FORMULAIRE
-  function style_newsletter(){
+    function eelv_news_scripts() {
+	  wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
+	}
+	function style_newsletter(){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
-    ?>
-<link rel="stylesheet" type="text/css" media="all" href="<?=plugins_url( 'newsletter.css' , __FILE__ )?>" />
-<?php
     $query='';
     if(isset($_POST['news_email'])){
       $email = stripslashes($_POST['news_email']);
@@ -2070,7 +2070,7 @@ add_action( 'init', 'newsletter_BO' );
 add_action('admin_menu', 'eelv_news_ajout_menu');
 add_action( 'network_admin_menu', 'eelv_news_ajout_network_menu'); 
 add_action('wp_head', 'style_newsletter');
-
+add_action('wp_enqueue_scripts', 'eelv_news_scripts');
 add_action( 'admin_init', 'newsletter_autosend' );
 add_filter( 'archive_template', 'eelv_lettrinfo_get_custom_archive_template' );
 add_filter( 'single_template', 'eelv_lettrinfo_get_custom_single_template' );

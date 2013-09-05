@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.1
-Tested up to: 3.5.2
+Tested up to: 3.6.0
 Stable tag: /trunk
 License: CC BY-NC 3.0
 License URI: http://creativecommons.org/licenses/by-nc/3.0/
@@ -98,6 +98,9 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
+
+= 3.5.4 =
+* Fix : use wp_enqueue_style function
 
 = 3.5.3 =
 * Fix : Adjust color of red-list emails
