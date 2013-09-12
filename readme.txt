@@ -99,6 +99,10 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.5.6 =
+* Add : widget options : texts, classes
+* Add : widget placeholder replacement for old browsers
+
 = 3.5.5 =
 * Add : Pre-checked option for share buttons
 * Add : Default style for widget, suscribe/unsuscribe show/hide occurence

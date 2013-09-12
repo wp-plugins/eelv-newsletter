@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: eelv-newsletter\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-10 16:02+0100\n"
-"PO-Revision-Date: 2013-09-12 12:26+0100\n"
+"POT-Creation-Date: 2013-09-12 17:34+0100\n"
+"PO-Revision-Date: 2013-09-12 17:35+0100\n"
 "Last-Translator: Bastien Ho <bastienho@urbancube.fr>\n"
 "Language-Team: bastho\n"
 "MIME-Version: 1.0\n"
@@ -63,8 +63,8 @@ msgstr "Lien d'aper&ccedil;u :"
 msgid "Please fill your email"
 msgstr "Veuillez saisir votre courriel"
 
-#: ../reply.php:130 ../lettreinfo.php:512 ../lettreinfo.php:1550
-#: ../lettreinfo.php:1566
+#: ../reply.php:130 ../lettreinfo.php:529 ../lettreinfo.php:1567
+#: ../lettreinfo.php:1583
 msgid "ok"
 msgstr "ok"
 
@@ -89,8 +89,8 @@ msgid "EELV Newsletter"
 msgstr "EELV Lettre d'info"
 
 #: ../lettreinfo.php:74 ../lettreinfo.php:75 ../lettreinfo.php:76
-#: ../lettreinfo.php:270 ../lettreinfo.php:549 ../lettreinfo.php:882
-#: ../lettreinfo.php:1532 ../lettreinfo.php:1708 ../lettreinfo.php:1790
+#: ../lettreinfo.php:270 ../lettreinfo.php:566 ../lettreinfo.php:899
+#: ../lettreinfo.php:1549 ../lettreinfo.php:1725 ../lettreinfo.php:1807
 msgid "Newsletter"
 msgstr "Lettre d'info"
 
@@ -103,7 +103,7 @@ msgid "Add"
 msgstr "Ajouter"
 
 #: ../lettreinfo.php:79 ../lettreinfo.php:80 ../lettreinfo.php:95
-#: ../lettreinfo.php:96 ../lettreinfo.php:110 ../lettreinfo.php:972
+#: ../lettreinfo.php:96 ../lettreinfo.php:110 ../lettreinfo.php:989
 msgid "Edit"
 msgstr "&Eacute;diter"
 
@@ -136,8 +136,8 @@ msgstr "Aucune lettre d'info trouv&eacute; dans la corbeille"
 msgid "Parent newsletter"
 msgstr "Parent newsletter"
 
-#: ../lettreinfo.php:91 ../lettreinfo.php:92 ../lettreinfo.php:973
-#: ../lettreinfo.php:1196
+#: ../lettreinfo.php:91 ../lettreinfo.php:92 ../lettreinfo.php:990
+#: ../lettreinfo.php:1213
 msgid "Skin"
 msgstr "Habillage"
 
@@ -234,11 +234,11 @@ msgid "New news type"
 msgstr "Nouveau type d'infos"
 
 #: ../lettreinfo.php:150 ../lettreinfo.php:223 ../lettreinfo.php:264
-#: ../lettreinfo.php:1084
+#: ../lettreinfo.php:1101
 msgid "Send"
 msgstr "Envoyer"
 
-#: ../lettreinfo.php:159 ../lettreinfo.php:1184 ../lettreinfo.php:2049
+#: ../lettreinfo.php:159 ../lettreinfo.php:1201 ../lettreinfo.php:2111
 msgid "Preview and send"
 msgstr "Pr&eacute;visualiser et envoyer"
 
@@ -262,11 +262,11 @@ msgstr "Lu(s)"
 msgid "Answers"
 msgstr "R&eacute;ponses"
 
-#: ../lettreinfo.php:198 ../lettreinfo.php:1034
+#: ../lettreinfo.php:198 ../lettreinfo.php:1051
 msgid "deactivated"
 msgstr "suivi d&eacute;sactiv&eacute;"
 
-#: ../lettreinfo.php:209 ../lettreinfo.php:1523
+#: ../lettreinfo.php:209 ../lettreinfo.php:1540
 msgid "No question"
 msgstr "Aucune question"
 
@@ -278,15 +278,15 @@ msgstr "Outils d'&eacute;ditions"
 msgid "Send as newsletter"
 msgstr "Envoyer en lettre d'info"
 
-#: ../lettreinfo.php:237 ../lettreinfo.php:964
+#: ../lettreinfo.php:237 ../lettreinfo.php:981
 msgid "Preview"
 msgstr "Aper&ccedil;u"
 
-#: ../lettreinfo.php:243 ../lettreinfo.php:1040
+#: ../lettreinfo.php:243 ../lettreinfo.php:1057
 msgid "Recipients"
 msgstr "Destinataires"
 
-#: ../lettreinfo.php:263 ../lettreinfo.php:582 ../lettreinfo.php:1546
+#: ../lettreinfo.php:263 ../lettreinfo.php:599 ../lettreinfo.php:1563
 msgid "Address book"
 msgstr "Carnet d'adresses"
 
@@ -294,7 +294,7 @@ msgstr "Carnet d'adresses"
 msgid "Configuration/help"
 msgstr "Configuration/aide"
 
-#: ../lettreinfo.php:266 ../lettreinfo.php:1536
+#: ../lettreinfo.php:266 ../lettreinfo.php:1553
 msgid "Reload parameters"
 msgstr "Recharger les parametres"
 
@@ -302,193 +302,197 @@ msgstr "Recharger les parametres"
 msgid "Share on : "
 msgstr "Partager sur :"
 
-#: ../lettreinfo.php:396 ../lettreinfo.php:413 ../lettreinfo.php:428
-#: ../lettreinfo.php:712 ../lettreinfo.php:1122
+#: ../lettreinfo.php:399 ../lettreinfo.php:416 ../lettreinfo.php:431
+#: ../lettreinfo.php:729 ../lettreinfo.php:1139
 msgid "An error occured !"
 msgstr "Erreur d'enregistrement !"
 
-#: ../lettreinfo.php:399
+#: ../lettreinfo.php:402
 msgid "You have been successfully re-registered"
 msgstr "Vous avez bien été ré-inscrit(e)."
 
-#: ../lettreinfo.php:406
+#: ../lettreinfo.php:409
 msgid "Your email is already registered in our mailing-list."
 msgstr "Votre email est déjà enregistré dans notre liste d'envoi."
 
-#: ../lettreinfo.php:416
+#: ../lettreinfo.php:419
 msgid "Thank you for your suscription"
 msgstr "Merci, vous avez bien été inscrit(e)"
 
-#: ../lettreinfo.php:431
+#: ../lettreinfo.php:434
 msgid "Thank you, your email have been deleted from our mailing-list"
 msgstr "Merci, vous avez bien été désinscrit(e)"
 
-#: ../lettreinfo.php:438
+#: ../lettreinfo.php:441
 msgid "Your email does'nt appear in our mailing list. No unsuscribe needed"
 msgstr ""
 "Votre email n'est pas enregistré dans notre liste d'envoi. Aucune "
 "désinscription n'est nécessaire."
 
-#: ../lettreinfo.php:444 ../lettreinfo.php:700
+#: ../lettreinfo.php:447 ../lettreinfo.php:717
 msgid "invalid address"
 msgstr "adresse non valide"
 
-#: ../lettreinfo.php:455
+#: ../lettreinfo.php:462 ../lettreinfo.php:2047
 msgid "Suscribe our newsletter"
 msgstr "S'inscrire &agrave; notre lettre d'info"
 
-#: ../lettreinfo.php:459 ../lettreinfo.php:499
+#: ../lettreinfo.php:463 ../lettreinfo.php:2048
+msgid "Newsletter : your email address"
+msgstr "Lettre d'info : votre courriel"
+
+#: ../lettreinfo.php:475 ../lettreinfo.php:516
 msgid "Suscribe"
 msgstr "S'inscrire"
 
-#: ../lettreinfo.php:460 ../lettreinfo.php:507
+#: ../lettreinfo.php:476 ../lettreinfo.php:524
 msgid "Unsuscribe"
 msgstr "Se d&eacute;sinscrire"
 
-#: ../lettreinfo.php:462 ../lettreinfo.php:484
+#: ../lettreinfo.php:478 ../lettreinfo.php:501
 msgid "Last newsletters"
 msgstr "Derni&egrave;res Lettres d'info"
 
-#: ../lettreinfo.php:491
+#: ../lettreinfo.php:508
 msgid "Your email:"
 msgstr "Votre email :"
 
-#: ../lettreinfo.php:552
+#: ../lettreinfo.php:569
 msgid "Do you really want to move selected contacts to :"
 msgstr ""
 "êtes vous sûr de vouloir supprimer d&eacute;placer les contacts s&eacute;"
 "lectionn&eacute;es vers"
 
-#: ../lettreinfo.php:559
+#: ../lettreinfo.php:576
 msgid "Do you really want to remove selected contacts ?"
 msgstr ""
 "êtes vous sûr de vouloir supprimer les contacts s&eacute;lectionn&eacute;es ?"
 
-#: ../lettreinfo.php:599
+#: ../lettreinfo.php:616
 msgid "An error occured, no group has been deleted !"
 msgstr ""
 "Une erreur s'est produite, aucun groupe n'a &eacute;t&eacute; "
 "supprim&eacute; !"
 
-#: ../lettreinfo.php:602
+#: ../lettreinfo.php:619
 msgid "Successful deletion !"
 msgstr "Suppression effectu&eacute;e avec succ&egrave;s !"
 
-#: ../lettreinfo.php:621
+#: ../lettreinfo.php:638
 msgid "An error occured, no contact has been deleted !"
 msgstr ""
 "Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; "
 "supprim&eacute; !"
 
-#: ../lettreinfo.php:624
+#: ../lettreinfo.php:641
 #, php-format
 msgid "%s contacts deleted !"
 msgstr "Suppression de %s contact(s) effectu&eacute;e avec succ&egrave;s !"
 
-#: ../lettreinfo.php:643
+#: ../lettreinfo.php:660
 msgid "An error occured, no contact has been moved !"
 msgstr ""
 "Une erreur s'est produite, aucun contact n'a &eacute;t&eacute; d&eacute;"
 "plac&eacute; !"
 
-#: ../lettreinfo.php:646
+#: ../lettreinfo.php:663
 #, php-format
 msgid "%s contacts succesfully moved !"
 msgstr "%s contacts on &eacute;t&eacute; d&eacute;plac&eacute;s !"
 
-#: ../lettreinfo.php:671
+#: ../lettreinfo.php:688
 msgid "An error occured..."
 msgstr "Une erreur s'est produite..."
 
-#: ../lettreinfo.php:675 ../lettreinfo.php:715
+#: ../lettreinfo.php:692 ../lettreinfo.php:732
 msgid "Record saved"
 msgstr "Enregistrement sauvegard&eacute;"
 
-#: ../lettreinfo.php:707
+#: ../lettreinfo.php:724
 msgid "Functionality under development"
 msgstr "Fonctionnalit&eacute; en cours de d&eacute;veloppement"
 
-#: ../lettreinfo.php:722 ../lettreinfo.php:747
+#: ../lettreinfo.php:739 ../lettreinfo.php:764
 msgid "New group"
 msgstr "Nouveau groupe"
 
-#: ../lettreinfo.php:730
+#: ../lettreinfo.php:747
 msgid "Edit group"
 msgstr "&Eacute;diter le groupe"
 
-#: ../lettreinfo.php:736 ../lettreinfo.php:1910
+#: ../lettreinfo.php:753 ../lettreinfo.php:1927
 msgid "Save options"
 msgstr "Enregistrer"
 
-#: ../lettreinfo.php:739
+#: ../lettreinfo.php:756
 msgid "cancel"
 msgstr "annuler"
 
-#: ../lettreinfo.php:747 ../lettreinfo.php:774 ../lettreinfo.php:1043
+#: ../lettreinfo.php:764 ../lettreinfo.php:791 ../lettreinfo.php:1060
 msgid "Groups"
 msgstr "Groupes"
 
-#: ../lettreinfo.php:758
+#: ../lettreinfo.php:775
 msgid "List"
 msgstr "Liste"
 
-#: ../lettreinfo.php:759
+#: ../lettreinfo.php:776
 msgid "Rename"
 msgstr "Renomer"
 
-#: ../lettreinfo.php:760 ../lettreinfo.php:792
+#: ../lettreinfo.php:777 ../lettreinfo.php:809
 msgid "Delete"
 msgstr "Supprimer"
 
-#: ../lettreinfo.php:781
+#: ../lettreinfo.php:798
 msgid "Bulk actions"
 msgstr "Actions group&eacute;es"
 
-#: ../lettreinfo.php:790
+#: ../lettreinfo.php:807
 msgid "Move to : "
 msgstr "D&eacute;placer vers :"
 
-#: ../lettreinfo.php:794
+#: ../lettreinfo.php:811
 msgid "Back"
 msgstr "Retour"
 
-#: ../lettreinfo.php:795
+#: ../lettreinfo.php:812
 msgid "New recipient"
 msgstr "Nouveau destinataire"
 
-#: ../lettreinfo.php:814
+#: ../lettreinfo.php:831
 msgid "No recipient have been selected"
 msgstr "Aucun destinataire n'a encore &eacute;t&eacute; enregistr&eacute;"
 
-#: ../lettreinfo.php:833
+#: ../lettreinfo.php:850
 msgid "Edit contact"
 msgstr "&Eacute;diter le contact"
 
-#: ../lettreinfo.php:834
+#: ../lettreinfo.php:851
 msgid "Name"
 msgstr "Nom"
 
-#: ../lettreinfo.php:836 ../lettreinfo.php:1493
+#: ../lettreinfo.php:853 ../lettreinfo.php:1510
 msgid "E-mail"
 msgstr "Courriel"
 
-#: ../lettreinfo.php:843
+#: ../lettreinfo.php:860
 msgid "Mass copy"
 msgstr "Copie en masse"
 
-#: ../lettreinfo.php:844 ../lettreinfo.php:1080
+#: ../lettreinfo.php:861 ../lettreinfo.php:1097
 msgid "Return separated email address"
 msgstr "Adresses email s&eacute;par&eacute;es par un retour à la ligne"
 
-#: ../lettreinfo.php:906
+#: ../lettreinfo.php:923
 msgid "No letter is in progress. to create one"
 msgstr "Aucune lettre n'est en cours, Pour en cr&eacute;er une"
 
-#: ../lettreinfo.php:906
+#: ../lettreinfo.php:923
 msgid "click here"
 msgstr "cliquez ici"
 
-#: ../lettreinfo.php:942
+#: ../lettreinfo.php:959
 msgid ""
 "Missing parameter \"Answer page\" for your Newsletter, please go to the "
 "configuration page"
@@ -496,7 +500,7 @@ msgstr ""
 "Param&egrave;tre \"Page de r&eacute;ponse\" manquant pour votre lettre "
 "d'info, veuillez vous rendre  à la page de configuration"
 
-#: ../lettreinfo.php:948
+#: ../lettreinfo.php:965
 msgid ""
 "Missing parameter \"Unsuscribe page\" for your Newsletter, please go to the "
 "configuration page"
@@ -504,91 +508,91 @@ msgstr ""
 "Param&egrave;tre \"Page de d&eacute;sinscription\" manquant pour votre "
 "lettre d'info, veuillez vous rendre  à la page de configuration"
 
-#: ../lettreinfo.php:967 ../lettreinfo.php:1341
+#: ../lettreinfo.php:984 ../lettreinfo.php:1358
 msgid "This is only a preview link"
 msgstr "Ceci est uniquement un lien de pr&eacute;visualisation"
 
-#: ../lettreinfo.php:997
+#: ../lettreinfo.php:1014
 msgid "Headers"
 msgstr "Ent&ecirc;tes"
 
-#: ../lettreinfo.php:998
+#: ../lettreinfo.php:1015
 msgid "Subject"
 msgstr "Sujet"
 
-#: ../lettreinfo.php:1000
+#: ../lettreinfo.php:1017
 msgid "Sender name"
 msgstr "Nom d'exp&eacute;diteur"
 
-#: ../lettreinfo.php:1002
+#: ../lettreinfo.php:1019
 msgid "Reply email"
 msgstr "Adresse de retour"
 
-#: ../lettreinfo.php:1005
+#: ../lettreinfo.php:1022
 msgid "Archive stat"
 msgstr "Statut d'archive"
 
-#: ../lettreinfo.php:1007
+#: ../lettreinfo.php:1024
 msgid "Published"
 msgstr "Publi&eacute;"
 
-#: ../lettreinfo.php:1008
+#: ../lettreinfo.php:1025
 msgid "private"
 msgstr "priv&eacute;"
 
-#: ../lettreinfo.php:1014
+#: ../lettreinfo.php:1031
 msgid "Archive news types"
 msgstr "Archives type d'infos "
 
-#: ../lettreinfo.php:1025
+#: ../lettreinfo.php:1042
 msgid "New type:"
 msgstr "Type d'infos :"
 
-#: ../lettreinfo.php:1031
+#: ../lettreinfo.php:1048
 msgid "Reading tracking"
 msgstr "Suivi de lecture"
 
-#: ../lettreinfo.php:1033
+#: ../lettreinfo.php:1050
 msgid "try to know if emails is readen"
 msgstr "Essayer de savoir si le courriel est lu"
 
-#: ../lettreinfo.php:1061
+#: ../lettreinfo.php:1078
 msgid "blog users"
 msgstr "Utilisateurs du site"
 
-#: ../lettreinfo.php:1078
+#: ../lettreinfo.php:1095
 msgid "Additional recipients"
 msgstr "Destinataires suppl&eacute;mentaires"
 
-#: ../lettreinfo.php:1147
+#: ../lettreinfo.php:1164
 msgid "Sending..."
 msgstr "Envoi..."
 
-#: ../lettreinfo.php:1151
+#: ../lettreinfo.php:1168
 msgid "To view the delivery status, please go to"
 msgstr "Pour consulter le statut d'envoi, veuillez vous rendre aux"
 
-#: ../lettreinfo.php:1152
+#: ../lettreinfo.php:1169
 msgid "archives"
 msgstr "archives"
 
-#: ../lettreinfo.php:1173
+#: ../lettreinfo.php:1190
 msgid "Your newsletter has'nt been saved yet"
 msgstr "Votre lettre d'info n'est pas encore enregistr&eacute;"
 
-#: ../lettreinfo.php:1177
+#: ../lettreinfo.php:1194
 msgid "Your newsletter has no title"
 msgstr "Votre lettre d'info n'a pas de titre"
 
-#: ../lettreinfo.php:1181
+#: ../lettreinfo.php:1198
 msgid "No skin applied"
 msgstr "Aucun habillage n'a &eacute;t&eacute; s&eacute;lectionn&eacute;"
 
-#: ../lettreinfo.php:1215
+#: ../lettreinfo.php:1232
 msgid "Insert some content"
 msgstr "Ins&eacute;rer du contenu"
 
-#: ../lettreinfo.php:1268
+#: ../lettreinfo.php:1285
 msgid ""
 "Do you want to load this skin's default content ?\\n\\nWarning!\\n\\nYou "
 "will loose the current content."
@@ -596,112 +600,112 @@ msgstr ""
 "Voulez vous charger le contenu par d&eacute;faut pour ce mod&egrave;le ?\\n"
 "\\nAttention !\\n\\nVous aller perdre tout le contenu actuel."
 
-#: ../lettreinfo.php:1279
+#: ../lettreinfo.php:1296
 msgid "Posts"
 msgstr "Articles"
 
-#: ../lettreinfo.php:1301
+#: ../lettreinfo.php:1318
 msgid "Pages"
 msgstr "Pages"
 
-#: ../lettreinfo.php:1323 ../lettreinfo.php:2046
+#: ../lettreinfo.php:1340 ../lettreinfo.php:2108
 msgid "Add share links"
 msgstr "Ajouter les boutons de partage"
 
-#: ../lettreinfo.php:1347
+#: ../lettreinfo.php:1364
 msgid "The skin has gone away ! Do you want to apply another one ?"
 msgstr "L'habillage a disparu ! voulez en appliquer un nouveau ?"
 
-#: ../lettreinfo.php:1367
+#: ../lettreinfo.php:1384
 msgid "Sent by"
 msgstr "Envoy&eacute; par"
 
-#: ../lettreinfo.php:1368
+#: ../lettreinfo.php:1385
 msgid "Last sent"
 msgstr "Dernier envoi"
 
-#: ../lettreinfo.php:1380
+#: ../lettreinfo.php:1397
 #, php-format
 msgid "%s opened"
 msgstr "%s d'ouverture"
 
-#: ../lettreinfo.php:1394
+#: ../lettreinfo.php:1411
 msgid "No reading-tracking"
 msgstr "Pas de suivi de lecture"
 
-#: ../lettreinfo.php:1448
+#: ../lettreinfo.php:1465
 msgid "Read on :"
 msgstr "Lu le :"
 
-#: ../lettreinfo.php:1449
+#: ../lettreinfo.php:1466
 msgid "On :"
 msgstr "Sur :"
 
-#: ../lettreinfo.php:1450
+#: ../lettreinfo.php:1467
 msgid "From IP address :"
 msgstr "Depuis l'adresse IP :"
 
-#: ../lettreinfo.php:1454
+#: ../lettreinfo.php:1471
 msgid "Unread"
 msgstr "Non lu"
 
-#: ../lettreinfo.php:1476
+#: ../lettreinfo.php:1493
 msgid "Automatically sending a new burst"
 msgstr "Envoi automatique d'une nouvelle salve"
 
-#: ../lettreinfo.php:1494
+#: ../lettreinfo.php:1511
 msgid "Answer"
 msgstr "R&eacute;ponse"
 
-#: ../lettreinfo.php:1495
+#: ../lettreinfo.php:1512
 msgid "Date"
 msgstr "Date"
 
-#: ../lettreinfo.php:1517
+#: ../lettreinfo.php:1534
 msgid "No answer"
 msgstr "Aucune r&eacute;ponse"
 
-#: ../lettreinfo.php:1547
+#: ../lettreinfo.php:1564
 msgid "Uncategorized group :"
 msgstr "Groupe \"Non class&eacute;\""
 
-#: ../lettreinfo.php:1554 ../lettreinfo.php:1570
+#: ../lettreinfo.php:1571 ../lettreinfo.php:1587
 msgid "Created"
 msgstr "Cr&eacute;&eacute;"
 
-#: ../lettreinfo.php:1562
+#: ../lettreinfo.php:1579
 msgid "Red list group :"
 msgstr "Groupe liste rouge :"
 
-#: ../lettreinfo.php:1575
+#: ../lettreinfo.php:1592
 msgid "Default skins"
 msgstr "Habillages par d&eacute;faut :"
 
-#: ../lettreinfo.php:1629
+#: ../lettreinfo.php:1646
 msgid "Click here if you cannot read this e-mail"
 msgstr "Si vous n'arrivez pas à lire cet email, cliquez ici"
 
-#: ../lettreinfo.php:1645
+#: ../lettreinfo.php:1662
 msgid "Sending"
 msgstr "Envoi"
 
-#: ../lettreinfo.php:1701 ../lettreinfo.php:1769
+#: ../lettreinfo.php:1718 ../lettreinfo.php:1786 ../lettreinfo.php:2038
 msgid "Options saved"
 msgstr "Options sauvegard&eacute;es"
 
-#: ../lettreinfo.php:1714 ../lettreinfo.php:1797
+#: ../lettreinfo.php:1731 ../lettreinfo.php:1814
 msgid "Configuration "
 msgstr "Configuration "
 
-#: ../lettreinfo.php:1720
+#: ../lettreinfo.php:1737
 msgid "Send a copy of each burst of shipments to:"
 msgstr "Envoyer une copie de chaque salve d'envois à :"
 
-#: ../lettreinfo.php:1728
+#: ../lettreinfo.php:1745
 msgid "Save"
 msgstr "Sauvegarder"
 
-#: ../lettreinfo.php:1744
+#: ../lettreinfo.php:1761
 msgid ""
 "New options are available for your Newsletter, please go to the "
 "configuration page"
@@ -709,137 +713,169 @@ msgstr ""
 "De nouvelles options sont disponibles pour votre Lettre d'information, s'il "
 "vous plait rendez vous à la page de configuration"
 
-#: ../lettreinfo.php:1803
+#: ../lettreinfo.php:1820
 msgid "Default sender name:"
 msgstr "Nom d'exp&eacute;diteur par d&eacute;faut :"
 
-#: ../lettreinfo.php:1810
+#: ../lettreinfo.php:1827
 msgid "Default reply address:"
 msgstr "Adresse de r&eacute;ponse par d&eacute;faut :"
 
-#: ../lettreinfo.php:1817
+#: ../lettreinfo.php:1834
 msgid "Unsuscribe page"
 msgstr "Page de d&eacute;sinscription"
 
-#: ../lettreinfo.php:1839
+#: ../lettreinfo.php:1856
 msgid "Reply page"
 msgstr "Adresse de retour"
 
-#: ../lettreinfo.php:1859
+#: ../lettreinfo.php:1876
 msgid "Pre-check \"Share buttons\""
 msgstr "Pré-cocher \"Boutons de partage\""
 
-#: ../lettreinfo.php:1868
+#: ../lettreinfo.php:1885
 msgid "Confirmation e-mails "
 msgstr "Courriels de confirmation"
 
-#: ../lettreinfo.php:1874
+#: ../lettreinfo.php:1891
 msgid "Sender email:"
 msgstr "Courriel de l'exp&eacute;diteur :"
 
-#: ../lettreinfo.php:1881
+#: ../lettreinfo.php:1898
 msgid "Suscribe subject:"
 msgstr "Objet d'inscription :"
 
-#: ../lettreinfo.php:1888
+#: ../lettreinfo.php:1905
 msgid "Suscribe Message:"
 msgstr "Message d'inscription"
 
-#: ../lettreinfo.php:1895
+#: ../lettreinfo.php:1912
 msgid "Unuscribe subject:"
 msgstr "Objet de d&eacute;sinscription"
 
-#: ../lettreinfo.php:1902
+#: ../lettreinfo.php:1919
 msgid "Unsuscribe message:"
 msgstr "Message de d&eacute;sinscription"
 
-#: ../lettreinfo.php:1918
+#: ../lettreinfo.php:1935
 msgid "Help"
 msgstr "Aide"
 
-#: ../lettreinfo.php:1925
+#: ../lettreinfo.php:1942
 msgid "Shortcods used:"
 msgstr "Shortcodes dans le site :"
 
-#: ../lettreinfo.php:1927
+#: ../lettreinfo.php:1944
 msgid "Insert suscribe form in a page :"
 msgstr "Insertion du formulaire d'inscription dans une page :"
 
-#: ../lettreinfo.php:1928
+#: ../lettreinfo.php:1945
 msgid "Insert answer form in a page :"
 msgstr "Insertion du formulaire de r&eacute;ponse dans une page :"
 
-#: ../lettreinfo.php:1929
+#: ../lettreinfo.php:1946
 msgid "Insert answer link in a newsletter :"
 msgstr "Insertion d'un lien de r&eacute;ponse dans une lettre d'info :"
 
-#: ../lettreinfo.php:1931
+#: ../lettreinfo.php:1948
 msgid "Skins shortcodes"
 msgstr "Shortcodes dans un th&egrave;me:"
 
-#: ../lettreinfo.php:1933
+#: ../lettreinfo.php:1950
 msgid "Insert newsletter content in a skin :"
 msgstr "insertion du contenu d'une lettre dans un th&egrave;me :"
 
-#: ../lettreinfo.php:1934
+#: ../lettreinfo.php:1951
 msgid "Insert an unsuscribe link :"
 msgstr "Insertion d'un lien de d&eacute;sinscription :"
 
-#: ../lettreinfo.php:1936
+#: ../lettreinfo.php:1953
 msgid "Legend of sending symbols:"
 msgstr "L&eacute;gende des symboles d'envoi :"
 
-#: ../lettreinfo.php:1938
+#: ../lettreinfo.php:1955
 msgid "Invalid email"
 msgstr "Courriel invalide :"
 
-#: ../lettreinfo.php:1939
+#: ../lettreinfo.php:1956
 msgid "Sending failed"
 msgstr "Envoi &eacute;chou&eacute; :"
 
-#: ../lettreinfo.php:1940
+#: ../lettreinfo.php:1957
 msgid "Newsletter successfully sent"
 msgstr "Envoi effectu&eacute; avec succ&egrave;s :"
 
-#: ../lettreinfo.php:1941
+#: ../lettreinfo.php:1958
 msgid "Address on the list of unsubscribed:"
 msgstr "Adresse inscrite sur la liste des d&eacute;sinscrits :"
 
-#: ../lettreinfo.php:1942
+#: ../lettreinfo.php:1959
 msgid "Email has been readen"
 msgstr "L'email a &eacute;t&eacute; lu"
 
-#: ../lettreinfo.php:1992 ../lettreinfo.php:2009
+#: ../lettreinfo.php:2009 ../lettreinfo.php:2026
 msgid "Suscribe newsletter"
 msgstr "Inscription &agrave; la Lettre d'info"
 
-#: ../lettreinfo.php:1995
+#: ../lettreinfo.php:2012
 msgid "Form / unsubscribe and archives NewsLetter"
 msgstr ""
 "Formulaire d'inscription/d&eacute;sinscription et archives de la Lettre "
 "d'info"
 
-#: ../lettreinfo.php:2019
+#: ../lettreinfo.php:2051
 msgid "Title"
 msgstr "Titre"
 
-#: ../lettreinfo.php:2022
-msgid "Hide archives link"
-msgstr "Cacher le lien vers les archives"
+#: ../lettreinfo.php:2055
+msgid "Label text"
+msgstr "Texte de description"
 
-#: ../lettreinfo.php:2024
+#: ../lettreinfo.php:2059
+msgid "Input text"
+msgstr "Texte du champ de saisie"
+
+#: ../lettreinfo.php:2063
+msgid "Button text"
+msgstr "Texte du bouton"
+
+#: ../lettreinfo.php:2067
+msgid "Hide suscribe/unsuscribe options"
+msgstr "Cacher les options d'inscription/désinscription"
+
+#: ../lettreinfo.php:2069 ../lettreinfo.php:2076
 msgid "No"
 msgstr "Non"
 
-#: ../lettreinfo.php:2025
+#: ../lettreinfo.php:2070 ../lettreinfo.php:2077
 msgid "Yes"
 msgstr "Oui"
 
-#: ../lettreinfo.php:2045
+#: ../lettreinfo.php:2074
+msgid "Hide archives link"
+msgstr "Cacher le lien vers les archives"
+
+#: ../lettreinfo.php:2081
+msgid "Advanced options"
+msgstr "Options avancées"
+
+#: ../lettreinfo.php:2082
+msgid "Form class"
+msgstr "Class dur formulaire"
+
+#: ../lettreinfo.php:2085
+msgid "Text class"
+msgstr "Class du texte"
+
+#: ../lettreinfo.php:2088
+msgid "Button class"
+msgstr "Class du bouton"
+
+#: ../lettreinfo.php:2107
 msgid "Add title to content"
 msgstr "Ajouter le titre au contenu"
 
-#: ../lettreinfo.php:2071
+#: ../lettreinfo.php:2133
 msgid "No skin available"
 msgstr "Aucun habillage disponible"
 

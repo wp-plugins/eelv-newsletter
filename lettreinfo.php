@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.5
+Version: 3.5.6
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -452,19 +452,33 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   function get_news_form($id=''){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
 	$eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
+	$eelv_li_xs_title= get_option('eelv_li_xs_title');
+	$eelv_li_xs_options = get_option('eelv_li_xs_options',0);
+	$eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
+	$eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
+	$eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
+	
+	$eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
+	$eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Suscribe our newsletter', 'eelv_lettreinfo'));
+	$eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
+	
+	
     ?>
-<form action="#" method="post" id="newsform<?=$id?>" class="newsform" onsubmit="if(this.news_email.value=='' || this.news_email.value=='newsletter : votre email'){ return false; }">
+<form action="#" method="post" id="newsform<?=$id?>" class="newsform <?php if(!empty($eelv_li_xs_formclass)) echo $eelv_li_xs_formclass; ?>" onsubmit="if(this.news_email.value=='' || this.news_email.value=='<?=addslashes($eelv_li_xs_texttext)?>'){ return false; }" >
   <div>
-    <label class="screen-reader-text" for="news_email<?=$id?>"><?=__('Suscribe our newsletter', 'eelv_lettreinfo')?></label>
-    <input type="text" name="news_email" id="news_email<?=$id?>" value="" placeholder="newsletter : votre email" onfocus="document.getElementById('news_hidden_option<?=$id?>').style.display='block';"/>
-    <input type="submit" value="ok"/>        
+    <label class="screen-reader-text" for="news_email<?=$id?>"><?=$eelv_li_xs_labeltext?></label>
+    <input type="text" name="news_email" id="news_email<?=$id?>" value="" placeholder="<?=$eelv_li_xs_texttext?>" <?php if(!empty($eelv_li_xs_textclass)) echo'class="'.$eelv_li_xs_textclass.'"'; ?>/>
+    <input type="submit" value="<?=$eelv_li_xs_buttontext?>" <?php if(!empty($eelv_li_xs_buttonclass)) echo'class="'.$eelv_li_xs_buttonclass.'"'; ?>/>  
+    <?php if($eelv_li_xs_options==0 || $eelv_li_xs_archives==0){ ?>      
     <div id='news_hidden_option<?=$id?>' class='news_hidden_option'>
-      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Suscribe", 'eelv_lettreinfo')?></label>
-      <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Unsuscribe", 'eelv_lettreinfo')?></label>
-      <?php if($eelv_li_xs_archives==0){ ?>
-      <p><a href="/newsletter_archive/"><?=__("Last newsletters", 'eelv_lettreinfo')?></a></p>
+      <?php if($eelv_li_xs_options==0){ ?>
+	      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Suscribe", 'eelv_lettreinfo')?></label>
+	      <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Unsuscribe", 'eelv_lettreinfo')?></label>
+      <?php } if($eelv_li_xs_archives==0){ ?>
+      	  <p><a href="/newsletter_archive/"><?=__("Last newsletters", 'eelv_lettreinfo')?></a></p>
       <?php } ?>
     </div>
+    <?php } ?>
     <?php if($news_reg_return!=''){?>
     <div class='news_return' id='news_return<?=$id?>' onclick="document.getElementById('news_return<?=$id?>').style.display='none';">
       <?=$news_reg_return?>
@@ -2007,27 +2021,72 @@ function widget_eelv_lettreinfo_side($params) {
       <?php get_news_form('widget'); ?>
       <?php echo $params['after_widget'];?>
       <?php
-                    }
+   }
                     
  wp_register_widget_control('widget_eelv_lettreinfo_insc', __('Suscribe newsletter','eelv_lettreinfo'),'widget_eelv_lettreinfo_insc_control');
  function widget_eelv_lettreinfo_insc_control(){
    if( isset($_POST['eelv_li_xs_title']) ){
 	    update_option('eelv_li_xs_title', stripslashes($_POST['eelv_li_xs_title']));
-	    update_option('eelv_li_xs_archives', $_POST['eelv_li_xs_archives']);
-	    echo 'Options sauvegard&eacute;es<br/>';
+	    update_option('eelv_li_xs_archives', stripslashes($_POST['eelv_li_xs_archives']));
+	    update_option('eelv_li_xs_options', stripslashes($_POST['eelv_li_xs_options']));
+	    update_option('eelv_li_xs_formclass', stripslashes($_POST['eelv_li_xs_formclass']));
+	    update_option('eelv_li_xs_textclass', stripslashes($_POST['eelv_li_xs_textclass']));
+	    update_option('eelv_li_xs_buttonclass', stripslashes($_POST['eelv_li_xs_buttonclass']));
+	    update_option('eelv_li_xs_labeltext', stripslashes($_POST['eelv_li_xs_labeltext']));
+	    update_option('eelv_li_xs_texttext', stripslashes($_POST['eelv_li_xs_texttext']));
+	    update_option('eelv_li_xs_buttontext', stripslashes($_POST['eelv_li_xs_buttontext']));
+	    _e('Options saved', 'eelv_lettreinfo' );
    }
                       $eelv_li_xs_title= get_option('eelv_li_xs_title');
+                      $eelv_li_xs_options = get_option('eelv_li_xs_options',0);
                       $eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
+                      $eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
+                      $eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
+                      $eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
+					  $eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
+					$eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Suscribe our newsletter', 'eelv_lettreinfo'));
+					$eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
+	
                       ?>
-      <p><label for='eelv_li_xs_title'><?php _e('Title', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_title' id='eelv_li_xs_title' value="<?=$eelv_li_xs_title?>"/></label>
+      <p><label><?php _e('Title', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_title' value="<?=$eelv_li_xs_title?>"/></label>
       </p>
-      <p><label for='eelv_li_xs_archives'><?php _e('Hide archives link', 'eelv_lettreinfo' ) ?><br/>
-        <select name='eelv_li_xs_archives' id='eelv_li_xs_archives'>
+      
+      <p><label><?php _e('Label text', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_labeltext' value="<?=$eelv_li_xs_labeltext?>"/></label>
+      </p>
+      
+      <p><label><?php _e('Input text', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_texttext' value="<?=$eelv_li_xs_texttext?>"/></label>
+      </p>
+      
+      <p><label><?php _e('Button text', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_buttontext' value="<?=$eelv_li_xs_buttontext?>"/></label>
+      </p>
+      
+      <p><label'><?php _e('Hide suscribe/unsuscribe options', 'eelv_lettreinfo' ) ?><br/>
+        <select name='eelv_li_xs_options'>
+            <option value="0" <?php if($eelv_li_xs_options==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
+            <option value="1" <?php if($eelv_li_xs_options==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
+        </select>
+        </label>
+      </p>
+      <p><label><?php _e('Hide archives link', 'eelv_lettreinfo' ) ?><br/>
+        <select name='eelv_li_xs_archives'>
             <option value="0" <?php if($eelv_li_xs_archives==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
             <option value="1" <?php if($eelv_li_xs_archives==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
         </select>
         </label>
+      </p>
+      <h5><?php _e('Advanced options', 'eelv_lettreinfo' ) ?></h5>
+      <p><label><?php _e('Form class', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_formclass' value="<?=$eelv_li_xs_formclass?>"/></label>
+      </p>
+      <p><label><?php _e('Text class', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_textclass' value="<?=$eelv_li_xs_textclass?>"/></label>
+      </p>
+      <p><label><?php _e('Button class', 'eelv_lettreinfo' ) ?><br/>
+        <input type='text' name='eelv_li_xs_buttonclass' value="<?=$eelv_li_xs_buttonclass?>"/></label>
       </p>
       <?php
   }
