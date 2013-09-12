@@ -137,3 +137,26 @@ margin-bottom:40px;
 	background:#FDD;
 	border-color:#EBB;
 }
+
+
+/***** Widget **/
+#newsformwidget{
+	position:relative;
+	height:35px;
+}
+#news_hidden_optionwidget{
+	text-align:left;
+	color:#FFF;
+	background:#333;
+	position:absolute;
+	overflow: hidden;
+	top:20px;
+	height:0px;
+}
+#news_hidden_optionwidget label,#news_hidden_optionwidget p{
+	padding:0.5em;
+	margin:0;
+}
+#news_hidden_optionwidget a{
+	color:#999;
+}

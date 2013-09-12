@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.4
+Version: 3.5.5
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -16,7 +16,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	
   // ID for DB version
   $eelv_newsletter_version = '2.6.5';
-  $eelv_newsletter_options_version = 3;
+  $eelv_newsletter_options_version = 4;
   $newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
   global $wpdb, $eelv_nl_default_themes, $eelv_nl_content_themes, $lettreinfo_plugin_path, $newsletter_plugin_url;
   $newsletter_plugin_url = plugins_url();
@@ -351,7 +351,10 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
  }
   /////////////////////////////////////////////FEUILLE DE STYLE + VALIDATION FORMULAIRE
     function eelv_news_scripts() {
+      global $eelv_newsletter_version;
 	  wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
+	  wp_enqueue_script('jquery');
+	  wp_enqueue_script('eelv_newsletter',plugins_url( 'newsletter.js' , __FILE__ ),'jquery',$eelv_newsletter_version,true);
 	}
 	function style_newsletter(){
     global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
@@ -1320,7 +1323,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
       <?php  }
                       ?>
       <label for="">
-        <input type="checkbox" id="nl_with_share" checked="checked"/><?=__('Add share links', 'eelv_lettreinfo' )?>
+        <input type="checkbox" id="nl_with_share" <?php if(get_option( 'newsletter_precoch_rs' )=='1') echo'checked="checked"'; ?>/><?=__('Add share links', 'eelv_lettreinfo' )?>
       </label>
       </td></tr></table>
       <?php
@@ -1755,7 +1758,7 @@ function newsletter_page_configuration() {
 	update_option( 'newsletter_default_mel', $_REQUEST['newsletter_default_mel'] );
 	update_option( 'newsletter_desinsc_url', $_REQUEST['newsletter_desinsc_url'] );
 	update_option( 'newsletter_reply_url', $_REQUEST['newsletter_reply_url'] );
-	update_option( 'newsletter_options_version', $_REQUEST['newsletter_options_version'] );
+	update_option( 'newsletter_precoch_rs', $_REQUEST['newsletter_precoch_rs'] );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
@@ -1769,10 +1772,12 @@ function newsletter_page_configuration() {
 <div class="updated"><p><strong><?php _e('Options saved', 'eelv_lettreinfo' ); ?></strong></p></div>
 <?php 
   }  
+  update_option( 'newsletter_options_version', $_REQUEST['newsletter_options_version'] );
   $default_exp = get_option( 'newsletter_default_exp' );
   $default_mel = get_option( 'newsletter_default_mel' );
   $desinsc_url = get_option( 'newsletter_desinsc_url' );
   $reply_url = get_option( 'newsletter_reply_url' );
+  $precoch_rs = get_option( 'newsletter_precoch_rs' );
   //$affichage_NL_hp = get_option( 'affichage_NL_hp' );
   
   $newsletter_msg = get_option( 'newsletter_msg' );
@@ -1852,6 +1857,14 @@ function newsletter_page_configuration() {
 				<legend><?php echo ( !empty($reply_url) ? '<a href="'.$reply_url.'" target="_blank">'.$reply_url.'</a>' : ''); ?></legend>  
                 </td>
               </tr>
+              <tr>
+                <td width="30%">
+                  <label for="newsletter_precoch_rs"><?php _e('Pre-check "Share buttons"', 'eelv_lettreinfo' ) ?></label>
+                </td><td>
+                <input type="checkbox" name="newsletter_precoch_rs"  id="newsletter_precoch_rs"  value="1" <?php echo $precoch_rs==1?'checked':''; ?>>
+                </td>
+              </tr>
+              
               
               </tbody>
               <thead>

@@ -3,10 +3,10 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.1
-Tested up to: 3.6.0
+Tested up to: 3.6.1
 Stable tag: /trunk
-License: CC BY-NC 3.0
-License URI: http://creativecommons.org/licenses/by-nc/3.0/
+License: GPLv3
+License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Add a registration form on FrontOffice
 a newsletter adminer on BackOffice :
@@ -98,6 +98,12 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
+
+= 3.5.5 =
+* Add : Pre-checked option for share buttons
+* Add : Default style for widget, suscribe/unsuscribe show/hide occurence
+* Fix : Auto update option version
+* Fix : Change licence from CC BY-NC 3.0 to GPLv3
 
 = 3.5.4 =
 * Fix : use wp_enqueue_style function
