@@ -1,10 +1,11 @@
 jQuery(document).ready(function(){
-	jQuery('#news_hidden_optionwidget').animate({height:'toggle'},1);
-	jQuery('#news_emailwidget').focus(function(){
-		jQuery('#news_hidden_optionwidget').animate({height:'toggle'},500);
+	jQuery('.news_hidden_option').animate({height:'toggle'},1);
+	jQuery('.newsform input').focus(function(){
+		console.log('focus');
+		jQuery(this).parent().find('.news_hidden_option').animate({height:'toggle'},500);
 	});
-	jQuery('#news_emailwidget').blur(function(){
-		jQuery('#news_hidden_optionwidget').animate({height:'toggle'},500);
+	jQuery('.newsform input').blur(function(){
+		jQuery(this).parent().find('.news_hidden_option').animate({height:'toggle'},500);
 	});
 	
 	jQuery('.newsform input[type=text]').each(function(){

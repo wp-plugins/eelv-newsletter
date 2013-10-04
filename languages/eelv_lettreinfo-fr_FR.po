@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: eelv-newsletter\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2013-09-12 17:34+0100\n"
-"PO-Revision-Date: 2013-09-12 17:35+0100\n"
+"PO-Revision-Date: 2013-10-04 09:39+0100\n"
 "Last-Translator: Bastien Ho <bastienho@urbancube.fr>\n"
 "Language-Team: bastho\n"
 "MIME-Version: 1.0\n"
@@ -861,7 +861,7 @@ msgstr "Options avancées"
 
 #: ../lettreinfo.php:2082
 msgid "Form class"
-msgstr "Class dur formulaire"
+msgstr "Class du formulaire"
 
 #: ../lettreinfo.php:2085
 msgid "Text class"
