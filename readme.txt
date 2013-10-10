@@ -99,6 +99,9 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.5.8 =
+* Fix : Minor bug fix
+
 = 3.5.7 =
 * Fix : Correctly allow multiple form occurences
 * Fix : French translation
