@@ -8,7 +8,7 @@ Stable tag: /trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Add a registration form on FrontOffice
+Add a registration form on Front-office
 a newsletter adminer on BackOffice :
 - manage skins
 - address book
