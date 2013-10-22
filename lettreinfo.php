@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.8
+Version: 3.5.9
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -846,11 +846,13 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
           <form action='<?=$action;?>' method="post" enctype="multipart/form-data">              
             <ul>
               <li>
-                <label for="imp_unite">
+              	<label>
                   <h3><input type="radio" name="import_type" value='unite' id='imp_unite' checked="checked" /> <?php _e('Edit contact', 'eelv_lettreinfo' ) ?></h3>
-                  <?php _e('Name', 'eelv_lettreinfo' ) ?>            
+                 </label>
+                  <label><?php _e('Name', 'eelv_lettreinfo' ) ?>            
                   <input type="text" name="con_nom" size="30" value="<?=$con_nom;?>" id="con_nom" autocomplete="off" onfocus="import_type[0].checked=true"/>  
-                  <?php _e('E-mail', 'eelv_lettreinfo' ) ?>               
+                  </label>
+                  <label><?php _e('E-mail', 'eelv_lettreinfo' ) ?>               
                   <input type="email" name="con_email" size="30" value="<?=$con_email;?>" id="con_email" autocomplete="off" onfocus="import_type[0].checked=true"/>
                 </label>
               </li>
@@ -858,9 +860,11 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
               <li>
                 <label for="imp_masse">
                   <h3><input type="radio" name="import_type" value='masse' id='imp_masse' /> <?php _e('Mass copy', 'eelv_lettreinfo' ) ?></h3>
-                  <p><?php _e('Return separated email address', 'eelv_lettreinfo' ) ?></p>                       
+                 </label>
+                 <label>
+                 <p><?php _e('Return separated email address', 'eelv_lettreinfo' ) ?></p>                       
                   <textarea cols="50" rows="10" name="con_mul" id="con_mul" onfocus="import_type[1].checked=true"></textarea>
-                </label> 
+                 </label>
               </li>
               <!--li>
               <label for="imp_file">
@@ -1768,11 +1772,11 @@ add_action('admin_head','eelv_newsletter_addAlert');
 function newsletter_page_configuration() {
   global $newsletter_plugin_url,$wpdb, $eelv_newsletter_options_version;
   if( isset($_REQUEST[ 'type' ]) && $_REQUEST[ 'type' ] == 'update' ) {    
-	update_option( 'newsletter_default_exp', $_REQUEST['newsletter_default_exp'] );
-	update_option( 'newsletter_default_mel', $_REQUEST['newsletter_default_mel'] );
-	update_option( 'newsletter_desinsc_url', $_REQUEST['newsletter_desinsc_url'] );
-	update_option( 'newsletter_reply_url', $_REQUEST['newsletter_reply_url'] );
-	update_option( 'newsletter_precoch_rs', $_REQUEST['newsletter_precoch_rs'] );
+	update_option( 'newsletter_default_exp', stripslashes($_REQUEST['newsletter_default_exp']) );
+	update_option( 'newsletter_default_mel', stripslashes($_REQUEST['newsletter_default_mel']) );
+	update_option( 'newsletter_desinsc_url', stripslashes($_REQUEST['newsletter_desinsc_url']) );
+	update_option( 'newsletter_reply_url', stripslashes($_REQUEST['newsletter_reply_url']) );
+	update_option( 'newsletter_precoch_rs', stripslashes($_REQUEST['newsletter_precoch_rs']) );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,

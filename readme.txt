@@ -10,11 +10,11 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 Add a registration form on Front-office
 a newsletter adminer on BackOffice :
-- manage skins
-- address book
-- archives
-- answers
-- tracking
+* manage skins
+* address book
+* archives
+* answers
+* tracking
 
 == Description ==
 = Add a registration form on FrontOffice, a newsletter manager on BackOffice : =
@@ -89,8 +89,8 @@ Yes, skins are registered as post-type.
 
 == Screenshots ==
 
-<img src="http://ecolosites.eelv.fr/files/2012/10/newsletter.png" alt="newsletter.png"/>
-<img src="http://ecolosites.eelv.fr/files/2012/10/newsletter2.png" alt="newsletter.png"/>
+1. Template manager
+2. Sending options
 
 == Changelog ==
 
@@ -98,6 +98,10 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
+
+= 3.5.9 = 
+* Fix : Options stripslashes
+* Fix : Address book fields focus
 
 = 3.5.8 =
 * Fix : Minor bug fix
