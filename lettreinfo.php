@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.5.9
+Version: 3.6.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -1234,6 +1234,12 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                       ?>
       </td><td valign="top" style='padding-left:20px'>
       <h4><?php _e('Insert some content', 'eelv_lettreinfo' ) ?></h4>
+      <h3><?php _e('Available adressing variables', 'eelv_lettreinfo' ) ?></h3>
+      <ul>
+      	<li><a onclick="incontent(' {dest_name} ');">{dest_name}</a></li>
+      	<li><a onclick="incontent(' {dest_email} ');">{dest_email}</a></li>
+      </ul>
+      
       <script>
         var IEbof=false;
       </script>
@@ -1625,6 +1631,19 @@ if($templates_nb>0){
       <?php
                     }
                     
+					function newsletter_getuserinfos($email){
+						global $newsletter_tb_name,$wpdb;
+						$user = get_user_by('email',$email);
+						
+						if(!$user){
+							$user=new WP_User();
+							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
+	                        if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
+	                          $user->display_name=$ret[0]['nom'];
+							}
+						}
+						return $user;
+					}
                     ///////////////////////////////////// SEMI CRON AUTO SEND
                     function newsletter_autosend(){
                       global $newsletter_tb_name,$wpdb,$newsletter_plugin_url,$eelv_nl_default_themes,$nl_id,$dest;
@@ -1634,6 +1653,13 @@ if($templates_nb>0){
                       if($send_nb>0){
                         $desinsc_url = get_option( 'newsletter_desinsc_url' );
                         $env=0;
+						
+						$content_top='<link rel="stylesheet" href="'.plugins_url( 'mail.css' , __FILE__ ).'" type="text/css" media="all" />';
+                        $content_top.='<style type="text/css">';
+						$content_top.=file_get_contents(plugin_dir_path(__FILE__ ).'mail.css');                        
+                        $content_top.='</style>';
+                            
+						
                         foreach($IDS as $nl_id){ 
                           $my_temp=get_post_meta($nl_id, 'nl_template',true);
                           $sujet = get_post_meta($nl_id, 'sujet', true);
@@ -1647,7 +1673,10 @@ if($templates_nb>0){
                           $template=get_post($my_temp);
                           if($template){
                           	
-                            $content = '<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>'.nl_content($nl_id);
+							
+                          	$content=$content_top.'<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>';
+                            $content.=nl_content($nl_id);
+							  
                             $prov = getenv("SERVER_NAME");
                             $eol="\n";
                             $now = time();
@@ -1668,12 +1697,28 @@ if($templates_nb>0){
                             
                             while($dest = array_shift($dests)){
                               $dest=trim($dest);
-                              if (filter_var($dest, FILTER_VALIDATE_EMAIL)) {
+							  $destinataire=newsletter_getuserinfos($dest);
+                              if ($destinataire && filter_var($dest, FILTER_VALIDATE_EMAIL)) {
                                 $ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$dest)."' AND `parent`='2' LIMIT 0,1");
                                 if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
                                   if( update_post_meta($nl_id, 'destinataires',implode(',',$dests)) ){
                                   	
+									
+									$sujet=str_replace('{dest_name}',$destinataire->display_name,$sujet);
+									$sujet=str_replace('{dest_email}',$dest,$sujet);
+									
+									
+									if(strstr($content,'{dest_name}')){
+										$content=str_replace(' {dest_name}',' '.$destinataire->display_name,$content);
+										$content=str_replace('{dest_name}',$destinataire->display_name,$content);
+									}
+									if(strstr($content,'{dest_email}')){
+										$content=str_replace(' {dest_email}',' '.$dest,$content);
+										$content=str_replace('{dest_email}',$dest,$content);
+									}
+									
 									$the_content=apply_filters('the_content',$content);
+									
 									if($nl_spy==1){
 										  $the_content.='<a href="'.get_bloginfo('url').'"><img src="'.$newsletter_plugin_url.'/eelv-newsletter/reading/'.base64_encode($dest.'!'.$nl_id).'/logo.png" border="none" alt="'.get_bloginfo('url').'"/></a>';
 									  }
@@ -1777,6 +1822,7 @@ function newsletter_page_configuration() {
 	update_option( 'newsletter_desinsc_url', stripslashes($_REQUEST['newsletter_desinsc_url']) );
 	update_option( 'newsletter_reply_url', stripslashes($_REQUEST['newsletter_reply_url']) );
 	update_option( 'newsletter_precoch_rs', stripslashes($_REQUEST['newsletter_precoch_rs']) );
+	update_option( 'newsletter_spy_text', stripslashes($_REQUEST['newsletter_spy_text']) );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
@@ -1796,6 +1842,11 @@ function newsletter_page_configuration() {
   $desinsc_url = get_option( 'newsletter_desinsc_url' );
   $reply_url = get_option( 'newsletter_reply_url' );
   $precoch_rs = get_option( 'newsletter_precoch_rs' );
+  $spy_text = get_option( 'newsletter_spy_text' ,str_replace(array('http://','https://'),'',get_bloginfo('url')));
+  
+  if($spy_text==''){
+ 	$spy_text=str_replace(array('http://','https://'),'',get_bloginfo('url'));
+ }
   //$affichage_NL_hp = get_option( 'affichage_NL_hp' );
   
   $newsletter_msg = get_option( 'newsletter_msg' );
@@ -1882,7 +1933,13 @@ function newsletter_page_configuration() {
                 <input type="checkbox" name="newsletter_precoch_rs"  id="newsletter_precoch_rs"  value="1" <?php echo $precoch_rs==1?'checked':''; ?>>
                 </td>
               </tr>
-              
+              <tr>
+                <td width="30%">
+                  <label for="newsletter_spy_text"><?php _e('Spy image text:', 'eelv_lettreinfo' ) ?></label>
+                </td><td>
+                <input  type="text" name="newsletter_spy_text"  size="60"  id="newsletter_spy_text"  value="<?=$spy_text?>" class="wide">
+                </td>
+              </tr>
               
               </tbody>
               <thead>

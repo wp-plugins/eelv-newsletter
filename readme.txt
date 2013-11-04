@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.1
-Tested up to: 3.6.1
+Tested up to: 3.7.1
 Stable tag: /trunk
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -98,6 +98,11 @@ Yes, skins are registered as post-type.
 * Add : thumbnail size configuration
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
+
+= 3.6.0 = 
+* Add : Add addressing possibility with `name` and `email` values
+* Add : Default WP `aligncenter`, `alignleft` and `alignright` style support
+* Add : Edit spy image's text
 
 = 3.5.9 = 
 * Fix : Options stripslashes

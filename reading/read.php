@@ -23,7 +23,11 @@ $my_img = imagecreate( 400, 15 );
 $background = imagecolorallocate( $my_img, 255, 255, 255 );
 $text_colour = imagecolorallocate( $my_img, 150, 150, 150 );
 $font = 'Lato-Regular.ttf';
-imagettftext($my_img, 8, 0, 1, 10, $text_colour, $font, str_replace(array('http://','https://'),'',get_bloginfo('url')));
+$spy_text = get_option( 'newsletter_spy_text' );
+ if($spy_text==''){
+ 	$spy_text=str_replace(array('http://','https://'),'',get_bloginfo('url'));
+ }
+imagettftext($my_img, 8, 0, 1, 10, $text_colour, $font, $spy_text);
 header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT', true, 200);
 header('Expires: '.gmdate('D, d M Y H:i:s',strtotime('+1 day')).' GMT', true, 200);
 header( "Content-type: image/png" );
