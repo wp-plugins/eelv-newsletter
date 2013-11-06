@@ -1125,9 +1125,11 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                           $result = count_users();
                           foreach($result['avail_roles'] as $role => $count){
                             if(isset($_POST['rol_'.$role])){
-                              $blogusers = get_users('blog_id='.$wpdb->blogid.'&orderby=nicename&role='.$role);
+                              $blogusers = get_users(array('blog_id'=>$wpdb->blogid,'orderby'=>'nicename','role'=>$role));
                               foreach ($blogusers as $user) {
-                                $contacts.=$user->user_email.',';
+                              	if(in_array($role,$user->roles) || $role==$user->roles){
+	                                $contacts.=$user->user_email.',';
+								}
                               }
                             }
                           }
