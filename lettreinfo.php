@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.0
+Version: 3.6.1
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -1125,7 +1125,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                           $result = count_users();
                           foreach($result['avail_roles'] as $role => $count){
                             if(isset($_POST['rol_'.$role])){
-                              $blogusers = get_users('blog_id='.$wpdb->blogid.'&orderby=nicename&role=$role');
+                              $blogusers = get_users('blog_id='.$wpdb->blogid.'&orderby=nicename&role='.$role);
                               foreach ($blogusers as $user) {
                                 $contacts.=$user->user_email.',';
                               }
@@ -1234,9 +1234,10 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                       ?>
       </td><td valign="top" style='padding-left:20px'>
       <h4><?php _e('Insert some content', 'eelv_lettreinfo' ) ?></h4>
-      <h3><?php _e('Available adressing variables', 'eelv_lettreinfo' ) ?></h3>
+      <h3><?php _e('Available addressing variables', 'eelv_lettreinfo' ) ?></h3>
       <ul>
       	<li><a onclick="incontent(' {dest_name} ');">{dest_name}</a></li>
+      	<li><a onclick="incontent(' {dest_login} ');">{dest_login}</a></li>
       	<li><a onclick="incontent(' {dest_email} ');">{dest_email}</a></li>
       </ul>
       
@@ -1638,8 +1639,9 @@ if($templates_nb>0){
 						if(!$user){
 							$user=new WP_User();
 							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
-	                        if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
-	                          $user->display_name=$ret[0]['nom'];
+	                        if(is_array($ret) && sizeof($ret)==0){          
+	                          $user->display_name=$ret[0]['nom'];        
+	                          $user->user_login='';
 							}
 						}
 						return $user;
@@ -1705,12 +1707,17 @@ if($templates_nb>0){
                                   	
 									
 									$sujet=str_replace('{dest_name}',$destinataire->display_name,$sujet);
+									$sujet=str_replace('{dest_login}',$destinataire->user_login,$sujet);
 									$sujet=str_replace('{dest_email}',$dest,$sujet);
 									
 									
 									if(strstr($content,'{dest_name}')){
 										$content=str_replace(' {dest_name}',' '.$destinataire->display_name,$content);
 										$content=str_replace('{dest_name}',$destinataire->display_name,$content);
+									}
+									if(strstr($content,'{dest_login}')){
+										$content=str_replace(' {dest_login}',' '.$destinataire->user_login,$content);
+										$content=str_replace('{dest_login}',$destinataire->user_login,$content);
 									}
 									if(strstr($content,'{dest_email}')){
 										$content=str_replace(' {dest_email}',' '.$dest,$content);
@@ -1732,6 +1739,7 @@ if($templates_nb>0){
                                     }
                                     update_post_meta($nl_id, 'sentmails',$sent);
                                     $env++;
+									
                                   }
                                 }
                                 elseif(is_array($ret) && sizeof($ret)==1){           // Black list

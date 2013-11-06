@@ -99,6 +99,11 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.6.1 = 
+* Fix : Important bug fix with role selection for receipients
+* Add : Add addressing possibility with `login` values
+* Fix : French translation
+
 = 3.6.0 = 
 * Add : Add addressing possibility with `name` and `email` values
 * Add : Default WP `aligncenter`, `alignleft` and `alignright` style support
