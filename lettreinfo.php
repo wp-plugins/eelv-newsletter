@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.2
+Version: 3.6.3
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -1634,19 +1634,27 @@ if($templates_nb>0){
       <?php
                     }
                     
-					function newsletter_getuserinfos($email){
+					function newsletter_getuserinfos($courriel){
 						global $newsletter_tb_name,$wpdb;
-						$user = get_user_by('email',$email);
+						$dest=array(
+						'name'=>'',
+						'login'=>''
+						);
+						$user = get_user_by('email',$courriel);
 						
-						if(!$user){
+						if($user){
+							$dest['name']=$user->display_name;        
+	                        $dest['login']=$user->user_login;
+						}
+						else{
 							$user=new WP_User();
-							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
-	                        if(is_array($ret) && sizeof($ret)==0){          
-	                          $user->display_name=$ret[0]['nom'];        
-	                          $user->user_login='';
+							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$courriel)."'");
+	                        if(is_array($ret) && sizeof($ret)>0){          
+	                          $dest['name']=$ret[0]['nom'];        
+	                          $dest['login']='';
 							}
 						}
-						return $user;
+						return $dest;
 					}
                     ///////////////////////////////////// SEMI CRON AUTO SEND
                     function newsletter_autosend(){
@@ -1707,33 +1715,35 @@ if($templates_nb>0){
                                 if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
                                   if( update_post_meta($nl_id, 'destinataires',implode(',',$dests)) ){
                                   	
+									$the_content=$content;
+									$the_sujet=$sujet;
 									
-									$sujet=str_replace('{dest_name}',$destinataire->display_name,$sujet);
-									$sujet=str_replace('{dest_login}',$destinataire->user_login,$sujet);
-									$sujet=str_replace('{dest_email}',$dest,$sujet);
+									$the_sujet=str_replace('{dest_name}',$destinataire['name'],$the_sujet);
+									$the_sujet=str_replace('{dest_login}',$destinataire['login'],$the_sujet);
+									$the_sujet=str_replace('{dest_email}',$dest,$the_sujet);
 									
 									
-									if(strstr($content,'{dest_name}')){
-										$content=str_replace(' {dest_name}',' '.$destinataire->display_name,$content);
-										$content=str_replace('{dest_name}',$destinataire->display_name,$content);
+									if(strstr($the_content,'{dest_name}')){
+										$the_content=str_replace(' {dest_name}',' '.$destinataire['name'],$the_content);
+										$the_content=str_replace('{dest_name}',$destinataire['name'],$the_content);
 									}
-									if(strstr($content,'{dest_login}')){
-										$content=str_replace(' {dest_login}',' '.$destinataire->user_login,$content);
-										$content=str_replace('{dest_login}',$destinataire->user_login,$content);
+									if(strstr($the_content,'{dest_login}')){
+										$the_content=str_replace(' {dest_login}',' '.$destinataire['login'],$the_content);
+										$the_content=str_replace('{dest_login}',$destinataire['login'],$the_content);
 									}
 									if(strstr($content,'{dest_email}')){
-										$content=str_replace(' {dest_email}',' '.$dest,$content);
-										$content=str_replace('{dest_email}',$dest,$content);
+										$the_content=str_replace(' {dest_email}',' '.$dest,$the_content);
+										$the_content=str_replace('{dest_email}',$dest,$the_content);
 									}
 									
-									$the_content=apply_filters('the_content',$content);
+									$the_content=apply_filters('the_content',$the_content);
 									
 									if($nl_spy==1){
 										  $the_content.='<a href="'.get_bloginfo('url').'"><img src="'.$newsletter_plugin_url.'/eelv-newsletter/reading/'.base64_encode($dest.'!'.$nl_id).'/logo.png" border="none" alt="'.get_bloginfo('url').'"/></a>';
 									  }
 									
 									
-                                    if(mail($dest,$sujet,nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
+                                    if(mail($dest,$the_sujet,nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
                                       $sent = $dest.':1,'.$sent;
                                     }
                                     else{                    // Envoi KO

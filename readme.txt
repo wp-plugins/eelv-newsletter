@@ -99,8 +99,11 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.6.3 = 
+* Fix : Addressing assignation problem
+
 = 3.6.2 = 
-* Add : Multple verification for users role, for preventing conflict with custom capabilities
+* Add : Double verification for users role, for preventing conflict with custom capabilities
 
 = 3.6.1 = 
 * Fix : Important bug fix with role selection for receipients
