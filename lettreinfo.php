@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.3
+Version: 3.6.4
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -474,6 +474,8 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       <?php if($eelv_li_xs_options==0){ ?>
 	      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Suscribe", 'eelv_lettreinfo')?></label>
 	      <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Unsuscribe", 'eelv_lettreinfo')?></label>
+      <?php }else{ ?>
+      		<input type="hidden" name='news_action' value='1'>
       <?php } if($eelv_li_xs_archives==0){ ?>
       	  <p><a href="/newsletter_archive/"><?=__("Last newsletters", 'eelv_lettreinfo')?></a></p>
       <?php } ?>
@@ -1503,9 +1505,9 @@ if($templates_nb>0){
                       ?>    
       <p><?=$dest?></p>
       <?php if($dest!=''){ ?>
-      <a href='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>'><?=__('Automatically sending a new burst','eelv_lettreinfo')?></a>
+      <a href='post.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>'><?=__('Automatically sending a new burst','eelv_lettreinfo')?></a>
       <script>
-        document.location='edit.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
+        document.location='post.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
       </script>
       <?php }
                     }
@@ -1636,25 +1638,24 @@ if($templates_nb>0){
                     
 					function newsletter_getuserinfos($courriel){
 						global $newsletter_tb_name,$wpdb;
-						$dest=array(
-						'name'=>'',
-						'login'=>''
+						$destin=array(
+							'name'=>'',
+							'login'=>''
 						);
 						$user = get_user_by('email',$courriel);
 						
 						if($user){
-							$dest['name']=$user->display_name;        
-	                        $dest['login']=$user->user_login;
+							$destin['name']=$user->display_name;        
+	                        $destin['login']=$user->user_login;
 						}
 						else{
-							$user=new WP_User();
 							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$courriel)."'");
 	                        if(is_array($ret) && sizeof($ret)>0){          
-	                          $dest['name']=$ret[0]['nom'];        
-	                          $dest['login']='';
+	                          $destin['name']=$ret[0]->nom;        
+	                          $destin['login']='';
 							}
 						}
-						return $dest;
+						return $destin;
 					}
                     ///////////////////////////////////// SEMI CRON AUTO SEND
                     function newsletter_autosend(){
