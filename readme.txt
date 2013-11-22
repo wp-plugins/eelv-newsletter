@@ -99,6 +99,9 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.6.5 = 
+* Fix : suscription bug
+
 = 3.6.4 = 
 * Fix : update edit.php to post.php
 * Fix : performances optimisation

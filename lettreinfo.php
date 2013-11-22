@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.4
+Version: 3.6.5
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -474,13 +474,14 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
       <?php if($eelv_li_xs_options==0){ ?>
 	      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Suscribe", 'eelv_lettreinfo')?></label>
 	      <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Unsuscribe", 'eelv_lettreinfo')?></label>
-      <?php }else{ ?>
-      		<input type="hidden" name='news_action' value='1'>
       <?php } if($eelv_li_xs_archives==0){ ?>
       	  <p><a href="/newsletter_archive/"><?=__("Last newsletters", 'eelv_lettreinfo')?></a></p>
       <?php } ?>
     </div>
-    <?php } ?>
+    <?php }
+    if($eelv_li_xs_options==1){ ?>
+      		<input type="hidden" name='news_action' value='1'>
+      <?php } ?>
     <?php if($news_reg_return!=''){?>
     <div class='news_return' id='news_return<?=$id?>' onclick="document.getElementById('news_return<?=$id?>').style.display='none';">
       <?=$news_reg_return?>
