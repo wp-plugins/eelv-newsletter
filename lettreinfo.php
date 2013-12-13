@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.5
+Version: 3.6.6
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -70,7 +70,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
   function newsletter_BO(){
     global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
     
-    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => false,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'menu_icon'=>plugin_dir_url( __FILE__ ).'img/mail.png','labels' => array (
+    register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => false,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'labels' => array (
       'name' => __("Newsletter",'eelv_lettreinfo'),
       'singular_name' => __("Newsletter",'eelv_lettreinfo'),
       'menu_name' => __("Newsletter",'eelv_lettreinfo'),
@@ -350,6 +350,9 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 		return "<div style='width:550px; margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Share on : ', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode($link)."&t=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".$title."%20".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode($link)."&title=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a></div>&nbsp;\n";	
  }
   /////////////////////////////////////////////FEUILLE DE STYLE + VALIDATION FORMULAIRE
+  	function eelv_news_adminscripts(){  		
+	  wp_enqueue_style('eelv_newsletter',plugins_url( 'admin.css' , __FILE__ ));
+  	}
     function eelv_news_scripts() {
       global $eelv_newsletter_version;
 	  wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
@@ -2226,6 +2229,7 @@ add_action('admin_menu', 'eelv_news_ajout_menu');
 add_action( 'network_admin_menu', 'eelv_news_ajout_network_menu'); 
 add_action('wp_head', 'style_newsletter');
 add_action('wp_enqueue_scripts', 'eelv_news_scripts');
+add_action('admin_enqueue_scripts', 'eelv_news_adminscripts');
 add_action( 'admin_init', 'newsletter_autosend' );
 add_filter( 'archive_template', 'eelv_lettrinfo_get_custom_archive_template' );
 add_filter( 'single_template', 'eelv_lettrinfo_get_custom_single_template' );
