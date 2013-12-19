@@ -2,7 +2,7 @@
 Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email, tracking, addressbook, mailing
-Requires at least: 3.1
+Requires at least: 3.8
 Tested up to: 3.8
 Stable tag: /trunk
 License: GPLv3
