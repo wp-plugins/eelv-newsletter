@@ -99,6 +99,10 @@ Yes, skins are registered as post-type.
 * Add : Archive widget
 * Add : Drag'n'drop editor tool
 
+= 3.6.7 = 
+* Add : 5sec. delay between two bursts
+* Add : Custom wpdb query for users adressing in order to get only required datas (improves performances)
+
 = 3.6.6 = 
 * Fix : Integration in WP 3.8
 

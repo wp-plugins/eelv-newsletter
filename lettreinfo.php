@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.6
+Version: 3.6.7
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: CC BY-NC v3.0
@@ -1175,7 +1175,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                             wp_update_post( $my_postu );*/
                             echo __('Sending...','eelv_lettreinfo')."
                               <script>
-                              document.location='edit.php?post_type=newsletter_archive';
+                              setTimeout(function(){document.location='post.php?post=".$archive."&action=edit&ref=".time()."';},5000);
                               </script>
                               ".__("To view the delivery status, please go to",'eelv_lettreinfo')."
                               <a href='edit.php?post_type=newsletter_archive'>".__('archives','eelv_lettreinfo')."</a>
@@ -1511,7 +1511,7 @@ if($templates_nb>0){
       <?php if($dest!=''){ ?>
       <a href='post.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>'><?=__('Automatically sending a new burst','eelv_lettreinfo')?></a>
       <script>
-        document.location='post.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';
+      setTimeout(function(){document.location='post.php?post=<?=$post_id?>&action=edit&ref=<?=time()?>';},5000);
       </script>
       <?php }
                     }
@@ -1646,9 +1646,13 @@ if($templates_nb>0){
 							'name'=>'',
 							'login'=>''
 						);
-						$user = get_user_by('email',$courriel);
+						$user = $wpdb->get_results($wpdb->prepare(
+						"SELECT `display_name`,`user_login` FROM ".$wpdb->prefix."users WHERE `user_email`='%s'",
+						$courriel
+						));
 						
 						if($user){
+							$user=$user[0];
 							$destin['name']=$user->display_name;        
 	                        $destin['login']=$user->user_login;
 						}
@@ -1714,7 +1718,12 @@ if($templates_nb>0){
                             
                             while($dest = array_shift($dests)){
                               $dest=trim($dest);
-							  $destinataire=newsletter_getuserinfos($dest);
+							  if(strstr($the_content,'{')){
+							  	$destinataire=newsletter_getuserinfos($dest);
+							  } 
+							  else{
+							  	$destinataire=true;
+							  }
                               if ($destinataire && filter_var($dest, FILTER_VALIDATE_EMAIL)) {
                                 $ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$dest)."' AND `parent`='2' LIMIT 0,1");
                                 if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
@@ -1722,10 +1731,15 @@ if($templates_nb>0){
                                   	
 									$the_content=$content;
 									$the_sujet=$sujet;
-									
-									$the_sujet=str_replace('{dest_name}',$destinataire['name'],$the_sujet);
-									$the_sujet=str_replace('{dest_login}',$destinataire['login'],$the_sujet);
-									$the_sujet=str_replace('{dest_email}',$dest,$the_sujet);
+									if(strstr($the_sujet,'{dest_name}')){
+										$the_sujet=str_replace('{dest_name}',$destinataire['name'],$the_sujet);
+									}
+									if(strstr($the_sujet,'{dest_login}')){
+										$the_sujet=str_replace('{dest_login}',$destinataire['login'],$the_sujet);
+									}
+									if(strstr($the_sujet,'{dest_email}')){
+										$the_sujet=str_replace('{dest_email}',$dest,$the_sujet);
+									}
 									
 									
 									if(strstr($the_content,'{dest_name}')){
