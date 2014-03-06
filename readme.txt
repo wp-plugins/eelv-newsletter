@@ -3,18 +3,13 @@ Contributors: bastho, ecolosites
 Donate link: http://eelv.fr/adherer/
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
-Tested up to: 3.8
+Tested up to: 3.8.1
 Stable tag: /trunk
-License: GPLv3
-License URI: https://www.gnu.org/licenses/gpl-3.0.html
+License: GPLv2
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Add a registration form on Front-office
-a newsletter adminer on BackOffice :
-* manage skins
-* address book
-* archives
-* answers
-* tracking
+a newsletter adminer on BackOffice : manage skins, address book, archives, answers, tracking
 
 == Description ==
 = Add a registration form on FrontOffice, a newsletter manager on BackOffice : =
@@ -95,9 +90,19 @@ Yes, skins are registered as post-type.
 == Changelog ==
 
 = Todo =
-* Add : thumbnail size configuration
-* Add : Archive widget
-* Add : Drag'n'drop editor tool
+* Add: Drag'n'drop editor tool
+* Add: Import/export in address books
+
+= 3.7.0 = 
+* Add: Edit default content for each newsletter skin
+* Add: Edit item style for each default content with realtime preview
+* Add: Archives widget
+* Add: Better address book list displaying
+* Add: Update the online newsletter displaying
+* Fix: Huge code improvement
+* Fix: Wording & translation
+* Fix: Few bugs
+
 
 = 3.6.7 = 
 * Add : 5sec. delay between two bursts
@@ -149,7 +154,7 @@ Yes, skins are registered as post-type.
 * Add : Pre-checked option for share buttons
 * Add : Default style for widget, suscribe/unsuscribe show/hide occurence
 * Fix : Auto update option version
-* Fix : Change licence from CC BY-NC 3.0 to GPLv3
+* Fix : Change licence from CC to GPL
 
 = 3.5.4 =
 * Fix : use wp_enqueue_style function
@@ -306,6 +311,4 @@ No particular informations
 * fr_FR : 100%
 
 = English =
-* en	: 95%
-* en_UK	: 95%
-* en_US	: 95%
+* en	: 100%

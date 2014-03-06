@@ -3,73 +3,119 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.6.7
+Version: 3.7.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
-License: CC BY-NC v3.0
+License: GPLv2
 Text Domain: eelv_lettreinfo
 Domain Path: /languages/
 */
 
-load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
-    
-	
-  // ID for DB version
-  $eelv_newsletter_version = '2.6.5';
-  $eelv_newsletter_options_version = 4;
-  $newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
-  global $wpdb, $eelv_nl_default_themes, $eelv_nl_content_themes, $lettreinfo_plugin_path, $newsletter_plugin_url;
-  $newsletter_plugin_url = plugins_url();
-  $lettreinfo_plugin_path=WP_PLUGIN_DIR.'/'.str_replace( basename( __FILE__), "", plugin_basename(__FILE__) );
-  $eelv_nl_content_themes=array();
-  $eelv_nl_default_themes=array();
-  $newsletter_sql = "CREATE TABLE " . $newsletter_tb_name . " (
-    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
-    `parent` mediumint(9) DEFAULT 0 NOT NULL,
-    `nom` VARCHAR(255) DEFAULT '' NOT NULL,
-    `email` VARCHAR(255) DEFAULT '' NOT NULL,
-    PRIMARY KEY  (`id`)
-    );";
-  include_once (plugin_dir_path(__FILE__).'reply.php');
   
-  function eelv_nl_infos(){
-		__('Add a registration form on frontOffice, a newsletter manager on BackOffice','eelv_lettreinfo');
-		__('EELV Newsletter','eelv_lettreinfo');
-   }
-  /* INSTALLATION DES TABLES  */
-  function eelvnewsletter_install() {
-    global $eelv_newsletter_version,$newsletter_tb_name,$newsletter_sql;
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($newsletter_sql);
-    add_option('eelv_newsletter_version', $eelv_newsletter_version);
-  }
-  // UPDATE PLUGIN
-  $installed_ver = get_option( "eelv_newsletter_version" );
-  if( $installed_ver != $eelv_newsletter_version ) {
-    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-    dbDelta($newsletter_sql);
-    update_option( 'eelv_newsletter_version', $eelv_newsletter_version );
-  }
-  // WP 3.1 patch upgrade
-  function eelvnewsletter_update_db_check() {
-    global $eelv_newsletter_version;
-    if (get_option('eelv_newsletter_version') != $eelv_newsletter_version) {
-      update_option( 'eelv_newsletter_version', $eelv_newsletter_version );
-      eelvnewsletter_install();
-    }
-  }
-  if(false===$wpdb->query('SELECT `id` FROM '.$newsletter_tb_name.' LIMIT 0,1') ){
-    eelvnewsletter_install();
-  }
-  // FONCTIONS
-  add_action( 'admin_enqueue_scripts', 'eelv_nl_my_admin_enqueue_scripts' );
-  function eelv_nl_my_admin_enqueue_scripts() {
-    if ( 'newsletter_archive' == get_post_type() )
-      wp_dequeue_script( 'autosave' );
-  }
+$eelv_newsletter=new EELV_newsletter();
+class EELV_newsletter{
+	
+	// ID for DB version
+	// Beeing updated each time the SQL structure changes
+	var $eelv_newsletter_version;
+	var $installed_ver;
+	// Current version of the options version
+	// Beeing updated each time the configuration page changes
+	var $eelv_newsletter_options_version;
+	
+	var $newsletter_tb_name;
+	var $newsletter_plugin_url;
+	var $newsletter_base_url;
+	var $lettreinfo_plugin_path;
+	var $eelv_nl_content_themes;
+	var $eelv_nl_default_themes;
+	var $default_item_style;
+	var $newsletter_sql;
+	
+	var $news_reg_return;
+	
+	
+	//Initialize the plugin
+	function EELV_newsletter(){
+	  global $wpdb;
+	  
+	  //Plugin translation
+	  load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );	  
+	  $plugin_description=__('Add a registration form on frontOffice, a newsletter manager on BackOffice','eelv_lettreinfo');
+	  $plugin_name=__('EELV Newsletter','eelv_lettreinfo');
+		
+  	  $this->news_reg_return='';		
+	  $this->eelv_newsletter_version = '2.6.5';
+	  $this->installed_ver = get_option( "eelv_newsletter_version" );
+	  $this->eelv_newsletter_options_version = 4;
+	  $this->newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
+	  $this->newsletter_plugin_url = plugins_url();
+	  $this->newsletter_base_url = plugins_url('/', __FILE__);
+	  $this->lettreinfo_plugin_path=plugin_dir_path(__FILE__);
+	  $this->eelv_nl_content_themes=array();
+	  $this->eelv_nl_default_themes=array();
+	  $this->newsletter_sql = "CREATE TABLE " . $this->newsletter_tb_name . " (
+	    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
+	    `parent` mediumint(9) DEFAULT 0 NOT NULL,
+	    `nom` VARCHAR(255) DEFAULT '' NOT NULL,
+	    `email` VARCHAR(255) DEFAULT '' NOT NULL,
+	    PRIMARY KEY  (`id`)
+	    );";
+		
+	  include_once ($this->lettreinfo_plugin_path.'widget.php');
+	  include_once ($this->lettreinfo_plugin_path.'reply.php');
+	  
+	  $this->default_item_style=array(
+						      'div'=>'width:550px; margin:5px 0px;text-align:left; clear:both; border-top:#CCC 1px dotted; padding-top:1em; margin-top:1em;',
+						      'a'=>'text-decoration:none;color:#666666;',
+						      'img'=>'float:left; margin-right:10px;',
+						      'h3' => 'margin:0px !important;text-decoration:none;color:#000000;',
+						      'p' => '',
+					     );
+	  
+	  // Hooks into WordPress
+	    register_activation_hook(__FILE__,array(&$this,'eelvnewsletter_install'));
+		add_action('plugins_loaded', array(&$this,'eelvnewsletter_update_db_check'));
+		add_action( 'init', array(&$this,'newsletter_BO' ));
+		add_action( 'admin_init', array(&$this,'newsletter_autosend' ));		
+		
+		add_action( 'save_post', array(&$this,'newsletter_save_postdata' ));
+		add_action( 'add_meta_boxes', array(&$this,'newsletter_add_custom_box' ));
+		
+		
+		add_action('admin_menu', array(&$this,'eelv_news_ajout_menu'));
+		add_action( 'network_admin_menu', array(&$this,'eelv_news_ajout_network_menu')); 
+		
+		add_action('wp_head', array(&$this,'inscform_action'));
+		add_action('admin_head',array(&$this,'eelv_newsletter_addAlert'));
+		add_action('wp_enqueue_scripts', array(&$this,'eelv_news_scripts'));
+		add_action('admin_enqueue_scripts', array(&$this,'eelv_news_adminscripts'));
+		
+		add_filter( 'archive_template', array(&$this,'eelv_lettrinfo_get_custom_archive_template' ));
+		add_filter( 'single_template', array(&$this,'eelv_lettrinfo_get_custom_single_template' ));
+		
+		add_filter('manage_newsletter_posts_columns', array(&$this,'lettreinfo_columns_head'));  
+		add_action('manage_newsletter_posts_custom_column', array(&$this,'lettreinfo_columns_content'), 10, 2); 
+		add_filter('manage_newsletter_archive_posts_columns', array(&$this,'lettreinfo_archives_columns_head'));  
+		add_action('manage_newsletter_archive_posts_custom_column', array(&$this,'lettreinfo_archives_columns_content'), 10, 2); 
+	  
+	  
+	  
+		add_shortcode( 'eelv_news_form' , array(&$this,'get_news_large_form' ));
+	  	add_shortcode( 'desinsc_url' , array(&$this,'nl_short_desinsc' ));  
+  		add_shortcode( 'nl_date' , array(&$this,'nl_short_date' ));
+		
+		
+		add_action('widgets_init', array(&$this,'register_widget'));
+  	
+	  	
+	}
+
+
+	
+  //WP init function	
   function newsletter_BO(){
-    global $eelv_nl_content_themes,$eelv_nl_default_themes, $newsletter_plugin_url,$lettreinfo_plugin_path;
-    
+    global $wpdb;
     register_post_type('newsletter', array(  'label' => 'Newsletter','description' => '','public' => false,'show_ui' => true,'show_in_menu' => true,'capability_type' => 'post','hierarchical' => false,'rewrite' => array('slug' => ''),'query_var' => true,'has_archive' => true,'supports' => array('title','editor','author'),'labels' => array (
       'name' => __("Newsletter",'eelv_lettreinfo'),
       'singular_name' => __("Newsletter",'eelv_lettreinfo'),
@@ -141,20 +187,94 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	  )
   ));
   
-    require_once($lettreinfo_plugin_path.'/templates.php');
-  }
+    require_once($this->lettreinfo_plugin_path.'templates.php');
+	
+	
+	// UPDATE PLUGIN
   
+	  if( $this->installed_ver != $this->eelv_newsletter_version ) {
+	    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	    dbDelta($this->newsletter_sql);
+	    update_option( 'eelv_newsletter_version', $this->eelv_newsletter_version );
+	  }
+	  if(false===$wpdb->query('SELECT `id` FROM '.$this->newsletter_tb_name.' LIMIT 0,1') ){
+	    $this->eelvnewsletter_install();
+	  }
+		
+		
+	 wp_register_sidebar_widget(
+	  'widget_eelv_lettreinfo_insc',        // your unique widget id
+	  __('Subscribe newsletter','eelv_lettreinfo'),          // widget name
+	  'widget_eelv_lettreinfo_side',  // callback function
+	  array(                  // options
+		'description' => __('Form / unsubscribe and archives NewsLetter','eelv_lettreinfo')
+	  )
+	);                  
+	 wp_register_widget_control('widget_eelv_lettreinfo_insc', __('Subscribe newsletter','eelv_lettreinfo'),'widget_eelv_lettreinfo_insc_control');
  
+  }
+
+	/* INSTALLATION DES TABLES  */
+	  function eelvnewsletter_install() {
+	    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+	    dbDelta($this->newsletter_sql);
+	    add_option('eelv_newsletter_version', $this->eelv_newsletter_version);
+	  }
+	  
+	  // WP 3.1 patch upgrade
+	  function eelvnewsletter_update_db_check() {
+	    if (get_option('eelv_newsletter_version') != $this->eelv_newsletter_version) {
+	      update_option( 'eelv_newsletter_version', $this->eelv_newsletter_version );
+	      eelvnewsletter_install();
+	    }
+	  }
+  
+  
+  	
+  // CSS & JS scripts 
+  //Admin side 
+   function eelv_news_adminscripts(){  		
+	  wp_enqueue_style('eelv_newsletter',plugins_url( 'admin.css' , __FILE__ ));
+	  wp_enqueue_script('eelv_newsletter_admin',plugins_url( 'admin.js' , __FILE__ ),'jquery',$this->eelv_newsletter_version,true);
+	  wp_localize_script('eelv_newsletter_admin', 'eelv_newsletter', array(
+			'url' => $this->newsletter_base_url,
+			// Tracking
+			'read_on' => str_replace('\'','\\\'',__('Read on :','eelv_lettreinfo')),
+			'on'=>str_replace('\'','\\\'',__('On :','eelv_lettreinfo')),
+			'from_ip'=>str_replace('\'','\\\'',__('From IP address :','eelv_lettreinfo')),
+			'unread'=>str_replace('\'','\\\'',__('Unread','eelv_lettreinfo')),
+			//Address book
+			'move_contacts_to'=>__('Do you really want to move selected contacts to :', 'eelv_lettreinfo' ),
+			'remove_contacts'=>__('Do you really want to remove selected contacts ?', 'eelv_lettreinfo' ),
+			// Editing
+			'load_default_content'=>__('Do you want to load this skin\'s default content ?\n\nWarning!\n\nYou will loose the current content.', 'eelv_lettreinfo' ),
+		));
+		if ( 'newsletter_archive' == get_post_type() )
+      	wp_dequeue_script( 'autosave' );
+  	}
+   //Front side
+    function eelv_news_scripts() {
+      wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
+	  wp_enqueue_script('jquery');
+	  wp_enqueue_script('eelv_newsletter',plugins_url( 'newsletter.js' , __FILE__ ),'jquery',$this->eelv_newsletter_version,true);
+	}
+
+
+
+	/* Colums management
+	 * 
+	 * 
+	 */ 
   // ADD NEW COLUMN  
   function lettreinfo_columns_head($defaults) {  
     $defaults['envoyer'] = __('Send','eelv_lettreinfo');  
     return $defaults;  
   }  
   // COLUMN CONTENT  
-  function lettreinfo_columns_content($column_name, $post_ID) {  
-    if ($column_name == 'envoyer') {  
-      $my_temp=get_post(get_post_meta(get_the_ID(), 'nl_template',true));
-      if(get_the_ID()!=0 && get_the_title()!='' && get_the_content()!=''  && $my_temp){
+  function lettreinfo_columns_content($column_name, $post_ID) {
+  	if ($column_name == 'envoyer') {  
+      $my_temp=get_post(get_post_meta($post_ID, 'nl_template',true));
+      if(0!==get_the_ID() && ''!=get_the_title() && ''!=get_the_content()  && $my_temp){
         echo $my_temp->post_title;
         echo '<br/><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'">'.__('Preview and send','eelv_lettreinfo').'</a>';
       }
@@ -210,74 +330,110 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	  }     
     }  
   }
+
+
   /* Adds a box to the main column on the Post and Page edit screens */
   function newsletter_add_custom_box() {
+  	
+	//Native posts & Custom post Newsletter edit interface	
     add_meta_box( 
       'news-carnet-adresse',
       __( "Edit tools", 'eelv_lettreinfo' ),
-      'newsletter_admin',
+      array(&$this,'newsletter_admin'),
       'newsletter' 
     );
     add_meta_box( 
       'news-envoi-edit',
       __( "Send", 'eelv_lettreinfo' ),
-      'newsletter_admin_prev',
+      array(&$this,'newsletter_admin_prev'),
       'newsletter',
       'side' 
     );
     add_meta_box( 
       'news-convert-post',
       __( "Send as newsletter", 'eelv_lettreinfo' ),
-      'news_transform',
+      array(&$this,'news_transform'),
       'post',
       'side' 
     ); 
+	
+	//Custom post Newsletter Archive edit interface	
     add_meta_box( 
       'news-archive_viewer',
       __( "Preview", 'eelv_lettreinfo' ),
-      'newsletter_archive_admin',
+     array(&$this, 'newsletter_archive_admin'),
       'newsletter_archive' 
     );
     add_meta_box( 
       'news-archive_viewerdest',
       __( "Recipients", 'eelv_lettreinfo' ),
-      'newsletter_archive_admin_dest',
+      array(&$this,'newsletter_archive_admin_dest'),
       'newsletter_archive' 
     );
     add_meta_box( 
       'news-archive_viewerqueue',
       __( "Queue", 'eelv_lettreinfo' ),
-      'newsletter_archive_admin_queue',
+     array(&$this, 'newsletter_archive_admin_queue'),
       'newsletter_archive' 
     ); 
     add_meta_box( 
       'news-archive_answers',
       __( "Answers", 'eelv_lettreinfo' ),
-      'newsletter_archive_admin_answers',
+      array(&$this,'newsletter_archive_admin_answers'),
       'newsletter_archive' 
     ); 
+	
+	//Custom post Newsletter Skin edit interface
+	add_meta_box( 
+      'news-skin_content',
+      __( "Default content", 'eelv_lettreinfo' ),
+      array(&$this,'newsletter_template_default_content'),
+      'newsletter_template' 
+    ); 
+	add_meta_box( 
+      'news-skin_style',
+      __( "Item style", 'eelv_lettreinfo' ),
+      array(&$this,'newsletter_template_item_style'),
+      'newsletter_template' 
+    ); 	
   }
-  // Ajout du menu et sous menu
+
+
+
+ // Ajout du menu et sous menu
   function eelv_news_ajout_menu() {
-    //add_submenu_page( 'edit.php?post_type=newsletter', __('News types','eelv_lettreinfo'), __('News types','eelv_lettreinfo'), 'publish_posts', 'edit-tags.php?taxonomy=newsletter_archives_types');
-    add_submenu_page('edit.php?post_type=newsletter', __('Address book', 'eelv_lettreinfo' ), __('Address book', 'eelv_lettreinfo' ), 'publish_posts', 'news_carnet_adresse', 'news_carnet_adresse');
-    add_submenu_page('edit.php?post_type=newsletter', __('Send', 'eelv_lettreinfo' ), __('Send', 'eelv_lettreinfo' ), 'publish_posts', 'news_envoi', 'news_envoi');
-    add_submenu_page('edit.php?post_type=newsletter', __('Configuration/help', 'eelv_lettreinfo' ), __('Configuration/help', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_page_configuration', 'newsletter_page_configuration');
-    add_submenu_page('edit.php?post_type=newsletter', __('Reload parameters', 'eelv_lettreinfo' ), __('Reload parameters', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_checkdb', 'newsletter_checkdb');
+    add_submenu_page('edit.php?post_type=newsletter', __('Address book', 'eelv_lettreinfo' ), __('Address book', 'eelv_lettreinfo' ), 'publish_posts', 'news_carnet_adresse', array(&$this,'news_carnet_adresse'));
+    add_submenu_page('edit.php?post_type=newsletter', __('Send', 'eelv_lettreinfo' ), __('Send', 'eelv_lettreinfo' ), 'publish_posts', 'news_envoi', array(&$this,'news_envoi'));
+    add_submenu_page('edit.php?post_type=newsletter', __('Configuration/help', 'eelv_lettreinfo' ), __('Configuration/help', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_page_configuration', array(&$this,'newsletter_page_configuration'));
+    add_submenu_page('edit.php?post_type=newsletter', __('Reload parameters', 'eelv_lettreinfo' ), __('Reload parameters', 'eelv_lettreinfo' ), 'manage_options', 'newsletter_checkdb', array(&$this,'newsletter_checkdb'));
   }
-  // Ajout du menu d'option sur le r&eacute;seau
+  // Network side
   function eelv_news_ajout_network_menu() {
-    add_submenu_page('settings.php', __('Newsletter', 'eelv_lettreinfo' ), __('Newsletter', 'eelv_lettreinfo' ), 'Super Admin', 'newsletter_network_configuration', 'newsletter_network_configuration');
-    //add_submenu_page('tpe', 'Historique', 'Historique', 'Super Admin', 'eelv_tpe_liste', 'tpe_supercommandes_liste');    
+    add_submenu_page('settings.php', __('Newsletter', 'eelv_lettreinfo' ), __('Newsletter', 'eelv_lettreinfo' ), 'Super Admin', 'newsletter_network_configuration', array(&$this,'newsletter_network_configuration'));
   }
+
+
+
+
+
+	/*
+	 * Usefull functions
+	 * 
+	 * 
+	 */ 
+  //Get informations from address book table		 
   function get_news_meta($id){
-    global $wpdb,$newsletter_tb_name ;
-    $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='$id'");
+    global $wpdb;
+    $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `id`='$id'");
     if(is_array($ret) && sizeof($ret)>0){
       return $ret[0];  
     }
     return false;
   }
+
+
+ 
+  // Make plain text version from an HTML newsletter
   function nl_plain_txt($str){
   	$str = strip_tags($str,'<a>');
 	$str=str_replace('</a>','</a>'."\n",$str);
@@ -295,6 +451,9 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 		$str=str_replace("\n\n\n","\n\n",$str);
 		return $str;
 	}
+  
+  
+  //Construct a multipart body content
 	function nl_mime_txt($str,$boundary='',$eol="\n"){
 		$message = '';
 		/*$message .= 'MIME-Version: 1.0'.$eol;
@@ -305,7 +464,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 		$message .= '--'.$boundary.$eol;
 		$message .= 'Content-Type: text/plain; charset=utf-8'.$eol;
 		$message .= 'Content-Transfer-Encoding: 8bit'.$eol.$eol;
-		$message .= nl_plain_txt($str).$eol;
+		$message .= $this->nl_plain_txt($str).$eol;
 		
 		$message .= '--'.$boundary.$eol;
 		$message .= 'Content-Type: text/html; charset=utf-8'.$eol;
@@ -315,52 +474,67 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 		$message .= '--'.$boundary.'--'.$eol;
 		return $message;
 	}
-  
-  add_shortcode( 'nl_date' , 'nl_short_date' );
-  function nl_short_date(){
-  	return date_i18n(get_option('date_format'));
-  }
-  
-  add_shortcode( 'desinsc_url' , 'nl_short_desinsc' );  
-  function nl_short_desinsc(){
-    $desinsc_url = get_option( 'newsletter_desinsc_url' );
-  	return '<a href="'.$desinsc_url.'" target="_blank" class="nl_a">'.$desinsc_url.'</a>';
-  }
-  function nl_content($post_id,$type='newsletter'){
-    $nl =  get_post($post_id);
-	if(is_object($nl)){
-	    $content=$nl->post_content;
-	    $template =  get_post(get_post_meta($post_id,'nl_template',true)); 
-	    if($template){
-	      $content= str_replace('[newsletter]',$content,$template->post_content);
-	    }
-	     
-	    $return  = apply_filters('the_content',$content);
-		if($return=='' && $content!=''){
-			$return=$content;
-			$desinsc_url = get_option( 'newsletter_desinsc_url' );
-			$return= str_replace('[nl_date]',date_i18n(get_option('date_format')),$return);
-	    	$return=str_replace('[desinsc_url]',"<a href='".$desinsc_url."' target='_blank' class='nl_a'>".$desinsc_url."</a>",$return);
+	 function nl_content($post_id,$type='newsletter'){
+	    $nl =  get_post($post_id);
+		if(is_object($nl)){
+		    $content=$nl->post_content;
+		    $template =  get_post(get_post_meta($post_id,'nl_template',true)); 
+		    if($template){
+		      $content= str_replace('[newsletter]',$content,$template->post_content);
+		    }
+		     
+		    $return  = apply_filters('the_content',$content);
+			if($return=='' && $content!=''){
+				$return=$content;
+				$desinsc_url = get_option( 'newsletter_desinsc_url' );
+				$return= str_replace('[nl_date]',date_i18n(get_option('date_format')),$return);
+		    	$return=str_replace('[desinsc_url]',"<a href='".$desinsc_url."' target='_blank' class='nl_a'>".$desinsc_url."</a>",$return);
+			} 
+		    return $return;
 		} 
-	    return $return;
-	} 
-	return '';
-  }
-  function eelv_newsletter_sharelinks($title,$link){
-		return "<div style='width:550px; margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Share on : ', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode($link)."&t=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".$title."%20".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode($link)."&title=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a></div>&nbsp;\n";	
- }
-  /////////////////////////////////////////////FEUILLE DE STYLE + VALIDATION FORMULAIRE
-  	function eelv_news_adminscripts(){  		
-	  wp_enqueue_style('eelv_newsletter',plugins_url( 'admin.css' , __FILE__ ));
-  	}
-    function eelv_news_scripts() {
-      global $eelv_newsletter_version;
-	  wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
-	  wp_enqueue_script('jquery');
-	  wp_enqueue_script('eelv_newsletter',plugins_url( 'newsletter.js' , __FILE__ ),'jquery',$eelv_newsletter_version,true);
-	}
-	function style_newsletter(){
-    global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
+		return '';
+	  }
+	  function eelv_newsletter_sharelinks($title,$link){
+			return "<div style='margin:0px;text-align:left; clear:both;font-size:9px; '><span style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#888;color:#FFF;'>".__('Share on : ', 'eelv_lettreinfo' )."</span><a href='http://www.facebook.com/sharer.php?u=".urlencode($link)."&t=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#3B5998;color:#FFF;'>Facebook</a><a href='https://twitter.com/intent/tweet?text=".$title."%20".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#2BB7EA;color:#FFF;'>Twitter</a><a href='https://plus.google.com/share?url=".urlencode($link)."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#DB4B39;color:#FFF;'>Google+</a><a href='http://www.linkedin.com/shareArticle?mini=true&url=".urlencode($link)."&title=".$title."' target='_blank' style='display:block;float:left;padding:2px;padding-left:10px;padding-right:10px;background:#0073B2;color:#FFF;'>Linked in</a></div>&nbsp;\n";	
+	 }
+	
+	
+	
+	//Shortcodes
+	 function nl_short_date(){
+	  	return date_i18n(get_option('date_format'));
+	  }
+	  
+	  function nl_short_desinsc(){
+	    $desinsc_url = get_option( 'newsletter_desinsc_url' );
+	  	return '<a href="'.$desinsc_url.'" target="_blank" class="nl_a">'.$desinsc_url.'</a>';
+	  }
+	
+	
+	
+	
+	
+	
+	/*
+	 * 
+	 * Front stuff
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */ 
+	///////////////////////////////////////////// VALIDATION FORMULAIRE
+  	
+	function inscform_action(){
+    global $wpdb;
     $query='';
     if(isset($_POST['news_email'])){
       $email = stripslashes($_POST['news_email']);
@@ -382,7 +556,7 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	  $suscribegrp = isset($_POST['news_grp']) && is_numeric($_POST['news_grp']) ? $_POST['news_grp'] : 1;
 	  
 	  if($suscribegrp>2){
-	  	  $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='".$suscribegrp."' AND `parent`='0'");
+	  	  $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `id`='".$suscribegrp."' AND `parent`='0'");
 		  if(!is_array($ret) || sizeof($ret)==0){
 		    $suscribegrp=1;
 		  }
@@ -393,33 +567,33 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 	  
         switch($_POST['news_action']){
           case '1':
-            $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'");
+            $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'");
             if(is_array($ret) && sizeof($ret)>0){
               $ret = $ret[0];
               if($ret->parent==2){ // Red list
-                $query="UPDATE $newsletter_tb_name SET `parent`='".$suscribegrp."' WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'";
+                $query="UPDATE $this->newsletter_tb_name SET `parent`='".$suscribegrp."' WHERE `email`='".str_replace("'","''",$email)."' AND `parent`='".$suscribegrp."'";
                 if($query!='' && false===$wpdb->query($query)){
-                  $news_reg_return.=__("An error occured !", 'eelv_lettreinfo') ;
+                  $this->news_reg_return.=__("An error occured !", 'eelv_lettreinfo') ;
                 }
                 elseif($query!=''){
-                  $news_reg_return=__("You have been successfully re-registered", 'eelv_lettreinfo');  
+                  $this->news_reg_return=__("You have been successfully re-registered", 'eelv_lettreinfo');  
 				  if(!empty($sender) && !empty($suscribe_title) && !empty($suscribe)){
 				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender);
 				  }              
                 }                
               }
               else{
-                $news_reg_return.=__("Your email is already registered in our mailing-list.", 'eelv_lettreinfo') ;
+                $this->news_reg_return.=__("Your email is already registered in our mailing-list.", 'eelv_lettreinfo') ;
               }
             }
             else{
-              $query="INSERT INTO $newsletter_tb_name (`parent`,`nom`,`email`) 
+              $query="INSERT INTO $this->newsletter_tb_name (`parent`,`nom`,`email`) 
                 VALUES (".$suscribegrp.",'".str_replace("'","''",substr($email,0,strpos($email,'@')))."','".str_replace("'","''",$email)."')";
               if($query!='' && false==$wpdb->query($query)){
-                $news_reg_return.=__("An error occured !", 'eelv_lettreinfo');
+                $this->news_reg_return.=__("An error occured !", 'eelv_lettreinfo');
               }
               elseif($query!=''){
-                $news_reg_return.=__("Thank you for your suscription", 'eelv_lettreinfo');   
+                $this->news_reg_return.=__("Thank you for your subscription", 'eelv_lettreinfo');   
 				if(!empty($sender) && !empty($suscribe_title) && !empty($suscribe)){
 				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender);
 				  }             
@@ -427,67 +601,67 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
             }
             break;
           case '0':
-            $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
+            $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `email`='".str_replace("'","''",$email)."'");
             if(is_array($ret) && sizeof($ret)>0){
-              $query="UPDATE $newsletter_tb_name SET `parent`='2' WHERE `email`='".str_replace("'","''",$email)."'";
+              $query="UPDATE $this->newsletter_tb_name SET `parent`='2' WHERE `email`='".str_replace("'","''",$email)."'";
               if($query!='' && false===$wpdb->query($query)){
-                $news_reg_return.=__("An error occured !", 'eelv_lettreinfo');
+                $this->news_reg_return.=__("An error occured !", 'eelv_lettreinfo');
               }
               elseif($query!=''){
-                $news_reg_return.=__("Thank you, your email have been deleted from our mailing-list", 'eelv_lettreinfo'); 
+                $this->news_reg_return.=__("Thank you, your email have been deleted from our mailing-list", 'eelv_lettreinfo'); 
 				  if(!empty($sender) && !empty($unsuscribe_title) && !empty($unsuscribe)){
 				  	mail($email,$unsuscribe_title,$unsuscribe,'From:'.$sender);
 				  }                
               }  
             }
             else{
-              $news_reg_return.=__("Your email does'nt appear in our mailing list. No unsuscribe needed", 'eelv_lettreinfo');
+              $this->news_reg_return.=__("Your email does'nt appear in our mailing list. No unsubscribe needed", 'eelv_lettreinfo');
             }
             break;
          }
       }
       else{
-        $news_reg_return.= '<b>'.htmlspecialchars(strip_tags($email)).'</b> : '.__('invalid address', 'eelv_lettreinfo');
+        $this->news_reg_return.= '<b>'.htmlspecialchars(strip_tags($email)).'</b> : '.__('invalid address', 'eelv_lettreinfo');
       }
     }
   }
   ////////////////////////////////////////////////////////////////////////////////////////////////////// FRONT OFFICE
   function get_news_form($id=''){
-    global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
-	$eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
-	$eelv_li_xs_title= get_option('eelv_li_xs_title');
-	$eelv_li_xs_options = get_option('eelv_li_xs_options',0);
-	$eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
-	$eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
-	$eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
+    global $wpdb;
+	$this->eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
+	$this->eelv_li_xs_title= get_option('eelv_li_xs_title');
+	$this->eelv_li_xs_options = get_option('eelv_li_xs_options',0);
+	$this->eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
+	$this->eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
+	$this->eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
 	
-	$eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
-	$eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Suscribe our newsletter', 'eelv_lettreinfo'));
-	$eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
+	$this->eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
+	$this->eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Subscribe our newsletter', 'eelv_lettreinfo'));
+	$this->eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
 	
 	if(empty($id)) $id=md5(time());
     ?>
-<form action="#" method="post" id="newsform<?=$id?>" class="newsform <?php if(!empty($eelv_li_xs_formclass)) echo $eelv_li_xs_formclass; ?>" onsubmit="if(this.news_email.value=='' || this.news_email.value=='<?=addslashes($eelv_li_xs_texttext)?>'){ return false; }" >
+<form action="#" method="post" id="newsform<?=$id?>" class="newsform <?php if(!empty($this->eelv_li_xs_formclass)) echo $this->eelv_li_xs_formclass; ?>" onsubmit="if(this.news_email.value=='' || this.news_email.value=='<?=addslashes($this->eelv_li_xs_texttext)?>'){ return false; }" >
   <div>
-    <label class="screen-reader-text" for="news_email<?=$id?>"><?=$eelv_li_xs_labeltext?></label>
-    <input type="text" name="news_email" id="news_email<?=$id?>" value="" placeholder="<?=$eelv_li_xs_texttext?>" <?php if(!empty($eelv_li_xs_textclass)) echo'class="'.$eelv_li_xs_textclass.'"'; ?>/>
-    <input type="submit" value="<?=$eelv_li_xs_buttontext?>" <?php if(!empty($eelv_li_xs_buttonclass)) echo'class="'.$eelv_li_xs_buttonclass.'"'; ?>/>  
-    <?php if($eelv_li_xs_options==0 || $eelv_li_xs_archives==0){ ?>      
+    <label class="screen-reader-text" for="news_email<?=$id?>"><?=$this->eelv_li_xs_labeltext?></label>
+    <input type="text" name="news_email" id="news_email<?=$id?>" value="" placeholder="<?=$this->eelv_li_xs_texttext?>" <?php if(!empty($this->eelv_li_xs_textclass)) echo'class="'.$this->eelv_li_xs_textclass.'"'; ?>/>
+    <input type="submit" value="<?=$this->eelv_li_xs_buttontext?>" <?php if(!empty($this->eelv_li_xs_buttonclass)) echo'class="'.$this->eelv_li_xs_buttonclass.'"'; ?>/>  
+    <?php if($this->eelv_li_xs_options==0 || $this->eelv_li_xs_archives==0){ ?>      
     <div id='news_hidden_option<?=$id?>' class='news_hidden_option'>
-      <?php if($eelv_li_xs_options==0){ ?>
-	      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Suscribe", 'eelv_lettreinfo')?></label>
+      <?php if($this->eelv_li_xs_options==0){ ?>
+	      <label for='news_option_1<?=$id?>'><input type="radio" name='news_action' value='1' id='news_option_1<?=$id?>' checked="checked"/><?=__("Subscribe", 'eelv_lettreinfo')?></label>
 	      <label for='news_option_2<?=$id?>'><input type="radio" name='news_action' value='0'  id='news_option_2<?=$id?>'/> <?=__("Unsuscribe", 'eelv_lettreinfo')?></label>
-      <?php } if($eelv_li_xs_archives==0){ ?>
+      <?php } if($this->eelv_li_xs_archives==0){ ?>
       	  <p><a href="/newsletter_archive/"><?=__("Last newsletters", 'eelv_lettreinfo')?></a></p>
       <?php } ?>
     </div>
     <?php }
-    if($eelv_li_xs_options==1){ ?>
+    if($this->eelv_li_xs_options==1){ ?>
       		<input type="hidden" name='news_action' value='1'>
       <?php } ?>
-    <?php if($news_reg_return!=''){?>
+    <?php if($this->news_reg_return!=''){?>
     <div class='news_return' id='news_return<?=$id?>' onclick="document.getElementById('news_return<?=$id?>').style.display='none';">
-      <?=$news_reg_return?>
+      <?=$this->news_reg_return?>
     </div>            
     <?php }  ?>
   </div>
@@ -495,10 +669,9 @@ load_plugin_textdomain( 'eelv_lettreinfo', false, 'eelv-newsletter/languages' );
 <?php
   }
 
-/** Inscription form **/
-add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
+	//Inscription form 
   function get_news_large_form($atts){
-    global $wpdb,$newsletter_tb_name,$newsletter_plugin_url,$news_reg_return;
+    global $wpdb;
 	extract(shortcode_atts(array(
 		      'group'=>1,
 		      'suscribe'=>1,
@@ -519,7 +692,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 		  $ret.='       
 	      <p>
 		      <label for="news_l_option_1">
-		      	<input type="radio" name="news_action" value="1" id="news_l_option_1" checked="checked"/> '.__("Suscribe", 'eelv_lettreinfo').'
+		      	<input type="radio" name="news_action" value="1" id="news_l_option_1" checked="checked"/> '.__("Subscribe", 'eelv_lettreinfo').'
 		      </label>
 	      </p>';
       }
@@ -527,14 +700,14 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 		  $ret.='
 	      <p>        
 		      <label for="news_l_option_2">
-		      	<input type="radio" name="news_action" value="0"  id="news_l_option_2"/> '.__('Unsuscribe', 'eelv_lettreinfo').'
+		      	<input type="radio" name="news_action" value="0"  id="news_l_option_2"/> '.__('Unsubscribe', 'eelv_lettreinfo').'
 		      </label>
 	      </p>';
 	  }
 	  $ret.='
       <p><input type="submit" value="'.__('ok', 'eelv_lettreinfo').'" class="btn"/></p>';
-    if($news_reg_return!='' && isset($_POST['news_grp']) && $_POST['news_grp']==$group){
-      $ret.='<div class="news_retour">'.$news_reg_return.'</div>';            
+    if($this->news_reg_return!='' && isset($_POST['news_grp']) && $_POST['news_grp']==$group){
+      $ret.='<div class="news_retour">'.$this->news_reg_return.'</div>';            
     }
 	if($archives==1){
 		$ret.='<p><a href="/newsletter_archive/">'.$archives_title.'</a></p>';
@@ -544,61 +717,60 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
       </form>';
     return $ret;
   }
-  ////////////////////////////////////////////////////////////////////////////////////////////////////// BACK OFFICE
+
+
+
+
+
+
+
+
+	/*
+	 * 
+	 * Back office stuff
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////// BACK OFFICE
   function news_liste_groupes(){
-    global $newsletter_tb_name,$wpdb;
+    global $wpdb;
     //newsletter_checkdb();
-    $querystr = "SELECT `id`,`nom` FROM `$newsletter_tb_name` WHERE `parent`='0' ORDER BY `nom`";
+    $querystr = "SELECT `id`,`nom` FROM `$this->newsletter_tb_name` WHERE `parent`='0' ORDER BY `nom`";
     return $wpdb->get_results($querystr);  
   }
   function news_liste_contacts($groupe,$fields='`id`,`nom`,`email`'){
-    global $newsletter_tb_name,$wpdb;
+    global $wpdb;
     if(is_array($groupe)){
       $groupe = implode("' OR `parent`='",$groupe);
     }
-    $querystr = "SELECT $fields FROM `$newsletter_tb_name` WHERE `parent`='$groupe' GROUP BY `email`ORDER BY `nom`";
+    $querystr = "SELECT $fields FROM `$this->newsletter_tb_name` WHERE `parent`='$groupe' GROUP BY `email`ORDER BY `nom`";
     return $wpdb->get_results($querystr);    
   }
-  /*****************************************************************************************************************************************
+
+
+
+/*****************************************************************************************************************************************
   A D R E S S E S                                                           
   *****************************************************************************************************************************************/
   function news_carnet_adresse(){
-    global $newsletter_tb_name,$wpdb,$newsletter_plugin_url;
-    style_newsletter();
+    global $wpdb;
+    $this->inscform_action();
     //newsletter_checkdb();
     ?>
 <div class="wrap">
   <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
   <h2><?=__("Newsletter",'eelv_lettreinfo')?></h2>
-  <script>
-    function changegrp(form,url,grpname){
-      is_confirmed = confirm("<?php _e('Do you really want to move selected contacts to :', 'eelv_lettreinfo' ) ?> "+grpname+" ?");
-      if (is_confirmed) {
-        form.action=url;
-        form.submit();
-      }  
-    }
-    function confsup(url,action){
-      is_confirmed = confirm("<?php _e('Do you really want to remove selected contacts ?', 'eelv_lettreinfo' ) ?>");
-      if (is_confirmed) {
-        if(action==1){
-          document.location=url;
-        }
-        if(action==2){
-          url.submit();
-        }
-      }
-    }
-    function tout(ou,ki){
-      chs = ou.getElementsByTagName('input');
-      chi = ki.checked;
-      for(i=0 ; i<chs.length ; i++){
-        if(chs[i].type=='checkbox'){
-          chs[i].checked=chi;
-        }
-      }
-    }
-  </script>
   <table class="widefat" style="margin-top: 1em;">
     <thead>
       <tr>
@@ -617,7 +789,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
     if(isset($_GET['delgroupe'])){
       $for='liste';
       $grp_id = $_GET['delgroupe'];
-      $query="DELETE FROM $newsletter_tb_name WHERE `id`='$grp_id' OR `parent`='$grp_id'";
+      $query="DELETE FROM $this->newsletter_tb_name WHERE `id`='$grp_id' OR `parent`='$grp_id'";
       if(false===$wpdb->query($query)){
         ?><div class="updated"><p><strong><?php _e('An error occured, no group has been deleted !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
   }
@@ -629,7 +801,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
       // Supression de contacts
       if(isset($_GET['delcontacts']) && isset($_GET['liste'])){
         $grp_id = $_GET['liste'];
-        $MBRS = news_liste_contacts($grp_id);    
+        $MBRS = $this->news_liste_contacts($grp_id);    
         if(sizeof($MBRS)>0){
           $ac = '`id`=0';
           $nb=0;
@@ -639,7 +811,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
               $nb++;
             }
           }
-          $query="DELETE FROM $newsletter_tb_name WHERE $ac";
+          $query="DELETE FROM $this->newsletter_tb_name WHERE $ac";
           if(false===$wpdb->query($query)){
             ?><div class="updated"><p><strong><?php _e('An error occured, no contact has been deleted !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
   }
@@ -651,7 +823,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   // deplacement de contacts
   if(isset($_GET['ngrp']) && isset($_GET['liste'])){
   $grp_id = $_GET['liste'];
-            $MBRS = news_liste_contacts($grp_id);    
+            $MBRS = $this->news_liste_contacts($grp_id);    
             if(sizeof($MBRS)>0){
               $ac = '`id`=0';
               $nb=0;
@@ -661,7 +833,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                   $nb++;
                 }
               }
-              $query="UPDATE $newsletter_tb_name SET `parent`='".str_replace("'","''",$_GET['ngrp'])."' WHERE $ac";
+              $query="UPDATE $this->newsletter_tb_name SET `parent`='".str_replace("'","''",$_GET['ngrp'])."' WHERE $ac";
               if(false===$wpdb->query($query)){
                 ?><div class="updated"><p><strong><?php _e('An error occured, no contact has been moved !', 'eelv_lettreinfo' ) ?></strong></p></div><?php
   }
@@ -685,10 +857,10 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
               if(isset($_POST['grp_nom']) ){
                 $grp_nom = stripslashes($_POST['grp_nom']);
                 if(is_numeric($grp_id)){
-                  $query="UPDATE $newsletter_tb_name SET `nom`='".str_replace("'","''",$grp_nom)."' WHERE `id`='$grp_id'";
+                  $query="UPDATE $this->newsletter_tb_name SET `nom`='".str_replace("'","''",$grp_nom)."' WHERE `id`='$grp_id'";
                 }
                 else{
-                  $query="INSERT INTO $newsletter_tb_name (`nom`) VALUES ('".str_replace("'","''",$grp_nom)."')";
+                  $query="INSERT INTO $this->newsletter_tb_name (`nom`) VALUES ('".str_replace("'","''",$grp_nom)."')";
                 }
                 if(false===$wpdb->query($query)){
                   ?><div class="updated"><p><strong><?php _e('An error occured...', 'eelv_lettreinfo' ) ?></strong></p></div><?php
@@ -702,17 +874,17 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                 $con_nom = stripslashes($_POST['con_nom']);
                 $con_email = stripslashes($_POST['con_email']);
                 if(is_numeric($con_id)){
-                  $query="UPDATE $newsletter_tb_name SET `nom`='".str_replace("'","''",$con_nom)."',`email`='".str_replace("'","''",$con_email)."' WHERE `id`='$con_id'";
+                  $query="UPDATE $this->newsletter_tb_name SET `nom`='".str_replace("'","''",$con_nom)."',`email`='".str_replace("'","''",$con_email)."' WHERE `id`='$con_id'";
                 }
                 else{
                   switch($_POST['import_type']){
                     case 'unite':
-                      $query="INSERT INTO ".$newsletter_tb_name." (`parent`,`nom`,`email`) 
+                      $query="INSERT INTO ".$this->newsletter_tb_name." (`parent`,`nom`,`email`) 
                         VALUES ('$grp_id','".str_replace("'","''",$con_nom)."','".str_replace("'","''",$con_email)."')";
                       break;
                     case 'masse':
                       $imp = preg_split('/[,;\n\t]/',stripslashes($_POST['con_mul'].','));
-                      $query='INSERT INTO '.$newsletter_tb_name.' (`parent`,`nom`,`email`) VALUES ';
+                      $query='INSERT INTO '.$this->newsletter_tb_name.' (`parent`,`nom`,`email`) VALUES ';
                       foreach($imp as $entry){
                         $entry=trim($entry);
                         if (filter_var($entry, FILTER_VALIDATE_EMAIL)) {
@@ -745,7 +917,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                 $grp_nom = __('New group', 'eelv_lettreinfo');
                 $action="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=new";
                 if(is_numeric($grp_id)){
-                  $news_info = get_news_meta($grp_id);
+                  $news_info = $this->get_news_meta($grp_id);
                   $grp_nom = $news_info->nom;
                   $action="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=$grp_id";
                 }
@@ -765,50 +937,66 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   if($for=='liste'){
   ////////////////////////////////////////////////////////////Listes
   if(!is_numeric($grp_id)){ // groupes
-  $GRPS = news_liste_groupes();    
+  $GRPS = $this->news_liste_groupes();    
                 $nb_groups = sizeof($GRPS);
                 ?><h3 class="sectiontitle title3"><?php _e('Groups', 'eelv_lettreinfo' ) ?></h3>  <a href="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=new" class="button add-new-h2"><?php _e('New group', 'eelv_lettreinfo' ) ?></a>    <?php
   if($nb_groups>0){?>  
-          <table class='eelv_news_groups'>   
+          <table class='eelv_news_groups widefat'> 
+          	<thead>
+          		<tr>
+          			<th><?php _e('ID','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('Name','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('Subscribers','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('Subscription form','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('List','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('Rename','eelv_lettreinfo'); ?></th>
+          			<th><?php _e('Delete','eelv_lettreinfo'); ?></th>
+          		</tr>
+          	</thead> 
+          	<tbody>
             <?php
   $coup=false;
                 foreach($GRPS as $groupe){ 
-                  $nbinsc = sizeof(news_liste_contacts($groupe->id));                
+                  $nbinsc = sizeof($this->news_liste_contacts($groupe->id));                
                   ?>      
             <tr>
+              <td><?=$groupe->id?></td>
               <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>'><b><?=$groupe->nom?></b></a></td>
               <td><b><?=$nbinsc?></b></td>
-              <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>' class="button"><?php _e('List', 'eelv_lettreinfo' ) ?></a></td>
-              <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=<?=$groupe->id?>' class="button"><?php _e('Rename', 'eelv_lettreinfo' ) ?></a></td>
-              <td><a onclick="confsup('edit.php?post_type=newsletter&page=news_carnet_adresse&delgroupe=<?=$groupe->id?>',1)" class="button"><?php _e('Delete', 'eelv_lettreinfo' ) ?></a></td>
+              <td>[eelv_news_form groupe=<?=$groupe->id?>]</td>
+              <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>' class="button"><span class="dashicons list"></span> <?php _e('List', 'eelv_lettreinfo' ) ?></a></td>
+              <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=<?=$groupe->id?>' class="button"><span class="dashicons edit"></span> <?php _e('Rename', 'eelv_lettreinfo' ) ?></a></td>
+              <td><a onclick="confsup('edit.php?post_type=newsletter&page=news_carnet_adresse&delgroupe=<?=$groupe->id?>',1)" class="button"><span class="dashicons trash"></span> <?php _e('Delete', 'eelv_lettreinfo' ) ?></a></td>
             </tr>      
             <?php }  ?>
-          </table>
+          </tbody> </table>
           <?php
   }
   ?><p>&nbsp;</p><?php
   }
   else{ // contacts
-  $news_info = get_news_meta($grp_id);
+  $news_info = $this->get_news_meta($grp_id);
                   $grp_nom = $news_info->nom;
-                  $MBRS = news_liste_contacts($grp_id);    
+                  $MBRS = $this->news_liste_contacts($grp_id);    
                   $nb_contacts = sizeof($MBRS);
                   ?>
           <h3 class="sectiontitle title3"><a href='edit.php?post_type=newsletter&page=news_carnet_adresse'><?php _e('Groups', 'eelv_lettreinfo' ) ?></a> > <?=$grp_nom?></h3>  
           <?php  
   if($for2=='liste'){ // liste contact
   ?>
-          <table class='eelv_news_groups'><tr><td>
+          <table class='eelv_news_groups widefat'>
+          	<thead>
+          	<tr><th>
             <input type="checkbox" onclick="tout(document.getElementById('liste_mel'),this)"/>
             <select onchange="eval(this.value)">
               <option value=""><?php _e('Bulk actions', 'eelv_lettreinfo' ) ?></option>
               <?php
-  $GRPS = news_liste_groupes();    
+  $GRPS = $this->news_liste_groupes();    
                   $nb_groups = sizeof($GRPS);
                   if($nb_groups>0){
                     foreach($GRPS as $groupe){ 
                       if($groupe->id !=$grp_id){
-                        $nbinsc = sizeof(news_liste_contacts($groupe->id));                
+                        $nbinsc = sizeof($this->news_liste_contacts($groupe->id));                
                         ?>      
               <option value="changegrp(document.getElementById('liste_mel'),'edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&ngrp=<?=$groupe->id?>','<?=$groupe->nom?>')"><?php _e('Move to : ', 'eelv_lettreinfo' ) ?> <?=$groupe->nom?></option>
               <?php } } }  ?>
@@ -816,11 +1004,12 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
             </select>
             <a href='edit.php?post_type=newsletter&page=news_carnet_adresse' class="button"><?php _e('Back', 'eelv_lettreinfo' ) ?></a>
             <a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&contact=new' class="button-primary"><?php _e('New recipient', 'eelv_lettreinfo' ) ?></a>
-            </td></tr></table>
+            
+            </th></tr></thead></table>
           <?php
   if($nb_contacts>0){?>                
           <form id='liste_mel' action="edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&delcontacts" method="post">
-            <table class='eelv_news_groups'> 
+            <table class='eelv_news_groups widefat'> <tbody>
               <?php
   $coup=false;
                         foreach($MBRS as $contact){ ?>      
@@ -829,7 +1018,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                 <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&contact=<?=$contact->id?>'><b><?=$contact->nom?></b></a></td>                         <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>&contact=<?=$contact->id?>'><b><?=$contact->email?></b></a></td>                       
               </tr>      
               <?php }  ?>
-            </table>
+            </tbody></table>
           </form>
           <?php
                       }
@@ -843,7 +1032,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                       $con_nom = '';
                       $action="edit.php?post_type=newsletter&page=news_carnet_adresse&liste=$grp_id&contact=new";
                       if(is_numeric($con_id)){
-                        $news_info = get_news_meta($con_id);
+                        $news_info = $this->get_news_meta($con_id);
                         $con_nom = $news_info->nom;
                         $con_email = $news_info->email;
                         $action="edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=$grp_id&contact=$con_id";
@@ -884,12 +1073,28 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
             <a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$grp_id?>' class="button">Retour</a>
             <input type="submit" value='Enregistrer' class="button-primary" />
           </form>
+          
+          
           <?php
   }
   }
   }
   ?>
         </td></tr></tbody></table>
+        
+        <?php if(isset($grp_id) && $grp_id>0): ?>
+        <p>&nbsp;</p>
+        <table class="widefat">
+        	<thead>
+        		<tr><th><?php _e('Subscription form for this address book', 'eelv_lettreinfo' ) ?></th></tr>
+        	</thead>
+          	<tbody>
+          		<tr><td>
+          			[eelv_news_form groupe=<?=$grp_id?>]
+          		</td></tr>
+          	</tbody>
+          </table>
+          <?php endif; ?>
 </div>
 <?php
   }
@@ -897,9 +1102,9 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   E N V O I                                                                  
   *****************************************************************************************************************************************/
   function news_envoi(){
-  style_newsletter();
+  $this->inscform_action();
                       //newsletter_checkdb();
-                      global $newsletter_tb_name,$wpdb,$newsletter_plugin_url;
+                      global $wpdb;
                       $default_exp = get_option( 'newsletter_default_exp' );
                       $default_mel = get_option( 'newsletter_default_mel' );
                       $desinsc_url = get_option( 'newsletter_desinsc_url' );
@@ -944,7 +1149,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 								$content='<h1>'.$post->post_title.'</h1>'.$content;	
 							}
 							if(isset($_GET['add_sharelinks'])){
-								$content.=eelv_newsletter_sharelinks($post->post_title,$post->guid);	
+								$content.=$this->eelv_newsletter_sharelinks($post->post_title,$post->guid);	
 							}
 							
                           if(0!== $new_post = wp_insert_post( array('post_type'=>'newsletter','post_title' => $post->post_title,  'post_content' => $content,  'post_status' => 'publish'))){
@@ -960,7 +1165,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                         if(isset($_GET['settemplate']) && is_numeric($_GET['settemplate'])){
 							update_post_meta($post->ID,'nl_template',$_GET['settemplate']);
 						}
-                        $content=nl_content($post_id); 
+                        $content=$this->nl_content($post_id); 
 						$preview = apply_filters('the_content',$content);
 						
 						$reply_url = get_option( 'newsletter_reply_url','');
@@ -972,7 +1177,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 						$desinsc_url = get_option( 'newsletter_desinsc_url' );
 						if(empty($desinsc_url)){					?>
 							<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
-							<?php _e('Missing parameter "Unsuscribe page" for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
+							<?php _e('Missing parameter "Unsubscribe page" for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
 							<?php
 						}
 						
@@ -1070,9 +1275,9 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                     <h4><?php _e('Groups', 'eelv_lettreinfo' ) ?></h4>                  
                     <ul class='eelv_news_groups'>   
                       <?php      
-  $GRPS = news_liste_groupes();
+  $GRPS = $this->news_liste_groupes();
                           foreach($GRPS as $groupe){ 
-                            $nbinsc = sizeof(news_liste_contacts($groupe->id));        
+                            $nbinsc = sizeof($this->news_liste_contacts($groupe->id));        
                             ?>      
                       <li>
                         <label  for='grp_<?=$groupe->id?>'>
@@ -1117,13 +1322,13 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
   $contacts='';
                           // CUSTOM GROUPES
                           $dest = array();
-                          $GRPS = news_liste_groupes();
+                          $GRPS = $this->news_liste_groupes();
                           foreach($GRPS as $groupe){ 
                             if(isset($_POST['grp_'.$groupe->id])){
                               array_push($dest,$groupe->id);
                             }
                           }
-                          $temp = news_liste_contacts($dest,'email');        
+                          $temp = $this->news_liste_contacts($dest,'email');        
                           foreach($temp as $contact){
                             $contacts.=$contact->email.',';  
                           }
@@ -1165,14 +1370,6 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 								wp_set_object_terms( $archive, $types,'newsletter_archives_types' );
 							}
 							
-						  
-                            /* $my_postu = array(
-                            'post_title' => $post->post_title,
-                            'post_content' => $post->post_content,
-                            'post_type' => 'newsletter'
-                            );
-                            // Update the post into the database
-                            wp_update_post( $my_postu );*/
                             echo __('Sending...','eelv_lettreinfo')."
                               <script>
                               setTimeout(function(){document.location='post.php?post=".$archive."&action=edit&ref=".time()."';},5000);
@@ -1190,9 +1387,20 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                     }
                     function newsletter_save_postdata( $post_id ) {
                       if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )      return;
-                      if ( isset($_REQUEST['newslettertemplate']) && $_REQUEST['newslettertemplate']!=''){
+					  
+					  //Save temple in NL
+                      if ( 'newsletter' == $_POST['post_type']  && isset($_REQUEST['newslettertemplate']) && $_REQUEST['newslettertemplate']!=''){
                         update_post_meta($post_id, 'nl_template', $_REQUEST['newslettertemplate']);
                       }
+                      
+                      //Save default content in template
+                      if ( 'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['item_style']) && is_array($_REQUEST['item_style'])) {
+                      	update_post_meta($post_id, 'item_style', $_REQUEST['item_style']);
+                      }
+                      if ( 'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['default_content']) && $_REQUEST['default_content']!='') {
+                      	update_post_meta($post_id, 'default_content', stripslashes($_REQUEST['default_content']));
+                      }
+                      	//
                     } 
                     function newsletter_admin_prev() {
                       $my_temp=get_post(get_post_meta(get_the_ID(), 'nl_template',true));
@@ -1213,14 +1421,26 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                         echo'<p><a href="edit.php?post_type=newsletter&page=news_envoi&post='.get_the_ID().'#nl_preview" class="button-primary">'.__('Preview and send','eelv_lettreinfo').'</a></p>';
                       }
                     }
-					
+
+
+
+
+
+
+
+
+
+   
+
+  
+  					
 					
                     function newsletter_admin() {
-                      global $wpdb, $eelv_nl_content_themes;
+                      global $wpdb;
                       //newsletter_checkdb();
-                      //print_r($eelv_nl_content_themes);
+                      //print_r($this->eelv_nl_content_themes);
                       ?>
-<table><tr>
+<table id="eelv_nl_edit_choose_skins"><tr>
   <td valign="top">
     <h4><?php _e('Skin', 'eelv_lettreinfo' ) ?></h4>
     <?php
@@ -1230,13 +1450,22 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
 
                       if($templates_nb>0){
                         $my_temp=get_post_meta(get_the_ID(), 'nl_template',true);
+						$my_temp_title='';
                         foreach($IDS as $item_id){ 
                           if($my_temp==NULL){
                             add_post_meta(get_the_ID(), 'nl_template', $item_id);
-                            $my_temp=$item_id;
+						    $my_temp=$item_id;                            
                           }
+							$my_temp_title=get_the_title($item_id);
+							$default_content = get_post_meta($item_id, 'default_content',true);
+							if(!empty($default_content)){
+								$this->eelv_nl_content_themes[$my_temp_title]=$default_content;
+							}
+							elseif(!isset($this->eelv_nl_content_themes[$my_temp_title])){
+								$this->eelv_nl_content_themes[$my_temp_title]='';
+							}
                           ?>
-    <p><label for='nt_<?=$item_id;?>' onclick="set_default_content('dc_<?=$item_id;?>')"><input type='radio' name='newslettertemplate' id='nt_<?=$item_id;?>' value='<?=$item_id;?>' <?php if($item_id==$my_temp){ echo' checked=checked ';} ?>/> <?=get_the_title($item_id);?></label><textarea id="dc_<?=$item_id;?>" style="display:none;"><?=$eelv_nl_content_themes[get_the_title($item_id)]?></textarea></p> 
+    <p><label for='nt_<?=$item_id;?>' onclick="set_default_content('dc_<?=$item_id;?>')"><input type='radio' name='newslettertemplate' id='nt_<?=$item_id;?>' value='<?=$item_id;?>' <?php if($item_id==$my_temp){ echo' checked=checked ';} ?>/> <?=$my_temp_title;?></label><textarea id="dc_<?=$item_id;?>" style="display:none;"><?=$this->eelv_nl_content_themes[$my_temp_title]?></textarea></p> 
       <?php }
                       }
                       ?>
@@ -1255,95 +1484,39 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
       <!--[if lt IE 9]>
       <script>IEbof=true;</script>
       <![endif]-->
-      <script>
-        function incontent(str){
-          if(IEbof){
-            switchEditors.go('content', 'html');
-            document.post.content.value+=str;
-            switchEditors.go('content', 'tinymce');
-          }
-          else{
-            document.post.content.value+=str;
-            if (document.all) {
-              value = str;
-              document.getElementById('content_ifr').name='content_ifr';
-              var ec_sel = document.getElementById('content_ifr').document.selection;
-              if(tinyMCE.activeEditor.selection){
-                tinyMCE.activeEditor.selection.setContent(str);
-              }
-              else if(tinyMCE.activeEditor){
-                tinyMCE.activeEditor.execCommand("mceInsertRawHTML", false, str);
-              }
-              else if (ec_sel) {
-                var ec_rng = ec_sel.createRange();
-                ec_rng.pasteHTML(value);
-              }
-              else{
-              }
-            }
-            else{
-              document.getElementById('content_ifr').name='content_ifr';
-              if(document.content_ifr){
-                document.content_ifr.document.execCommand('insertHTML', false, str);
-              }
-              else if(document.getElementById('content_ifr').contentDocument){
-                document.getElementById('content_ifr').contentDocument.execCommand('insertHTML', false, str);
-              }
-              else if(tinyMCE.activeEditor.selection){
-                tinyMCE.activeEditor.selection.setContent(str);
-              }
-              else{
-                tinyMCE.activeEditor.execCommand("mceInsertRawHTML", false, str);
-              }
-            }  
-          }
-        }
-        function set_default_content(ki){
-          ki = document.getElementById(ki);
-          if(ki.value && ki.value!=''){
-            if(confirm("<?php __('Do you want to load this skin\'s default content ?\n\nWarning!\n\nYou will loose the current content.', 'eelv_lettreinfo' ) ?>")){
-              str=ki.value;
-              switchEditors.go('content', 'html');
-              document.post.content.value=str;
-              switchEditors.go('content', 'tinymce');  
-            }
-          }
-        }
-      </script>
       <?php
-  $querystr = "";
+      
+      $item_style=shortcode_atts($this->default_item_style, get_post_meta($my_temp, 'item_style',true));
+	  
+	  
+  					$querystr = "";
                       $optis='<option value="">'.__('Posts', 'eelv_lettreinfo' ).'</option>';
-                      wp_reset_query();
-                      query_posts(array('status'=>'publish','post_type'=>'post','posts_per_page'=>'-1'));
-                      if(have_posts()){  
-                        while(have_posts()){
-                          the_post();  
+                      $post_list=new WP_Query(array('status'=>'publish','post_type'=>'post','posts_per_page'=>'-1'));
+                      if($post_list->have_posts()){  
+                        while($post_list->have_posts()){
+                          $post_list->the_post();  
+							
                           ?>
-      <textarea id="nl_post_<?php the_ID();?>" style="display:none"><?php echo"<div style='width:550px; margin:5px 0px;text-align:left;  clear:both; border-top:#CCC 1px dotted; padding-top:1em; margin-top:1em;'>
-  <a href='".get_post_permalink()."' style='text-decoration:none;color:#666666;'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>'float:left; margin-right:10px;'))."</a> <h3 style='margin:0px !important;'><a href='".get_post_permalink()."' style='text-decoration:none;color:#000000;'>".get_the_title()."</a></h3>
-  <a href='".get_post_permalink()."' style='text-decoration:none;color:#666666;'>".substr(strip_tags(get_the_content()),0,300)."...</a>
-  </div>&nbsp;
-  "; ?></textarea>
-      <textarea id="nl_share_<?php the_ID();?>" style="display:none"><?php echo eelv_newsletter_sharelinks(get_the_title(),get_post_permalink()); ?></textarea>
+      <textarea id="nl_post_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'>
+  <a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>"; ?></textarea>
+      <textarea id="nl_share_<?php the_ID();?>" style="display:none"><?php echo $this->eelv_newsletter_sharelinks(get_the_title(),get_post_permalink()); ?></textarea>
       <?php 
                           $optis.='<option value="'.get_the_ID().'">'.substr(get_the_title(),0,70).'</option>';
                         } ?> 
-      <p><select name="nl_insert_post" onchange="var nl_p_content=getElementById('nl_post_'+this.value).value; if(document.getElementById('nl_with_share').checked==true){nl_p_content+=getElementById('nl_share_'+this.value).value}incontent(nl_p_content);this.value=''">
+      <p><select name="nl_insert_post" onchange="var nl_p_content=getElementById('nl_post_'+this.value).value; if(document.getElementById('nl_with_share').checked==true){nl_p_content+=getElementById('nl_share_'+this.value).value}incontent(nl_p_content+'</div>&nbsp;\n');this.value=''">
         <?=$optis?>
         </select>
       </p>
       <?php  }
                       
                       $optis='<option value="">'.__('Pages', 'eelv_lettreinfo' ).'</option>';
-                      wp_reset_query();
-                      query_posts(array('status'=>'publish','post_type'=>'page','posts_per_page'=>'-1'));
-                      if(have_posts()){  
-                        while(have_posts()){
-                          the_post();  
+                      $page_list=new WP_Query(array('status'=>'publish','post_type'=>'page','posts_per_page'=>'-1'));
+                      if($page_list->have_posts()){  
+                        while($page_list->have_posts()){
+                          $page_list->the_post();  
                           ?>
-      <textarea id="nl_page_<?php the_ID();?>" style="display:none"><?php echo"<div style='width:550px; margin:5px 0px;text-align:left;  clear:both; border-top:#CCC 1px dotted; padding-top:1em; margin-top:1em;'>
-  <a href='".get_post_permalink()."' style='text-decoration:none;color:#666666;'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>'float:left; margin-right:10px;'))."</a> <h3 style='margin:0px !important;'><a href='".get_post_permalink()."' style='text-decoration:none;color:#000000;'>".get_the_title()."</a></h3>
-  <a href='".get_post_permalink()."' style='text-decoration:none;color:#666666;'>".substr(strip_tags(get_the_content()),0,300)."...</a>
+      <textarea id="nl_page_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'>
+  <a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>
   </div>&nbsp;
   "; ?></textarea>
       
@@ -1362,7 +1535,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
       <?php
                     }
                     function newsletter_archive_admin() {
-                      global $wpdb,$newsletter_plugin_url;
+                      global $wpdb;
                       $post_id = get_the_ID(); //$_GET['id'];
                       $my_temp=get_post_meta($post_id, 'nl_template',true);
                       $sujet = get_post_meta($post_id, 'sujet', true);
@@ -1371,7 +1544,7 @@ add_shortcode( 'eelv_news_form' , 'get_news_large_form' );
                       $lastsend = get_post_meta($post_id, 'lastsend',true);  
                       // $post = get_post( $post_id);
                       $template =  get_post(get_post_meta($post_id,'nl_template',true));
-                      $content=apply_filters('the_content',nl_content($post_id ));   ?>
+                      $content=apply_filters('the_content',$this->nl_content($post_id ));   ?>
                       <div id="eelv_news_prevlink" style="display:none;">
 		     <p>
 		        <?php _e('This is only a preview link', 'eelv_lettreinfo' ); ?></a>
@@ -1406,14 +1579,14 @@ if($templates_nb>0){
       <?php 
                     }
                     function newsletter_archive_admin_dest() {
-                      global $wpdb,$newsletter_plugin_url;
+                      global $wpdb;
                       $post_id = get_the_ID(); //$_GET['id'];
                       $sent = get_post_meta($post_id, 'sentmails',true);
 					  $nl_spy=get_post_meta($post_id, 'nl_spy',true);
 					  $lus = abs(substr_count($sent,':3'));
 		  			 $tot = abs(substr_count($sent,','));
                       ?>    
-                    <p><?php  printf(__('%s opened','eelv_lettreinfo'),round($lus/$tot*100).'%'); ?></p>
+                    <p><?php  printf(__('%s opened','eelv_lettreinfo'),($tot>0?round($lus/$tot*100):0).'%'); ?></p>
       <p><ul id="eelv_nl_sentlist"><?php 
                       echo '<li data-email="'.str_replace(
                         array(
@@ -1429,81 +1602,15 @@ if($templates_nb>0){
                       ?></ul>
                       <?php if($nl_spy==0) _e('No reading-tracking','eelv_lettreinfo'); ?>
                       </p>
-					  <style>
-					  #eelv_nl_sentlist li.eelv_nl_sent{
-						display:inline-block;
-						width:26%;
-						padding:7px 1px 7px 40px;
-						margin:2px;
-						background-position: 6px 6px;
-						background-repeat:no-repeat;
-						background-color:#FFF;
-						border:#CCC 1px outset;
-						border-radius:5px;
-						box-shadow:rgba(0,0,0,0.2) 0px 2px 3px; 
-					  }
-					  #eelv_nl_sentlist li.eelv_nl_status_-1{
-						background-image:url(<?=$newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg);
-						color:#900;
-					  }
-					  #eelv_nl_sentlist li.eelv_nl_status_0{
-						background-image:url(<?=$newsletter_plugin_url?>/eelv-newsletter/img/0.jpg);
-						color:#900;
-					  }
-					  #eelv_nl_sentlist li.eelv_nl_status_1{
-						background-image:url(<?=$newsletter_plugin_url?>/eelv-newsletter/img/1.jpg);
-						color:#030;
-					  }
-					  #eelv_nl_sentlist li.eelv_nl_status_2{
-					  	background-color:#EEE;
-						background-image:url(<?=$newsletter_plugin_url?>/eelv-newsletter/img/2.jpg);
-						color:#000;
-					  }
-					  #eelv_nl_sentlist li.eelv_nl_status_3{
-						background-image:url(<?=$newsletter_plugin_url?>/eelv-newsletter/img/3.jpg);
-						border:#0F0 1px outset;
-						color:#0C0;
-					  }
-					  
-					  </style>
-                      <script>
-					  jQuery(document).ready(function(e) {
-                        jQuery('#eelv_nl_sentlist').children('li').each(function(index, element) {
-							if(jQuery(this).data('email')!=''){
-								
-					  			jQuery(this).html(jQuery(this).data('email')).click(function(){
-									<?php if($nl_spy==1): ?>
-									jQuery.ajax({
-										type: 'POST',
-										url:'<?=$newsletter_plugin_url?>/eelv-newsletter/reading/check.php?i=<?=$post_id?>&m='+jQuery(this).data('email'),
-										dataType: 'json',
-										async: false,
-										success: function (k) {
-											var txt='';
-											for(var i=0 ; i<k.length ; i++){
-											  txt+='<?=str_replace('\'','\\\'',__('Read on :','eelv_lettreinfo'))?> '+k[i]['date']+'\n';											  
-											  txt+='<?=str_replace('\'','\\\'',__('On :','eelv_lettreinfo'))?> '+k[i]['user_agent']+'\n';
-											  txt+='<?=str_replace('\'','\\\'',__('From IP address :','eelv_lettreinfo'))?> '+k[i]['ip']+'\n';
-											  txt+='\n\n'; 
-											}
-											if(txt==''){
-												txt='<?=str_replace('\'','\\\'',__('Unread','eelv_lettreinfo'))?> ';	
-											}
-											alert(txt);
-										}
-									});	
-									<?php endif; ?>
-								});
-								
-							}
-                    	});
-                    });
-					  
-					  </script>
       <?php 
                     }
+
+
+					//Meta boxes
+					
+					//Queue list
                     function newsletter_archive_admin_queue() {
-                      global $wpdb,$newsletter_plugin_url;
+                      global $wpdb;
                       $post_id = get_the_ID(); //$_GET['id'];
                       $dest = get_post_meta($post_id, 'destinataires',true);
                       ?>    
@@ -1515,6 +1622,8 @@ if($templates_nb>0){
       </script>
       <?php }
                     }
+					
+					//answers
 					function newsletter_archive_admin_answers() {
 						$nl =  get_post(get_the_ID());  
 	 					$content=$nl->post_content;
@@ -1560,6 +1669,42 @@ if($templates_nb>0){
 						  }
                     }
 					
+					
+					function newsletter_template_default_content(){
+						$post_id = get_the_ID(); 
+                        $default_content = get_post_meta($post_id, 'default_content',true);
+						
+						wp_editor( $default_content, 'default_content' );
+					}
+					function newsletter_template_item_style(){
+						$post_id = get_the_ID();			
+						$item_style=shortcode_atts($this->default_item_style, get_post_meta($post_id, 'item_style',true));						 
+						 ?>
+						 <div id="newsletter_item_post_style">
+						 <?php
+						 foreach ($item_style as $k => $v) {
+						?>
+						<div>
+							<label>
+								<?=$k?>:								
+								<input type="text" data-type="<?=$k?>" name="item_style[<?=$k?>]" value="<?=$v?>" class="widefat">
+							</label>
+						</div>
+						<?php
+						}
+						 ?>
+						 </div>
+						 <h3><?php _e( "Preview", 'eelv_lettreinfo' ) ?></h3>
+						 <div id="newsletter_item_post_preview">
+						 <div>
+  <a href='#'><img src="<?=$this->newsletter_base_url?>img/newsletter.png" alt="letter image"></a>
+  <a href='#'><h3>Lorem ipsum dolor sit amet</h3></a>
+  <a href='#'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p></a>
+  						</div>
+  						</div>
+						 <?php
+					}
+
                     ///////////////////////////////////// CHECK DB
                     function newsletter_checkdb(){
                       ?>
@@ -1576,17 +1721,17 @@ if($templates_nb>0){
             <tr>
               <td>
                 <?php
-  global $newsletter_tb_name,$wpdb,$newsletter_plugin_url,$eelv_nl_default_themes;
+  global $wpdb;
                       // GROUPE NON CLASSE
-                      $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='1'");?>
+                      $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `id`='1'");?>
                      <h3><?php _e('Address book','eelv_lettreinfo'); ?></h3>
                       <p><?php _e('Uncategorized group :','eelv_lettreinfo'); ?>
                      <?php if(is_array($ret) && sizeof($ret)>0){
-                        $query="UPDATE $newsletter_tb_name SET `nom`='Non class&eacute;s',`email`='',`parent`='0' WHERE `id`='1'";
+                        $query="UPDATE $this->newsletter_tb_name SET `nom`='".__("Uncategorized",'eelv_lettreinfo')."',`email`='',`parent`='0' WHERE `id`='1'";
                         _e('ok','eelv_lettreinfo');
                       }
                       else{
-                        $query="INSERT INTO $newsletter_tb_name (`id`,`nom`) VALUES ('1','Non class&eacute;s')";
+                        $query="INSERT INTO $this->newsletter_tb_name (`id`,`nom`) VALUES ('1','".__("Uncategorized",'eelv_lettreinfo')."')";
                         _e('Created','eelv_lettreinfo');
                       }
 						?>
@@ -1596,20 +1741,20 @@ if($templates_nb>0){
                       $wpdb->query($query);
                       // GROUPE RED LIST
                       echo'<p>'.__('Red list group :','eelv_lettreinfo').' ';
-                      $ret =  $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `id`='2'");
+                      $ret =  $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `id`='2'");
                       if(is_array($ret) && sizeof($ret)>0){
-                        $query="UPDATE $newsletter_tb_name SET `nom`='Liste rouge',`email`='',`parent`='0' WHERE `id`='2'";
+                        $query="UPDATE $this->newsletter_tb_name SET `nom`='".__("Red list",'eelv_lettreinfo')."',`email`='',`parent`='0' WHERE `id`='2'";
                         _e('ok','eelv_lettreinfo');
                       }
                       else{
-                        $query="INSERT INTO $newsletter_tb_name (`id`,`nom`) VALUES ('2','Liste rouge')";
+                        $query="INSERT INTO $this->newsletter_tb_name (`id`,`nom`) VALUES ('2','".__("Red list",'eelv_lettreinfo')."')";
                         _e('Created','eelv_lettreinfo');
                       }
                       echo'  </p>';
                       $wpdb->query($query);
                       // THEMES PAR DEFAUT
                       echo'<h3>'.__('Default skins','eelv_lettreinfo').'</h3>';
-                      foreach($eelv_nl_default_themes as $check_theme=>$check_content){
+                      foreach($this->eelv_nl_default_themes as $check_theme=>$check_content){
                         echo'<p><b>'.$check_theme.'</b> : ';
                         $req="SELECT * FROM $wpdb->posts WHERE post_type = 'newsletter_template' AND `post_status`='publish' AND `post_title`='$check_theme'";
                         $ret =  $wpdb->get_results($req);
@@ -1641,7 +1786,7 @@ if($templates_nb>0){
                     }
                     
 					function newsletter_getuserinfos($courriel){
-						global $newsletter_tb_name,$wpdb;
+						global $wpdb;
 						$destin=array(
 							'name'=>'',
 							'login'=>''
@@ -1657,7 +1802,7 @@ if($templates_nb>0){
 	                        $destin['login']=$user->user_login;
 						}
 						else{
-							$ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$courriel)."'");
+							$ret = $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `email`='".str_replace("'","''",$courriel)."'");
 	                        if(is_array($ret) && sizeof($ret)>0){          
 	                          $destin['name']=$ret[0]->nom;        
 	                          $destin['login']='';
@@ -1667,8 +1812,8 @@ if($templates_nb>0){
 					}
                     ///////////////////////////////////// SEMI CRON AUTO SEND
                     function newsletter_autosend(){
-                      global $newsletter_tb_name,$wpdb,$newsletter_plugin_url,$eelv_nl_default_themes,$nl_id,$dest;
-                      $querystr = "SELECT $wpdb->posts.`ID` FROM $wpdb->posts,$wpdb->postmeta WHERE (post_status = 'publish' OR post_status = 'private') AND post_type = 'newsletter_archive'  AND $wpdb->postmeta.`post_id`=$wpdb->posts.`ID` AND $wpdb->postmeta.`meta_key`='destinataires' AND $wpdb->postmeta.`meta_value`!=''";
+                      global $wpdb,$nl_id,$dest;
+					  $querystr = "SELECT $wpdb->posts.`ID` FROM $wpdb->posts,$wpdb->postmeta WHERE (post_status = 'publish' OR post_status = 'private') AND post_type = 'newsletter_archive'  AND $wpdb->postmeta.`post_id`=$wpdb->posts.`ID` AND $wpdb->postmeta.`meta_key`='destinataires' AND $wpdb->postmeta.`meta_value`!=''";
                       $IDS = $wpdb->get_col($querystr);  
                       $send_nb = sizeof($IDS);
                       if($send_nb>0){
@@ -1696,7 +1841,8 @@ if($templates_nb>0){
                           	
 							
                           	$content=$content_top.'<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>';
-                            $content.=nl_content($nl_id);
+                            $content.=$this->nl_content($nl_id);
+                            $the_content=$content;
 							  
                             $prov = getenv("SERVER_NAME");
                             $eol="\n";
@@ -1711,21 +1857,21 @@ if($templates_nb>0){
                             $headers .= 'MIME-Version: 1.0'.$eol;
                             $headers .= "Content-Type:  multipart/alternative; boundary=\"".$boundary."\"".$eol;
                             //print_r($dests);    
-                            $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
-                            if($newsletter_admin_surveillance!=''){
-                              mail($newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,nl_mime_txt($content,$boundary,$eol),$headers);
+                            $this->newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+                            if($this->newsletter_admin_surveillance!=''){
+                              mail($this->newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$this->nl_mime_txt($content,$boundary,$eol),$headers);
                             }
                             
                             while($dest = array_shift($dests)){
                               $dest=trim($dest);
 							  if(strstr($the_content,'{')){
-							  	$destinataire=newsletter_getuserinfos($dest);
+							  	$destinataire=$this->newsletter_getuserinfos($dest);
 							  } 
 							  else{
 							  	$destinataire=true;
 							  }
                               if ($destinataire && filter_var($dest, FILTER_VALIDATE_EMAIL)) {
-                                $ret = $wpdb->get_results("SELECT * FROM `$newsletter_tb_name` WHERE `email`='".str_replace("'","''",$dest)."' AND `parent`='2' LIMIT 0,1");
+                                $ret = $wpdb->get_results("SELECT * FROM `$this->newsletter_tb_name` WHERE `email`='".str_replace("'","''",$dest)."' AND `parent`='2' LIMIT 0,1");
                                 if(is_array($ret) && sizeof($ret)==0){             // White liste OK            
                                   if( update_post_meta($nl_id, 'destinataires',implode(',',$dests)) ){
                                   	
@@ -1750,7 +1896,7 @@ if($templates_nb>0){
 										$the_content=str_replace(' {dest_login}',' '.$destinataire['login'],$the_content);
 										$the_content=str_replace('{dest_login}',$destinataire['login'],$the_content);
 									}
-									if(strstr($content,'{dest_email}')){
+									if(strstr($the_content,'{dest_email}')){
 										$the_content=str_replace(' {dest_email}',' '.$dest,$the_content);
 										$the_content=str_replace('{dest_email}',$dest,$the_content);
 									}
@@ -1758,11 +1904,11 @@ if($templates_nb>0){
 									$the_content=apply_filters('the_content',$the_content);
 									
 									if($nl_spy==1){
-										  $the_content.='<a href="'.get_bloginfo('url').'"><img src="'.$newsletter_plugin_url.'/eelv-newsletter/reading/'.base64_encode($dest.'!'.$nl_id).'/logo.png" border="none" alt="'.get_bloginfo('url').'"/></a>';
+										  $the_content.='<a href="'.get_bloginfo('url').'"><img src="'.$this->newsletter_plugin_url.'/eelv-newsletter/reading/'.base64_encode($dest.'!'.$nl_id).'/logo.png" border="none" alt="'.get_bloginfo('url').'"/></a>';
 									  }
 									
 									
-                                    if(mail($dest,$the_sujet,nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
+                                    if(mail($dest,$the_sujet,$this->nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
                                       $sent = $dest.':1,'.$sent;
                                     }
                                     else{                    // Envoi KO
@@ -1806,7 +1952,7 @@ function newsletter_network_configuration(){
 <div class="updated"><p><strong><?php _e('Options saved', 'eelv_lettreinfo' ); ?></strong></p></div>
 <?php 
   }
-  $newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
+  $this->newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
   ?>  
       <div class="wrap">
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
@@ -1824,7 +1970,7 @@ function newsletter_network_configuration(){
                 <td width="30%">
                   <label for="newsletter_default_exp"><?=_e('Send a copy of each burst of shipments to:', 'eelv_lettreinfo' )?> :</label>
                 </td><td>
-                <input  type="text" name="newsletter_admin_surveillance"  size="60"  id="newsletter_admin_surveillance"  value="<?=$newsletter_admin_surveillance?>" class="wide">
+                <input  type="text" name="newsletter_admin_surveillance"  size="60"  id="newsletter_admin_surveillance"  value="<?=$this->newsletter_admin_surveillance?>" class="wide">
                 </td>
               </tr>
               <tr>
@@ -1839,22 +1985,21 @@ function newsletter_network_configuration(){
         </form>
       </div>
       <?php
+      $this->newsletter_checkdb();
 }
 function eelv_newsletter_addAlert() { 
-	global $eelv_newsletter_options_version;
 	$cu = wp_get_current_user();
-    if ($cu->has_cap('manage_options') && get_option( 'newsletter_options_version')!=$eelv_newsletter_options_version && !is_network_admin()) {
+    if ($cu->has_cap('manage_options') && get_option( 'newsletter_options_version')!=$this->eelv_newsletter_options_version && !is_network_admin()) {
   ?>
 	<div class="updated"><p><a href="edit.php?post_type=newsletter&page=newsletter_page_configuration">
 		<?php _e('New options are available for your Newsletter, please go to the configuration page', 'eelv_lettreinfo' ); ?></a></p></div>
 	<?php
 	}
 } 
-add_action('admin_head','eelv_newsletter_addAlert');
 
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function newsletter_page_configuration() {
-  global $newsletter_plugin_url,$wpdb, $eelv_newsletter_options_version;
+  global $wpdb;
   if( isset($_REQUEST[ 'type' ]) && $_REQUEST[ 'type' ] == 'update' ) {    
 	update_option( 'newsletter_default_exp', stripslashes($_REQUEST['newsletter_default_exp']) );
 	update_option( 'newsletter_default_mel', stripslashes($_REQUEST['newsletter_default_mel']) );
@@ -1875,7 +2020,7 @@ function newsletter_page_configuration() {
 <div class="updated"><p><strong><?php _e('Options saved', 'eelv_lettreinfo' ); ?></strong></p></div>
 <?php 
   }  
-  update_option( 'newsletter_options_version', $eelv_newsletter_options_version );
+  update_option( 'newsletter_options_version', $this->eelv_newsletter_options_version );
   $default_exp = get_option( 'newsletter_default_exp' );
   $default_mel = get_option( 'newsletter_default_mel' );
   $desinsc_url = get_option( 'newsletter_desinsc_url' );
@@ -1888,12 +2033,12 @@ function newsletter_page_configuration() {
  }
   //$affichage_NL_hp = get_option( 'affichage_NL_hp' );
   
-  $newsletter_msg = get_option( 'newsletter_msg' );
-	  $msg_sender = $newsletter_msg['sender'];
-	  $msg_suscribe_title = $newsletter_msg['suscribe_title'];
-	  $msg_suscribe = $newsletter_msg['suscribe'];
-	  $msg_unsuscribe_title = $newsletter_msg['unsuscribe_title'];
-	  $msg_unsuscribe = $newsletter_msg['unsuscribe'];
+  $this->newsletter_msg = get_option( 'newsletter_msg' );
+	  $msg_sender = $this->newsletter_msg['sender'];
+	  $msg_suscribe_title = $this->newsletter_msg['suscribe_title'];
+	  $msg_suscribe = $this->newsletter_msg['suscribe'];
+	  $msg_unsuscribe_title = $this->newsletter_msg['unsuscribe_title'];
+	  $msg_unsuscribe = $this->newsletter_msg['unsuscribe'];
   ?>  
   
       <div class="wrap">
@@ -1901,7 +2046,7 @@ function newsletter_page_configuration() {
         <h2><?=_e('Newsletter', 'eelv_lettreinfo' )?></h2>
         <form name="typeSite" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">  
           <input type="hidden" name="type" value="update">
-          <input type="hidden" name="newsletter_options_version" value="<?=$eelv_newsletter_options_version?>"/>
+          <input type="hidden" name="newsletter_options_version" value="<?=$this->eelv_newsletter_options_version?>"/>
           <table class="widefat" style="margin-top: 1em;">
             <thead>
               <tr>
@@ -1925,7 +2070,7 @@ function newsletter_page_configuration() {
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_desinsc_url"><?php _e('Unsuscribe page', 'eelv_lettreinfo' ) ?> :</label>
+                  <label for="newsletter_desinsc_url"><?php _e('Unsubscribe page', 'eelv_lettreinfo' ) ?> :</label>
                    
                 </td><td>
                 <select  name="newsletter_desinsc_url"   id="newsletter_desinsc_url">
@@ -1995,28 +2140,28 @@ function newsletter_page_configuration() {
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_msg_suscribe_title"><?php _e('Suscribe subject:', 'eelv_lettreinfo' ) ?></label>
+                  <label for="newsletter_msg_suscribe_title"><?php _e('Subscribe subject:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                 <input  type="text" name="newsletter_msg_suscribe_title"  size="60"  id="newsletter_msg_suscribe_title"  value="<?=$msg_suscribe_title?>" class="wide">
                 </td>
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_msg_suscribe"><?php _e('Suscribe Message:', 'eelv_lettreinfo' ) ?></label>
+                  <label for="newsletter_msg_suscribe"><?php _e('Subscribe Message:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                 <textarea  name="newsletter_msg_suscribe" id="newsletter_msg_suscribe"><?=$msg_suscribe;?></textarea>
                 </td>
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_msg_unsuscribe_title"><?php _e('Unuscribe subject:', 'eelv_lettreinfo' ) ?></label>
+                  <label for="newsletter_msg_unsuscribe_title"><?php _e('Unsubscribe subject:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                 <input  type="text" name="newsletter_msg_unsuscribe_title"  size="60"  id="newsletter_msg_unsuscribe_title"  value="<?=$msg_unsuscribe_title?>" class="wide">
                 </td>
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_msg_unsuscribe"><?php _e('Unsuscribe message:', 'eelv_lettreinfo' ) ?></label>
+                  <label for="newsletter_msg_unsuscribe"><?php _e('Unsubscribe message:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                 <textarea  name="newsletter_msg_unsuscribe" id="newsletter_msg_unsuscribe"><?=$msg_unsuscribe;?></textarea>
                 </td>
@@ -2041,22 +2186,22 @@ function newsletter_page_configuration() {
                   <p><a href="https://ecolosites.eelv.fr/tag/newsletter/" target="_blank">EELV Newsletter</a></p>
                   <p><?php _e('Shortcods used:', 'eelv_lettreinfo' ) ?></p>
                   <ul>
-                    <li><?php _e('Insert suscribe form in a page :', 'eelv_lettreinfo' ) ?><strong>[eelv_news_form]</strong></li>
+                    <li><?php _e('Insert subscription form in a page :', 'eelv_lettreinfo' ) ?><strong>[eelv_news_form]</strong></li>
                   	<li><?php _e('Insert answer form in a page :','eelv_lettreinfo')?> <strong>[nl_reply_form]</strong></li>
                   	<li><?php _e('Insert answer link in a newsletter :','eelv_lettreinfo')?> <strong>[nl_reply_link rep="rep" val="val"]</strong></li>
                   </ul>
                   <p><?php _e('Skins shortcodes', 'eelv_lettreinfo' ) ?></p>        
                   <ul>
                     <li><?php _e('Insert newsletter content in a skin :', 'eelv_lettreinfo' ) ?><strong>[newsletter]</strong></li>
-                    <li><?php _e('Insert an unsuscribe link :', 'eelv_lettreinfo' ) ?><strong>[desinsc_url]</strong></li>
+                    <li><?php _e('Insert an unsubscribe link :', 'eelv_lettreinfo' ) ?><strong>[desinsc_url]</strong></li>
                   </ul>
                   <p><?php _e('Legend of sending symbols:', 'eelv_lettreinfo' ) ?></p>
                   <ul>
-                  <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg"/> <?php _e('Invalid email', 'eelv_lettreinfo' ) ?></li>
-                  <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/0.jpg"/> <?php _e('Sending failed', 'eelv_lettreinfo' ) ?></li>
-                  <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/1.jpg"/> <?php _e('Newsletter successfully sent', 'eelv_lettreinfo' ) ?></li>
-                  <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/2.jpg"/> <?php _e('Address on the list of unsubscribed:', 'eelv_lettreinfo' ) ?></li>
-                  <li><img src="<?=$newsletter_plugin_url?>/eelv-newsletter/img/3.jpg"/> <?php _e('Email has been readen', 'eelv_lettreinfo' ) ?></li>
+                  <li><img src="<?=$this->newsletter_plugin_url?>/eelv-newsletter/img/-1.jpg"/> <?php _e('Invalid email', 'eelv_lettreinfo' ) ?></li>
+                  <li><img src="<?=$this->newsletter_plugin_url?>/eelv-newsletter/img/0.jpg"/> <?php _e('Sending failed', 'eelv_lettreinfo' ) ?></li>
+                  <li><img src="<?=$this->newsletter_plugin_url?>/eelv-newsletter/img/1.jpg"/> <?php _e('Newsletter successfully sent', 'eelv_lettreinfo' ) ?></li>
+                  <li><img src="<?=$this->newsletter_plugin_url?>/eelv-newsletter/img/2.jpg"/> <?php _e('Address on the list of unsubscribed:', 'eelv_lettreinfo' ) ?></li>
+                  <li><img src="<?=$this->newsletter_plugin_url?>/eelv-newsletter/img/3.jpg"/> <?php _e('Email has been readen', 'eelv_lettreinfo' ) ?></li>
                   </ul>
                 </td></tr></tbody></table>
         </form>
@@ -2090,7 +2235,7 @@ function eelv_lettrinfo_get_custom_archive_template($template){
   global $wp_query;
   if($wp_query->get_queried_object()->query_var=='newsletter_archive') {  
 	  $templates = array('archive-newsletter_archive.php', 'archive.php');
-	  $template = eelv_lettrinfo_locate_plugin_template($templates);
+	  $template = $this->eelv_lettrinfo_locate_plugin_template($templates);
   }
   return $template;
 }
@@ -2099,32 +2244,26 @@ function eelv_lettrinfo_get_custom_single_template($template){
   $object = $wp_query->get_queried_object();
   if ( 'newsletter_archive' == $object->post_type ) {
 	$templates = array('single-' . $object->post_type . '.php', 'single.php');
-	$template = eelv_lettrinfo_locate_plugin_template($templates);
+	$template = $this->eelv_lettrinfo_locate_plugin_template($templates);
   }
   return $template;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////// WIDGET
-wp_register_sidebar_widget(
-  'widget_eelv_lettreinfo_insc',        // your unique widget id
-  __('Suscribe newsletter','eelv_lettreinfo'),          // widget name
-  'widget_eelv_lettreinfo_side',  // callback function
-  array(                  // options
-	'description' => __('Form / unsubscribe and archives NewsLetter','eelv_lettreinfo')
-  )
-);
+	function register_widget(){
+		if(class_exists('EELV_NL_Archives_Widget'))
+			register_widget('EELV_NL_Archives_Widget');	
+	}
 function widget_eelv_lettreinfo_side($params) {
-  $eelv_li_xs_title= get_option('eelv_li_xs_title')?>
+  $this->eelv_li_xs_title= get_option('eelv_li_xs_title')?>
       <?php echo $params['before_widget']; ?>
       <?php echo $params['before_title'];?>
-      <?php echo  $eelv_li_xs_title; ?>
+      <?php echo  $this->eelv_li_xs_title; ?>
       <?php echo $params['after_title'];?>
-      <?php get_news_form('widget'); ?>
+      <?php $this->get_news_form('widget'); ?>
       <?php echo $params['after_widget'];?>
       <?php
    }
-                    
- wp_register_widget_control('widget_eelv_lettreinfo_insc', __('Suscribe newsletter','eelv_lettreinfo'),'widget_eelv_lettreinfo_insc_control');
- function widget_eelv_lettreinfo_insc_control(){
+function widget_eelv_lettreinfo_insc_control(){
    if( isset($_POST['eelv_li_xs_title']) ){
 	    update_option('eelv_li_xs_title', stripslashes($_POST['eelv_li_xs_title']));
 	    update_option('eelv_li_xs_archives', stripslashes($_POST['eelv_li_xs_archives']));
@@ -2137,56 +2276,56 @@ function widget_eelv_lettreinfo_side($params) {
 	    update_option('eelv_li_xs_buttontext', stripslashes($_POST['eelv_li_xs_buttontext']));
 	    _e('Options saved', 'eelv_lettreinfo' );
    }
-                      $eelv_li_xs_title= get_option('eelv_li_xs_title');
-                      $eelv_li_xs_options = get_option('eelv_li_xs_options',0);
-                      $eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
-                      $eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
-                      $eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
-                      $eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
-					  $eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
-					$eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Suscribe our newsletter', 'eelv_lettreinfo'));
-					$eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
+                      $this->eelv_li_xs_title= get_option('eelv_li_xs_title');
+                      $this->eelv_li_xs_options = get_option('eelv_li_xs_options',0);
+                      $this->eelv_li_xs_archives = get_option('eelv_li_xs_archives',0);
+                      $this->eelv_li_xs_formclass = get_option('eelv_li_xs_formclass','');
+                      $this->eelv_li_xs_textclass = get_option('eelv_li_xs_textclass','');
+                      $this->eelv_li_xs_buttonclass = get_option('eelv_li_xs_buttonclass','');
+					  $this->eelv_li_xs_buttontext = get_option('eelv_li_xs_buttontext','ok');
+					$this->eelv_li_xs_labeltext = get_option('eelv_li_xs_labeltext',__('Subscribe our newsletter', 'eelv_lettreinfo'));
+					$this->eelv_li_xs_texttext = get_option('eelv_li_xs_texttext',__('Newsletter : your email address', 'eelv_lettreinfo'));
 	
                       ?>
       <p><label><?php _e('Title', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_title' value="<?=$eelv_li_xs_title?>"/></label>
+        <input type='text' name='eelv_li_xs_title' value="<?=$this->eelv_li_xs_title?>"/></label>
       </p>
       
       <p><label><?php _e('Label text', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_labeltext' value="<?=$eelv_li_xs_labeltext?>"/></label>
+        <input type='text' name='eelv_li_xs_labeltext' value="<?=$this->eelv_li_xs_labeltext?>"/></label>
       </p>
       
       <p><label><?php _e('Input text', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_texttext' value="<?=$eelv_li_xs_texttext?>"/></label>
+        <input type='text' name='eelv_li_xs_texttext' value="<?=$this->eelv_li_xs_texttext?>"/></label>
       </p>
       
       <p><label><?php _e('Button text', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_buttontext' value="<?=$eelv_li_xs_buttontext?>"/></label>
+        <input type='text' name='eelv_li_xs_buttontext' value="<?=$this->eelv_li_xs_buttontext?>"/></label>
       </p>
       
-      <p><label'><?php _e('Hide suscribe/unsuscribe options', 'eelv_lettreinfo' ) ?><br/>
+      <p><label'><?php _e('Hide subscribe/unsubscribe options', 'eelv_lettreinfo' ) ?><br/>
         <select name='eelv_li_xs_options'>
-            <option value="0" <?php if($eelv_li_xs_options==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
-            <option value="1" <?php if($eelv_li_xs_options==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
+            <option value="0" <?php if($this->eelv_li_xs_options==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
+            <option value="1" <?php if($this->eelv_li_xs_options==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
         </select>
         </label>
       </p>
       <p><label><?php _e('Hide archives link', 'eelv_lettreinfo' ) ?><br/>
         <select name='eelv_li_xs_archives'>
-            <option value="0" <?php if($eelv_li_xs_archives==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
-            <option value="1" <?php if($eelv_li_xs_archives==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
+            <option value="0" <?php if($this->eelv_li_xs_archives==0){ echo'selected'; } ?>><?php _e('No', 'eelv_lettreinfo' ) ?></option>
+            <option value="1" <?php if($this->eelv_li_xs_archives==1){ echo'selected'; } ?>><?php _e('Yes', 'eelv_lettreinfo' ) ?></option>
         </select>
         </label>
       </p>
       <h5><?php _e('Advanced options', 'eelv_lettreinfo' ) ?></h5>
       <p><label><?php _e('Form class', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_formclass' value="<?=$eelv_li_xs_formclass?>"/></label>
+        <input type='text' name='eelv_li_xs_formclass' value="<?=$this->eelv_li_xs_formclass?>"/></label>
       </p>
       <p><label><?php _e('Text class', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_textclass' value="<?=$eelv_li_xs_textclass?>"/></label>
+        <input type='text' name='eelv_li_xs_textclass' value="<?=$this->eelv_li_xs_textclass?>"/></label>
       </p>
       <p><label><?php _e('Button class', 'eelv_lettreinfo' ) ?><br/>
-        <input type='text' name='eelv_li_xs_buttonclass' value="<?=$eelv_li_xs_buttonclass?>"/></label>
+        <input type='text' name='eelv_li_xs_buttonclass' value="<?=$this->eelv_li_xs_buttonclass?>"/></label>
       </p>
       <?php
   }
@@ -2209,45 +2348,13 @@ function widget_eelv_lettreinfo_side($params) {
     
     
     <p><a id="eelv_nl_convert_a" class="button"> <?php _e("Preview and send",'eelv_lettreinfo'); ?></a></p>
-    <script>
-	jQuery(document).ready(function(e) {
-		jQuery('#eelv_nl_convert_id').width(jQuery('#eelv_nl_convert_id').parent().width()-10);
-		jQuery('#eelv_nl_convert_a').click(function(){
-			var lien=jQuery('#eelv_nl_convert_link').attr('value');
-			lien+='&convert=';
-			lien+=jQuery('#eelv_nl_convert_id').val();
-			if(jQuery('#eelv_nl_convert_title').is(':checked')==true){
-				lien+='&add_title=1';
-			}
-			if(jQuery('#eelv_nl_convert_share').is(':checked')==true){
-				lien+='&add_sharelinks=1';
-			}
-			//console.log(lien);
-			document.location=lien;
-			return false;
-		});
-	});
-	</script>
 <?php
   }else{
 	_e("No skin available",'eelv_lettreinfo');  
   }  
 }
-///////////////////////////////////////////////////////////////////////// INSERTION DANS WORDPRESS
-register_activation_hook(__FILE__,'eelvnewsletter_install');
-add_action( 'save_post', 'newsletter_save_postdata' );
-add_action('plugins_loaded', 'eelvnewsletter_update_db_check');
-add_action( 'add_meta_boxes', 'newsletter_add_custom_box' );
-add_action( 'init', 'newsletter_BO' );
-add_action('admin_menu', 'eelv_news_ajout_menu');
-add_action( 'network_admin_menu', 'eelv_news_ajout_network_menu'); 
-add_action('wp_head', 'style_newsletter');
-add_action('wp_enqueue_scripts', 'eelv_news_scripts');
-add_action('admin_enqueue_scripts', 'eelv_news_adminscripts');
-add_action( 'admin_init', 'newsletter_autosend' );
-add_filter( 'archive_template', 'eelv_lettrinfo_get_custom_archive_template' );
-add_filter( 'single_template', 'eelv_lettrinfo_get_custom_single_template' );
-add_filter('manage_newsletter_posts_columns', 'lettreinfo_columns_head');  
-add_action('manage_newsletter_posts_custom_column', 'lettreinfo_columns_content', 10, 2); 
-add_filter('manage_newsletter_archive_posts_columns', 'lettreinfo_archives_columns_head');  
-add_action('manage_newsletter_archive_posts_custom_column', 'lettreinfo_archives_columns_content', 10, 2); 
+
+
+
+}
+//End of the EELV_newsletter Class

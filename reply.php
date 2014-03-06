@@ -74,9 +74,9 @@ add_shortcode('li_form_reponse',array( 'EelvNlReply', 'form'));*/
 					}
 					$ret.='</div>';
 				}
-				
+				global $eelv_newsletter;
 				// ask for missing informations	
-				$content=nl_content($_REQUEST['nl'],$type='newsletter_archive');		
+				$content=$eelv_newsletter->nl_content($_REQUEST['nl'],$type='newsletter_archive');		
 				$ret.=$content;	
 				$ret.='</form>';
 			
