@@ -1,9 +1,15 @@
 jQuery(document).ready(function($){
 	
 // Default content preview
-	$('#newsletter_item_post_preview').children('div').clone().appendTo('#newsletter_item_post_preview').clone().appendTo('#newsletter_item_post_preview').clone().appendTo('#newsletter_item_post_preview');
+	//$('#newsletter_item_post_preview').children('div').clone().appendTo('#newsletter_item_post_preview').clone().appendTo('#newsletter_item_post_preview').clone().appendTo('#newsletter_item_post_preview');
 	$('#newsletter_item_post_style input').change(function(){
-		$('#newsletter_item_post_preview '+$(this).data('type')).attr('style',$(this).val());
+		$('#newsletter_item_post_preview '+$(this).data('type')+'.nl_preview').attr('style',$(this).val());
+		if($(this).data('type')=='readmore'){
+			$('#newsletter_item_post_preview a.readmore').attr('style',$(this).val());
+		}
+		if($(this).data('type')=='readmore_content'){
+			$('#newsletter_item_post_preview a.readmore').text($(this).val());
+		}		
 	});
 	$('#newsletter_item_post_style input').trigger('change');
 
@@ -127,8 +133,8 @@ function incontent(str){
     }  
   }
 }
-function set_default_content(ki){
-  ki = document.getElementById(ki);
+function apply_default_content(ki){
+   ki = document.getElementById(ki);
   if(ki.value && ki.value!=''){
     if(confirm(eelv_newsletter.load_default_content)){
       str=ki.value;
@@ -137,5 +143,12 @@ function set_default_content(ki){
       switchEditors.go('content', 'tinymce');  
     }
   }
-  jQuery('#post').submit();
+}
+function set_default_content(ki){
+  apply_default_content(ki);
+  setTimeout('eelv_nl_submitform()',500);
+  
+}
+function eelv_nl_submitform(){
+	jQuery('#publish').trigger('click');
 }

@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.7.0
+Version: 3.8.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -18,6 +18,7 @@ class EELV_newsletter{
 	// ID for DB version
 	// Beeing updated each time the SQL structure changes
 	var $eelv_newsletter_version;
+	var $js_version;
 	var $installed_ver;
 	// Current version of the options version
 	// Beeing updated each time the configuration page changes
@@ -30,6 +31,7 @@ class EELV_newsletter{
 	var $eelv_nl_content_themes;
 	var $eelv_nl_default_themes;
 	var $default_item_style;
+	var $default_item_style_trads;
 	var $newsletter_sql;
 	
 	var $news_reg_return;
@@ -46,6 +48,7 @@ class EELV_newsletter{
 		
   	  $this->news_reg_return='';		
 	  $this->eelv_newsletter_version = '2.6.5';
+	  $this->js_version='2.7.1';
 	  $this->installed_ver = get_option( "eelv_newsletter_version" );
 	  $this->eelv_newsletter_options_version = 4;
 	  $this->newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
@@ -66,12 +69,28 @@ class EELV_newsletter{
 	  include_once ($this->lettreinfo_plugin_path.'reply.php');
 	  
 	  $this->default_item_style=array(
+	  						  't_size'=>'thumbnail',
 						      'div'=>'width:550px; margin:5px 0px;text-align:left; clear:both; border-top:#CCC 1px dotted; padding-top:1em; margin-top:1em;',
 						      'a'=>'text-decoration:none;color:#666666;',
 						      'img'=>'float:left; margin-right:10px;',
 						      'h3' => 'margin:0px !important;text-decoration:none;color:#000000;',
 						      'p' => '',
+						      'readmore'=>'',
+						      'readmore_content'=>'',
+						      'excerpt_length'=>300
 					     );
+						 
+		$this->default_item_style_trads=array(
+							't_size'=>__('Thumbnail size','eelv_lettreinfo'),
+							'div'=>__('Div style:','eelv_lettreinfo'),
+							'a'=>__('A style:','eelv_lettreinfo'),
+							'img'=>__('Img style:','eelv_lettreinfo'),
+							'h3'=>__('H3 style:','eelv_lettreinfo'),
+							'p'=>__('P style:','eelv_lettreinfo'),
+							'readmore'=>__('Readmore style:','eelv_lettreinfo'),
+							'readmore_content'=>__('Readmore content:','eelv_lettreinfo'),
+							'excerpt_length'=>__('Excerpt length: (characters)','eelv_lettreinfo')
+						);
 	  
 	  // Hooks into WordPress
 	    register_activation_hook(__FILE__,array(&$this,'eelvnewsletter_install'));
@@ -108,6 +127,7 @@ class EELV_newsletter{
 		
 		add_action('widgets_init', array(&$this,'register_widget'));
   	
+		add_filter('tiny_mce_before_init', array(&$this,'myformatTinyMCE') );
 	  	
 	}
 
@@ -235,7 +255,7 @@ class EELV_newsletter{
   //Admin side 
    function eelv_news_adminscripts(){  		
 	  wp_enqueue_style('eelv_newsletter',plugins_url( 'admin.css' , __FILE__ ));
-	  wp_enqueue_script('eelv_newsletter_admin',plugins_url( 'admin.js' , __FILE__ ),'jquery',$this->eelv_newsletter_version,true);
+	  wp_enqueue_script('eelv_newsletter_admin',plugins_url( 'admin.js' , __FILE__ ),'jquery',$this->js_version,true);
 	  wp_localize_script('eelv_newsletter_admin', 'eelv_newsletter', array(
 			'url' => $this->newsletter_base_url,
 			// Tracking
@@ -474,6 +494,12 @@ class EELV_newsletter{
 		$message .= '--'.$boundary.'--'.$eol;
 		return $message;
 	}
+	function myformatTinyMCE($in)	{
+		if(get_post_type()=='newsletter' || get_post_type()=='newsletter_archive' || get_post_type()=='newsletter_template'){
+			$in['wpautop']=false;
+		}
+		return $in;
+	}
 	 function nl_content($post_id,$type='newsletter'){
 	    $nl =  get_post($post_id);
 		if(is_object($nl)){
@@ -482,8 +508,9 @@ class EELV_newsletter{
 		    if($template){
 		      $content= str_replace('[newsletter]',$content,$template->post_content);
 		    }
-		     
+		    remove_filter('the_content', 'wpautop');
 		    $return  = apply_filters('the_content',$content);
+			add_filter('the_content', 'wpautop');
 			if($return=='' && $content!=''){
 				$return=$content;
 				$desinsc_url = get_option( 'newsletter_desinsc_url' );
@@ -1465,13 +1492,21 @@ class EELV_newsletter{
 								$this->eelv_nl_content_themes[$my_temp_title]='';
 							}
                           ?>
-    <p><label for='nt_<?=$item_id;?>' onclick="set_default_content('dc_<?=$item_id;?>')"><input type='radio' name='newslettertemplate' id='nt_<?=$item_id;?>' value='<?=$item_id;?>' <?php if($item_id==$my_temp){ echo' checked=checked ';} ?>/> <?=$my_temp_title;?></label><textarea id="dc_<?=$item_id;?>" style="display:none;"><?=$this->eelv_nl_content_themes[$my_temp_title]?></textarea></p> 
+    <p>
+    	<label>
+	    	<input type='radio' onclick="set_default_content('dc_<?=$item_id;?>')" name='newslettertemplate' id='nt_<?=$item_id;?>' value='<?=$item_id;?>' <?php if($item_id==$my_temp){ echo' checked=checked ';} ?>/> 
+	    	<?=$my_temp_title;?>
+    	</label>
+    	<?php if($this->eelv_nl_content_themes[$my_temp_title]!=''){ ?>
+    	<u onclick="apply_default_content('dc_<?=$item_id;?>')"><?php _e('Load default content', 'eelv_lettreinfo' ) ?></u>
+    	<?php } ?>
+    	<textarea id="dc_<?=$item_id;?>" style="display:none;"><?=$this->eelv_nl_content_themes[$my_temp_title]?></textarea>
+    </p> 
       <?php }
-                      }
-                      ?>
+      } ?>
       </td><td valign="top" style='padding-left:20px'>
       <h4><?php _e('Insert some content', 'eelv_lettreinfo' ) ?></h4>
-      <h3><?php _e('Available addressing variables', 'eelv_lettreinfo' ) ?></h3>
+      <h5><?php _e('Available addressing variables', 'eelv_lettreinfo' ) ?></h5>
       <ul>
       	<li><a onclick="incontent(' {dest_name} ');">{dest_name}</a></li>
       	<li><a onclick="incontent(' {dest_login} ');">{dest_login}</a></li>
@@ -1484,10 +1519,16 @@ class EELV_newsletter{
       <!--[if lt IE 9]>
       <script>IEbof=true;</script>
       <![endif]-->
-      <?php
       
+      <h5><?php _e('Last posts', 'eelv_lettreinfo' ) ?></h5>
+      <?php
       $item_style=shortcode_atts($this->default_item_style, get_post_meta($my_temp, 'item_style',true));
 	  
+	    $imgsize=$item_style['t_size'];
+	    /*if ( function_exists( 'add_image_size' ) ) { 
+	   		$imgsize='newletter_template_thumbnail_'.$my_temp;
+			//add_image_size( $imgsize, $item_style['t_size_width'],$item_style['t_size_height'],true);		   
+		}*/
 	  
   					$querystr = "";
                       $optis='<option value="">'.__('Posts', 'eelv_lettreinfo' ).'</option>';
@@ -1497,8 +1538,12 @@ class EELV_newsletter{
                           $post_list->the_post();  
 							
                           ?>
-      <textarea id="nl_post_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'>
-  <a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>"; ?></textarea>
+      <textarea id="nl_post_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'>";
+      echo"<a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),$imgsize,array('style'=>$item_style['img']))."</a>";
+      echo"<h3><a href='".get_post_permalink()."' style='".$item_style['h3']."'>".get_the_title()."</a></h3>";
+      echo"<p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,$item_style['excerpt_length'])."...</p>"; 
+  		if($item_style['readmore_content']!=''){ echo "<a href='".get_post_permalink()."' style='".$item_style['readmore']."'>".$item_style['readmore_content']."</a>";  }
+  		?></textarea>
       <textarea id="nl_share_<?php the_ID();?>" style="display:none"><?php echo $this->eelv_newsletter_sharelinks(get_the_title(),get_post_permalink()); ?></textarea>
       <?php 
                           $optis.='<option value="'.get_the_ID().'">'.substr(get_the_title(),0,70).'</option>';
@@ -1515,9 +1560,9 @@ class EELV_newsletter{
                         while($page_list->have_posts()){
                           $page_list->the_post();  
                           ?>
-      <textarea id="nl_page_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'>
-  <a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),array(550,100),array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>
-  </div>&nbsp;
+      <textarea id="nl_page_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'><a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),$imgsize,array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>";
+  if($item_style['readmore_content']!=''){ echo "<a href='".get_post_permalink()."' style='".$item_style['readmore']."'>".$item_style['readmore_content']."</a>";  }
+  echo"</div>&nbsp;
   "; ?></textarea>
       
       <?php 
@@ -1673,34 +1718,53 @@ if($templates_nb>0){
 					function newsletter_template_default_content(){
 						$post_id = get_the_ID(); 
                         $default_content = get_post_meta($post_id, 'default_content',true);
-						
+						_e('This content will be loaded when you\'ll choose this template for editing a newsletter.','eelv_lettreinfo');
 						wp_editor( $default_content, 'default_content' );
 					}
 					function newsletter_template_item_style(){
-						$post_id = get_the_ID();			
-						$item_style=shortcode_atts($this->default_item_style, get_post_meta($post_id, 'item_style',true));						 
-						 ?>
-						 <div id="newsletter_item_post_style">
-						 <?php
-						 foreach ($item_style as $k => $v) {
+						$post_id = get_the_ID();	
+						$item_style=shortcode_atts($this->default_item_style, get_post_meta($post_id, 'item_style',true));
+											 
 						?>
+						 <div id="newsletter_item_post_style">
+						 	<div>
+								<label>
+									<?php _e('Thumbnail size','eelv_lettreinfo')?> : 						
+									<select data-type="t_size" name="item_style[t_size]">
+										<option value="thumbnail" <?=($item_style['t_size']=='thumbnail'?'selected':'') ?>><?=_x('Thumbnail size')?></option>
+										<option value="medium" <?=($item_style['t_size']=='medium'?'selected':'') ?>><?=_x('Medium size')?></option>
+										<option value="large" <?=($item_style['t_size']=='large'?'selected':'') ?>><?=_x('Large size')?></option>
+										<option value="full" <?=($item_style['t_size']=='full'?'selected':'') ?>><?=_x('Full size')?></option>
+									</select>
+								</label>
+							</div>
+					  <?php
+						 foreach ($item_style as $k => $v) { if($k!='t_size'){?>
 						<div>
 							<label>
-								<?=$k?>:								
+								<?=$this->default_item_style_trads[$k]?>								
 								<input type="text" data-type="<?=$k?>" name="item_style[<?=$k?>]" value="<?=$v?>" class="widefat">
 							</label>
 						</div>
 						<?php
-						}
+						}}
 						 ?>
 						 </div>
+						 
 						 <h3><?php _e( "Preview", 'eelv_lettreinfo' ) ?></h3>
 						 <div id="newsletter_item_post_preview">
-						 <div>
-  <a href='#'><img src="<?=$this->newsletter_base_url?>img/newsletter.png" alt="letter image"></a>
-  <a href='#'><h3>Lorem ipsum dolor sit amet</h3></a>
-  <a href='#'><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit. Donec et mollis dolor. Praesent et diam eget libero egestas mattis sit amet vitae augue. Nam tincidunt congue enim, ut porta lorem lacinia consectetur. Donec ut libero sed arcu vehicula ultricies a non tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p></a>
+						 	
+						 	<?php $pst = new WP_Query('posts_per_page=5');
+							while($pst->have_posts()){ $pst->the_post(); ?>
+															
+						 <div class="nl_preview">
+  <a href='#' class="nl_preview">
+  	<?php the_post_thumbnail($item_style['t_size'],array('class'=>'nl_preview')) ?>
+  <h3 class="nl_preview"><?php the_title(); ?></h3></a>
+  <p class="nl_preview"><?=substr(strip_tags(get_the_content()),0,$item_style['excerpt_length']);?>...</p></a>
+  <a href='#' class="readmore"><?=$item_style['readmore_content']?></a>  						
   						</div>
+  						<?php } ?>
   						</div>
 						 <?php
 					}
@@ -1985,7 +2049,6 @@ function newsletter_network_configuration(){
         </form>
       </div>
       <?php
-      $this->newsletter_checkdb();
 }
 function eelv_newsletter_addAlert() { 
 	$cu = wp_get_current_user();
@@ -2207,6 +2270,8 @@ function newsletter_page_configuration() {
         </form>
       </div>
       <?php
+      
+      $this->newsletter_checkdb();
   }  
 function eelv_lettrinfo_locate_plugin_template($template_names, $load = false, $require_once = true ){
   if ( !is_array($template_names) )

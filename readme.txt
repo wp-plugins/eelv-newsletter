@@ -93,6 +93,14 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
 
+= 3.8.0 = 
+* Add: More options in skin management and for default content
+* Add: Remove autoP formating for skins and newsletters
+* Add: 2 cols preformated template
+* Add: Ability to load skin's default content unregardless to the selected skin
+* Add: Displays real posts in realtime preview for default content
+* Fix: Refresh after selecting a skin in newsletter editing
+
 = 3.7.0 = 
 * Add: Edit default content for each newsletter skin
 * Add: Edit item style for each default content with realtime preview
