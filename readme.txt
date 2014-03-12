@@ -311,7 +311,9 @@ Yes, skins are registered as post-type.
 
 == Upgrade notice ==
 
-No particular informations
+= 3.8.0 = 
+
+AutoP is removed form skins and newsletters. Please, re-edit them.
 
 == Languages ==
 
