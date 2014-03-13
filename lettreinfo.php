@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.8.0
+Version: 3.8.1
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -1548,7 +1548,7 @@ class EELV_newsletter{
       <?php 
                           $optis.='<option value="'.get_the_ID().'">'.substr(get_the_title(),0,70).'</option>';
                         } ?> 
-      <p><select name="nl_insert_post" onchange="var nl_p_content=getElementById('nl_post_'+this.value).value; if(document.getElementById('nl_with_share').checked==true){nl_p_content+=getElementById('nl_share_'+this.value).value}incontent(nl_p_content+'</div>&nbsp;\n');this.value=''">
+      <p><select name="nl_insert_post" onchange="var nl_p_content=getElementById('nl_post_'+this.value).value; if(document.getElementById('nl_with_share').checked==true){nl_p_content+=getElementById('nl_share_'+this.value).value}incontent(nl_p_content+'</div><br><br>');this.value=''">
         <?=$optis?>
         </select>
       </p>
@@ -1562,8 +1562,7 @@ class EELV_newsletter{
                           ?>
       <textarea id="nl_page_<?php the_ID();?>" style="display:none"><?php echo"<div style='".$item_style['div']."'><a href='".get_post_permalink()."' style='".$item_style['a']."'>".get_the_post_thumbnail(get_the_ID(),$imgsize,array('style'=>$item_style['img']))." <h3 style='".$item_style['h3']."'>".get_the_title()."</h3> <p style='".$item_style['p']."'>".substr(strip_tags(get_the_content()),0,300)."...</p></a>";
   if($item_style['readmore_content']!=''){ echo "<a href='".get_post_permalink()."' style='".$item_style['readmore']."'>".$item_style['readmore_content']."</a>";  }
-  echo"</div>&nbsp;
-  "; ?></textarea>
+  echo"</div><br><br>"; ?></textarea>
       
       <?php 
                           $optis.='<option value="'.get_the_ID().'">'.substr(get_the_title(),0,70).'</option>';
