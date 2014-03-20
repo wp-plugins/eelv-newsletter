@@ -93,7 +93,7 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
 
-= 3.8.2 =
+= 3.8.3 =
 * Fix: subscription widget bug
 
 = 3.8.1 =
