@@ -93,6 +93,9 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
 
+= 3.8.2 =
+* Fix: subscription widget bug
+
 = 3.8.1 =
 * Fix: Break lines after inserted posts in newsletter editor to prevent posts in other posts
 
