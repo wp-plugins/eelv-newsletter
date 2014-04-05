@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.8.3
+Version: 3.8.4
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -245,7 +245,7 @@ class EELV_newsletter{
 	  function eelvnewsletter_update_db_check() {
 	    if (get_option('eelv_newsletter_version') != $this->eelv_newsletter_version) {
 	      update_option( 'eelv_newsletter_version', $this->eelv_newsletter_version );
-	      eelvnewsletter_install();
+	      $this->eelvnewsletter_install();
 	    }
 	  }
   
