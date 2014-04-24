@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.8.4
+Version: 3.8.5
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -35,6 +35,8 @@ class EELV_newsletter{
 	var $newsletter_sql;
 	
 	var $news_reg_return;
+    
+    var $eol;
 	
 	
 	//Initialize the plugin
@@ -57,6 +59,7 @@ class EELV_newsletter{
 	  $this->lettreinfo_plugin_path=plugin_dir_path(__FILE__);
 	  $this->eelv_nl_content_themes=array();
 	  $this->eelv_nl_default_themes=array();
+      $this->eol="\r\n";
 	  $this->newsletter_sql = "CREATE TABLE " . $this->newsletter_tb_name . " (
 	    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
 	    `parent` mediumint(9) DEFAULT 0 NOT NULL,
@@ -474,7 +477,8 @@ class EELV_newsletter{
   
   
   //Construct a multipart body content
-	function nl_mime_txt($str,$boundary='',$eol="\n"){
+	function nl_mime_txt($str,$boundary='',$eol="\r\n"){
+		$eol=$this->eol;
 		$message = '';
 		/*$message .= 'MIME-Version: 1.0'.$eol;
 		$message .= 'Content-Type: multipart/alternative;'.$eol;
@@ -605,7 +609,7 @@ class EELV_newsletter{
                 elseif($query!=''){
                   $this->news_reg_return=__("You have been successfully re-registered", 'eelv_lettreinfo');  
 				  if(!empty($sender) && !empty($suscribe_title) && !empty($suscribe)){
-				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender);
+				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender.$this->eol,'-f '.$sender);
 				  }              
                 }                
               }
@@ -622,7 +626,7 @@ class EELV_newsletter{
               elseif($query!=''){
                 $this->news_reg_return.=__("Thank you for your subscription", 'eelv_lettreinfo');   
 				if(!empty($sender) && !empty($suscribe_title) && !empty($suscribe)){
-				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender);
+				  	mail($email,$suscribe_title,$suscribe,'From:'.$sender.$this->eol,'-f '.$sender);
 				  }             
               }
             }
@@ -637,7 +641,7 @@ class EELV_newsletter{
               elseif($query!=''){
                 $this->news_reg_return.=__("Thank you, your email have been deleted from our mailing-list", 'eelv_lettreinfo'); 
 				  if(!empty($sender) && !empty($unsuscribe_title) && !empty($unsuscribe)){
-				  	mail($email,$unsuscribe_title,$unsuscribe,'From:'.$sender);
+				  	mail($email,$unsuscribe_title,$unsuscribe,'From:'.$sender.$this->eol,'-f '.$sender);
 				  }                
               }  
             }
@@ -1416,15 +1420,15 @@ class EELV_newsletter{
                       if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )      return;
 					  
 					  //Save temple in NL
-                      if ( 'newsletter' == $_POST['post_type']  && isset($_REQUEST['newslettertemplate']) && $_REQUEST['newslettertemplate']!=''){
+                      if (isset($_POST['post_type']) && 'newsletter' == $_POST['post_type']  && isset($_REQUEST['newslettertemplate']) && $_REQUEST['newslettertemplate']!=''){
                         update_post_meta($post_id, 'nl_template', $_REQUEST['newslettertemplate']);
                       }
                       
                       //Save default content in template
-                      if ( 'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['item_style']) && is_array($_REQUEST['item_style'])) {
+                      if (isset($_POST['post_type']) &&  'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['item_style']) && is_array($_REQUEST['item_style'])) {
                       	update_post_meta($post_id, 'item_style', $_REQUEST['item_style']);
                       }
-                      if ( 'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['default_content']) && $_REQUEST['default_content']!='') {
+                      if (isset($_POST['post_type']) &&  'newsletter_template' == $_POST['post_type']  && isset($_REQUEST['default_content']) && $_REQUEST['default_content']!='') {
                       	update_post_meta($post_id, 'default_content', stripslashes($_REQUEST['default_content']));
                       }
                       	//
@@ -1908,7 +1912,7 @@ if($templates_nb>0){
                             $the_content=$content;
 							  
                             $prov = getenv("SERVER_NAME");
-                            $eol="\n";
+                            $eol=$this->eol;
                             $now = time();
                             $headers = "From: $expediteur <$reponse>".$eol;
                             $headers .= "Reply-To: $expediteur <$reponse>".$eol;
@@ -1922,7 +1926,7 @@ if($templates_nb>0){
                             //print_r($dests);    
                             $this->newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
                             if($this->newsletter_admin_surveillance!=''){
-                              mail($this->newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$this->nl_mime_txt($content,$boundary,$eol),$headers);
+                              mail($this->newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$this->nl_mime_txt($content,$boundary,$eol),$headers,'-f '.$reponse);
                             }
                             
                             while($dest = array_shift($dests)){
@@ -1971,7 +1975,7 @@ if($templates_nb>0){
 									  }
 									
 									
-                                    if(mail($dest,$the_sujet,$this->nl_mime_txt($the_content,$boundary,$eol),$headers)){  // Envoi OK
+                                    if(mail($dest,$the_sujet,$this->nl_mime_txt($the_content,$boundary,$eol),$headers,'-f '.$reponse)){  // Envoi OK
                                       $sent = $dest.':1,'.$sent;
                                     }
                                     else{                    // Envoi KO

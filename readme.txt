@@ -93,6 +93,11 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
 
+= 3.8.5 =
+* Fix: Change headers end of line to CRLF (\r\n) to match more servers
+http://fr2.php.net/manual/fr/function.mail.php
+* Fix: Remove some PHP warnings
+
 = 3.8.4 =
 * Fix: Activation generate error
 
