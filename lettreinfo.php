@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.8.6
+Version: 3.8.7
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -705,21 +705,21 @@ class EELV_newsletter{
     global $wpdb;
 	extract(shortcode_atts(array(
 		      'group'=>1,
-		      'suscribe'=>1,
+		      'subscribe'=>1,
 		      'unsuscribe' => 1,
 		      'archives' => 1,
 		      'archives_title' => __("Last newsletters", 'eelv_lettreinfo')
 	     ), $atts));
     $ret='
-      <form action="#" method="post" class="newslform" onsubmit="if(this.news_email.value=="" || this.news_email.value=="newsletter : votre email"){ return false; }">
+      <form action="#" method="post" class="newslform" onsubmit="if(this.news_email.value==\'\' || this.news_email.value==\''.__('Your email', 'eelv_lettreinfo').'\'){ return false; }">
       <fieldset>
       <input type="hidden" name="news_grp" value="'.$group.'" />
       <p>
 	      <label for="news_l_email">'.__('Your email:', 'eelv_lettreinfo').'
-	      	<input type="text" name="news_email" id="news_l_email" value="" />
+	      	<input type="text" name="news_email" id="news_l_email" value="'.__('Your email', 'eelv_lettreinfo').'" placeholder="'.__('Your email', 'eelv_lettreinfo').'" onfocus="this.select()" />
 	      </label>
       </p> ';
-	  if($suscribe==1){
+	  if($subscribe==1){
 		  $ret.='       
 	      <p>
 		      <label for="news_l_option_1">
@@ -727,7 +727,7 @@ class EELV_newsletter{
 		      </label>
 	      </p>';
       }
-	  if($unsuscribe==1){	
+	  if($unbsuscribe==1){	
 		  $ret.='
 	      <p>        
 		      <label for="news_l_option_2">
