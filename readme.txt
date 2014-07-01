@@ -22,15 +22,15 @@ a newsletter adminer on BackOffice : manage skins, address book, archives, answe
 * shortcuts to add last posts or pages preview
 * the plugin allows to use shortcodes into the newsletters
 
-= Suscribe / unsuscribe form =
+= Subscribe / unsubscribe form =
 * Create a new page and put the shortcode [eelv_news_form] in the content.
 * Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page
 (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
 * available attributes :
 <ul>
 <li>group=1 (Int, define in wich address book group to register e-mail addresses)</li>
-<li>suscribe=1 (bool)</li>
-<li>unsuscribe=1 (bool)</li>
+<li>subscribe=1 (bool)</li>
+<li>unsubscribe=1 (bool)</li>
 <li>archives=1 (Bool, displays or not the archives link)</li>
 <li>archives_title="Last newsletters"</li>
 </ul>
@@ -331,8 +331,12 @@ http://fr2.php.net/manual/fr/function.mail.php
 
 == Upgrade notice ==
 
-= 3.8.0 = 
+= 3.8.7 = 
+Subscribe form shortcode attributes changed !
+suscribe becomes subscribe
+unsuscribe becomes unsubscribe
 
+= 3.8.0 = 
 AutoP is removed form skins and newsletters. Please, re-edit them.
 
 == Languages ==

@@ -706,7 +706,7 @@ class EELV_newsletter{
 	extract(shortcode_atts(array(
 		      'group'=>1,
 		      'subscribe'=>1,
-		      'unsuscribe' => 1,
+		      'unsubscribe' => 1,
 		      'archives' => 1,
 		      'archives_title' => __("Last newsletters", 'eelv_lettreinfo')
 	     ), $atts));
