@@ -58,6 +58,14 @@ jQuery(document).ready(function($){
 		document.location=lien;
 		return false;
 	});
+        
+        // Wizard
+        jQuery('#newsletter_admin_wizard input').change(function(){
+            newsletter_wizard_edit();
+        });
+        jQuery('#newsletter_wizard_submit').click(function(){
+            incontent(jQuery('#newsletter_wizard_shortcode').html());
+        });
 
 });
 
@@ -151,4 +159,20 @@ function set_default_content(ki){
 }
 function eelv_nl_submitform(){
 	jQuery('#publish').trigger('click');
+}
+
+//Wizard
+function newsletter_wizard_edit(){  
+    var nl_sce='[nl_reply_link';
+    jQuery('#newsletter_admin_wizard input').each(function(){
+        if(!jQuery(this).hasClass('nl_sc_no_use')){
+            var att = jQuery(this).data('att');
+            var val = jQuery(this).val();
+            if(att!==null && val!==''){
+                nl_sce+=' '+att+'="'+val+'"';
+            }
+        }
+    });
+    nl_sce+=']';
+    jQuery('#newsletter_wizard_shortcode').html(nl_sce);
 }

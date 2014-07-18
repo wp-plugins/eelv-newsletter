@@ -1,6 +1,6 @@
-=== EELV Newsletter ===
+=== WP Newsletter ===
 Contributors: bastho, ecolosites
-Donate link: http://eelv.fr/adherer/
+Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
 Tested up to: 3.9.1
@@ -61,6 +61,18 @@ Links will be automaticly created with the e-mail address of the receipient. If 
 = Sending alert =
 * Network admins can also setup an email to receive each newsletter sent by the server, for preventing spam usage or support users
 
+=External address books with hooks=
+Use theses hooks to use any external address book
+
+To hook into the pre-sending form, use `add_action('eelv_newsletter_select_receipients');` and add your receipients selector  
+
+To parse the query and correctly add emails to the queue, use :
+`add_filter('eelv_newsletter_parse_receipients','your_function');
+function your_function(){
+    return 'first@email.dom,second@email.com';
+}
+`
+
 == Installation ==
 
 1. Upload `eelv_newsletter` to the `/wp-content/plugins/` directory
@@ -92,6 +104,13 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
+
+= 3.9.0 =
+* Add: Shortcode wizard to insert answer links
+* Add: Export contacts from a group as CSV 
+* Add: Hooks to add some external address books 
+* Fix:[nl_date] & [desinsc_url] not parsed
+* Fix:Encoding on Mac clients by using "Quoted-printable" instead of "8bit"
 
 = 3.8.7 =
 * Fix: JS error on subscribe form from shortcode
