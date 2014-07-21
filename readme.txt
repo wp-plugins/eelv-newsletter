@@ -105,12 +105,15 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
 
+= 3.9.1 =
+* Fix: Un/Subscribe shortcode attribute error
+
 = 3.9.0 =
 * Add: Shortcode wizard to insert answer links
 * Add: Export contacts from a group as CSV 
 * Add: Hooks to add some external address books 
-* Fix:[nl_date] & [desinsc_url] not parsed
-* Fix:Encoding on Mac clients by using "Quoted-printable" instead of "8bit"
+* Fix: [nl_date] & [desinsc_url] not parsed
+* Fix: Encoding on Mac clients by using "Quoted-printable" instead of "8bit"
 
 = 3.8.7 =
 * Fix: JS error on subscribe form from shortcode
