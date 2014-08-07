@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.9.1
+Version: 3.10.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -33,6 +33,7 @@ class EELV_newsletter{
 	var $default_item_style;
 	var $default_item_style_trads;
 	var $newsletter_sql;
+        var $mime_type;
 	
 	var $news_reg_return;
     
@@ -59,7 +60,7 @@ class EELV_newsletter{
 	  $this->lettreinfo_plugin_path=plugin_dir_path(__FILE__);
 	  $this->eelv_nl_content_themes=array();
 	  $this->eelv_nl_default_themes=array();
-      $this->eol="\r\n";
+          $this->eol="\r\n";
 	  $this->newsletter_sql = "CREATE TABLE " . $this->newsletter_tb_name . " (
 	    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
 	    `parent` mediumint(9) DEFAULT 0 NOT NULL,
@@ -67,6 +68,11 @@ class EELV_newsletter{
 	    `email` VARCHAR(255) DEFAULT '' NOT NULL,
 	    PRIMARY KEY  (`id`)
 	    );";
+          
+          $this->mime_type=get_option( 'newsletter_mime_type' );
+          if($this->mime_type==''){
+              $this->mime_type='html_txt';
+          }
 		
 	  include_once ($this->lettreinfo_plugin_path.'widget.php');
 	  include_once ($this->lettreinfo_plugin_path.'reply.php');
@@ -463,6 +469,8 @@ class EELV_newsletter{
  
   // Make plain text version from an HTML newsletter
   function nl_plain_txt($str){
+        $str = preg_replace('/<\s*style.+?<\s*\/\s*style.*?>/si', '', $str); 
+        $str = str_replace(array('&nbsp;','&laquo;','&raquo;','&rsquo;'),array(' ','"','"',"'"),$str);
   	$str = strip_tags($str,'<a>');
 	$str=str_replace('</a>','</a>'."\n",$str);
 	$str=str_replace('&#038;','&',$str);
@@ -482,25 +490,24 @@ class EELV_newsletter{
   
   
   //Construct a multipart body content
-	function nl_mime_txt($str,$boundary='',$eol="\r\n"){
+	function nl_mime_txt($str,$boundary=''){
 		$eol=$this->eol;
 		$message = '';
-		/*$message .= 'MIME-Version: 1.0'.$eol;
-		$message .= 'Content-Type: multipart/alternative;'.$eol;
-		$message .= 'boundary="'.$boundary.'"'.$eol.$eol;*/
-		$message .= 'This is a multi-part message in MIME format'.$eol.$eol;
-		
-		$message .= '--'.$boundary.$eol;
-		$message .= 'Content-Type: text/plain; charset=utf-8'.$eol;
-		$message .= 'Content-Transfer-Encoding: quoted-printable'.$eol.$eol;
-		$message .= quoted_printable_encode ($this->nl_plain_txt($str)).$eol.$eol;
-		
-		$message .= '--'.$boundary.$eol;
-		$message .= 'Content-Type: text/html; charset=utf-8'.$eol;
-		$message .= 'Content-Transfer-Encoding: quoted-printable'.$eol.$eol;
-		$message .= '<html><body>'.quoted_printable_encode ($str).'</body></html>'.$eol;
-		
-		$message .= '--'.$boundary.'--'.$eol;
+                if($this->mime_type=='html_txt'){
+                    $message .= '--'.$boundary.$eol;
+                    $message .= 'Content-Type: text/plain; charset=UTF-8'.$eol;
+                    $message .= 'Content-Transfer-Encoding: quoted-printable'.$eol.$eol;
+                    $message .= quoted_printable_encode ($this->nl_plain_txt($str)).$eol.$eol;
+
+                    $message .= '--'.$boundary.$eol;
+                    $message .= 'Content-Type: text/html; charset=UTF-8'.$eol;
+                    $message .= 'Content-Transfer-Encoding: quoted-printable'.$eol.$eol;
+                    $message .= quoted_printable_encode ('<html><body>'.$str.'</body></html>').$eol.$eol;
+                    $message .= '--'.$boundary.'--'.$eol;
+                }
+                else{
+                    $message .= ('<html><body>'.$str.'</body></html>').$eol.$eol;
+                }
 		return $message;
 	}
 	function myformatTinyMCE($in)	{
@@ -513,6 +520,8 @@ class EELV_newsletter{
 	    $nl =  get_post($post_id);
 		if(is_object($nl)){
 		    $content=$nl->post_content;
+                    $content = preg_replace('/<\s*style.+?<\s*\/\s*style.*?>/si', '', $content); 
+                    $content = str_replace(array('&nbsp;','&laquo;','&raquo;','&rsquo;'),array(' ','"','"',"'"),$content);
 		    $template =  get_post(get_post_meta($post_id,'nl_template',true)); 
 		    if($template){
 		      $content= str_replace('[newsletter]',$content,$template->post_content);
@@ -1393,7 +1402,7 @@ class EELV_newsletter{
                             }
                           }
                           // OTHER
-                          $contacts.=apply_filters('eelv_newsletter_parse_receipients');
+                          $contacts=apply_filters('eelv_newsletter_parse_receipients',$contacts);
                           
                           
                           $contacts=implode(',',array_unique(explode(',',$contacts)));
@@ -1944,26 +1953,32 @@ if($templates_nb>0){
                           if($template){
                           	
 							
-                          	$content=$content_top.'<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>';
+                            $content=$content_top.'<center><a href="'.home_url().'/?post_type=newsletter_archive&p='.$nl_id.'" target="_blank"><font size="1">'.__('Click here if you cannot read this e-mail','eelv_lettreinfo').'</font></a></center>';
                             $content.=$this->nl_content($nl_id);
                             $the_content=$content;
 							  
                             $prov = getenv("SERVER_NAME");
                             $eol=$this->eol;
-                            $now = time();
+                            $now = time();        
+                            $boundary=md5(time());
                             $headers = "From: $expediteur <$reponse>".$eol;
                             $headers .= "Reply-To: $expediteur <$reponse>".$eol;
                             $headers .= "Return-Path: $expediteur <$reponse>".$eol;    
-                            $headers .= "Message-ID: <".$nl_id."@".$prov.">".$eol;
-                            $headers .= "X-Mailer: PHP v".phpversion().$eol;         
-                            //$boundary="----=_NextPart_".md5(time());        
-                            $boundary='-----='.md5(time());
-                            $headers .= 'MIME-Version: 1.0'.$eol;
-                            $headers .= "Content-Type:  multipart/alternative; boundary=\"".$boundary."\"".$eol;
+                            $headers .= "Message-ID: <".$nl_id.".".$prov.">".$eol;
+                            $headers .= "X-Mailer: PHP v".phpversion().$eol; 
+                            if($this->mime_type=='html_txt'){
+                                $headers .= "Content-Type: multipart/alternative; boundary=".$boundary.$eol;
+                            }
+                            else{
+                               $headers .= "Content-Type: text/html; charset=UTF-8".$eol;                            
+                                $headers .= 'Content-Transfer-Encoding: 8bit'.$eol; 
+                            }
+                            $headers .= 'MIME-Version: 1.0';                            
+                            
                             //print_r($dests);    
                             $this->newsletter_admin_surveillance = get_site_option( 'newsletter_admin_surveillance' );
                             if($this->newsletter_admin_surveillance!=''){
-                              mail($this->newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$this->nl_mime_txt($content,$boundary,$eol),$headers,'-f '.$reponse);
+                              mail($this->newsletter_admin_surveillance,'[EELV-newsletter:'.__('Sending','eelv_lettreinfo').'] '.$sujet,$this->nl_mime_txt($content,$boundary),$headers,'-f '.$reponse);
                             }
                             
                             while($dest = array_shift($dests)){
@@ -2012,7 +2027,7 @@ if($templates_nb>0){
                                           }
 									
 									
-                                    if(mail($dest,$the_sujet,$this->nl_mime_txt($the_content,$boundary,$eol),$headers,'-f '.$reponse)){  // Envoi OK
+                                    if(mail($dest,$the_sujet,$this->nl_mime_txt($the_content,$boundary),$headers,'-f '.$reponse)){  // Envoi OK
                                       $sent = $dest.':1,'.$sent;
                                     }
                                     else{                    // Envoi KO
@@ -2110,6 +2125,7 @@ function newsletter_page_configuration() {
 	update_option( 'newsletter_reply_url', stripslashes($_REQUEST['newsletter_reply_url']) );
 	update_option( 'newsletter_precoch_rs', stripslashes($_REQUEST['newsletter_precoch_rs']) );
 	update_option( 'newsletter_spy_text', stripslashes($_REQUEST['newsletter_spy_text']) );
+	update_option( 'newsletter_mime_type', stripslashes($_REQUEST['newsletter_mime_type']) );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
@@ -2130,6 +2146,7 @@ function newsletter_page_configuration() {
   $reply_url = get_option( 'newsletter_reply_url' );
   $precoch_rs = get_option( 'newsletter_precoch_rs' );
   $spy_text = get_option( 'newsletter_spy_text' ,str_replace(array('http://','https://'),'',get_bloginfo('url')));
+  $mime_type = get_option( 'newsletter_mime_type' );
   
   if($spy_text==''){
  	$spy_text=str_replace(array('http://','https://'),'',get_bloginfo('url'));
@@ -2225,6 +2242,14 @@ function newsletter_page_configuration() {
                   <label for="newsletter_spy_text"><?php _e('Spy image text:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                 <input  type="text" name="newsletter_spy_text"  size="60"  id="newsletter_spy_text"  value="<?=$spy_text?>" class="wide">
+                </td>
+              </tr>
+              <tr>
+                <td width="30%">
+                  <label for="newsletter_mime_type"><?php _e('MIME Type:', 'eelv_lettreinfo' ) ?></label>
+                </td><td>
+                    <p><label><input type="radio" name="newsletter_mime_type" value="html_only" <?=($mime_type=='html_only'?'checked':'')?>> <?php _e('HTML only', 'eelv_lettreinfo' ) ?></label></p>
+                    <p><label><input type="radio" name="newsletter_mime_type"  value="html_txt" <?=($mime_type=='html_txt'||$mime_type==''?'checked':'')?>> <?php _e('HTML + Plain text (better, but may cause troubles on some mac clients)', 'eelv_lettreinfo' ) ?></label></p>
                 </td>
               </tr>
               

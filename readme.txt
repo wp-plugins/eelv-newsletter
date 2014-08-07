@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
-Tested up to: 3.9.1
+Tested up to: 3.9.2
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,11 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
+
+= 3.10.0 =
+* Add: Configuration option : MIME type HTML or HTML+PlainText
+* Add: Remove styles from plain text part
+* Fix: Default skins add header images only if there is one
 
 = 3.9.1 =
 * Fix: Un/Subscribe shortcode attribute error
