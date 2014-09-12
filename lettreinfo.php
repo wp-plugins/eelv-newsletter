@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.10.0
+Version: 3.11.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -37,7 +37,7 @@ class EELV_newsletter{
 	
 	var $news_reg_return;
     
-    var $eol;
+        var $eol;
 	
 	
 	//Initialize the plugin
@@ -60,7 +60,7 @@ class EELV_newsletter{
 	  $this->lettreinfo_plugin_path=plugin_dir_path(__FILE__);
 	  $this->eelv_nl_content_themes=array();
 	  $this->eelv_nl_default_themes=array();
-          $this->eol="\r\n";
+          $this->eol=get_option( 'newsletter_eol' )=='n'?"\n":"\r\n";
 	  $this->newsletter_sql = "CREATE TABLE " . $this->newsletter_tb_name . " (
 	    `id` mediumint(9) NOT NULL AUTO_INCREMENT,
 	    `parent` mediumint(9) DEFAULT 0 NOT NULL,
@@ -2126,6 +2126,7 @@ function newsletter_page_configuration() {
 	update_option( 'newsletter_precoch_rs', stripslashes($_REQUEST['newsletter_precoch_rs']) );
 	update_option( 'newsletter_spy_text', stripslashes($_REQUEST['newsletter_spy_text']) );
 	update_option( 'newsletter_mime_type', stripslashes($_REQUEST['newsletter_mime_type']) );
+	update_option( 'newsletter_eol', stripslashes($_REQUEST['newsletter_eol']) );
 	
 	update_option( 'newsletter_msg', array(
 		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
@@ -2147,6 +2148,7 @@ function newsletter_page_configuration() {
   $precoch_rs = get_option( 'newsletter_precoch_rs' );
   $spy_text = get_option( 'newsletter_spy_text' ,str_replace(array('http://','https://'),'',get_bloginfo('url')));
   $mime_type = get_option( 'newsletter_mime_type' );
+  $eol = get_option( 'newsletter_eol' );
   
   if($spy_text==''){
  	$spy_text=str_replace(array('http://','https://'),'',get_bloginfo('url'));
@@ -2249,7 +2251,16 @@ function newsletter_page_configuration() {
                   <label for="newsletter_mime_type"><?php _e('MIME Type:', 'eelv_lettreinfo' ) ?></label>
                 </td><td>
                     <p><label><input type="radio" name="newsletter_mime_type" value="html_only" <?=($mime_type=='html_only'?'checked':'')?>> <?php _e('HTML only', 'eelv_lettreinfo' ) ?></label></p>
-                    <p><label><input type="radio" name="newsletter_mime_type"  value="html_txt" <?=($mime_type=='html_txt'||$mime_type==''?'checked':'')?>> <?php _e('HTML + Plain text (better, but may cause troubles on some mac clients)', 'eelv_lettreinfo' ) ?></label></p>
+                    <p><label><input type="radio" name="newsletter_mime_type"  value="html_txt" <?=($mime_type=='html_txt'||$mime_type==''?'checked':'')?>> <?php _e('HTML + Plain text (better, but may cause troubles on some mac clients)', 'eelv_lettreinfo' ) ?> <?php _e('(default value)', 'eelv_lettreinfo' ) ?></label></p>
+                </td>
+              </tr>
+              <tr>
+                <td width="30%">
+                  <label for="newsletter_eol"><?php _e('End of line:', 'eelv_lettreinfo' ) ?></label>
+                </td><td>
+                    <p><label><input type="radio" name="newsletter_eol" value="rn" <?=($eol=='rn'||$eol==''?'checked':'')?>> \r\n <?php _e('(default value)', 'eelv_lettreinfo' ) ?></label></p>
+                    <p><label><input type="radio" name="newsletter_eol"  value="n" <?=($eol=='n'?'checked':'')?>> \n</label></p>
+                    <p><?php _e('See the related PHP documentation', 'eelv_lettreinfo' ) ?> <a href="http://php.net/manual/fr/function.mail.php">http://php.net/manual/fr/function.mail.php</a></p>
                 </td>
               </tr>
               

@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
-Tested up to: 3.9.2
+Tested up to: 4.0.0
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -104,6 +104,10 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add: Drag'n'drop editor tool
 * Add: Import/export in address books
+
+= 3.11.0 =
+* Add: Configuration option : End of line \r\n and \n to fix problem on some servers such as qmail
+* Add: plugin icon
 
 = 3.10.0 =
 * Add: Configuration option : MIME type HTML or HTML+PlainText
