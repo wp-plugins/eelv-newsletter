@@ -53,7 +53,7 @@ class EELV_newsletter{
 	  $this->eelv_newsletter_version = '2.6.5';
 	  $this->js_version='2.7.1';
 	  $this->installed_ver = get_option( "eelv_newsletter_version" );
-	  $this->eelv_newsletter_options_version = 4;
+	  $this->eelv_newsletter_options_version = 5;
 	  $this->newsletter_tb_name = 'eelv_'.$wpdb->blogid. '_newsletter_adr';
 	  $this->newsletter_plugin_url = plugins_url();
 	  $this->newsletter_base_url = plugins_url('/', __FILE__);
