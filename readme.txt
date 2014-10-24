@@ -27,13 +27,13 @@ a newsletter adminer on BackOffice : manage skins, address book, archives, answe
 * Go to the configuration page on the wordpress admin to manage defaults values for expeditor and fill the unsuscribe page
 (the page wich contains the shortcode [eelv_news_form] to allow visitors to suscribe/unsuscribe your newsletter)
 * available attributes :
-<ul>
-<li>group=1 (Int, define in wich address book group to register e-mail addresses)</li>
-<li>subscribe=1 (bool)</li>
-<li>unsubscribe=1 (bool)</li>
-<li>archives=1 (Bool, displays or not the archives link)</li>
-<li>archives_title="Last newsletters"</li>
-</ul>
+
+* group=1 (Int, define in wich address book group to register e-mail addresses)
+* subscribe=1 (bool)
+* unsubscribe=1 (bool)
+* archives=1 (Bool, displays or not the archives link)
+* archives_title="Last newsletters"
+
 
 = Answer functionnality =
 * Create a new page and put the shortcode [nl_reply_form] in the content.
@@ -42,13 +42,18 @@ a newsletter adminer on BackOffice : manage skins, address book, archives, answe
 * add answer links in your newsletters by adding the shortcode [nl_reply_link], you can add as many links as you want.
 Attributes your anwser links are rep="the_answer_code" val="the link's text"
 example: 
-<blockquote>
-<b>Do you like this plugin ?</b>
-<p>`[nl_reply_link val="Yes I do" rep="yes"]`</p>
-<p>`[nl_reply_link val="it's fine" rep="fine"]`</p>
-<p>`[nl_reply_link val="Not at all" rep="no"]`</p>
+
+**Do you like this plugin ?**
+
+>`[nl_reply_link val="Yes I do" rep="yes"]`
+>
+>`[nl_reply_link val="it's fine" rep="fine"]`
+>
+>`[nl_reply_link val="Not at all" rep="no"]`
+>
+
 Links will be automaticly created with the e-mail address of the receipient. If the link is broken, with not enougth datas, a form will be displayed to complete it.
-</blockquote>
+
 
 = Reading tracking =
 * Check if your newsletters are readen or not
@@ -67,10 +72,11 @@ Use theses hooks to use any external address book
 To hook into the pre-sending form, use `add_action('eelv_newsletter_select_receipients');` and add your receipients selector  
 
 To parse the query and correctly add emails to the queue, use :
-`add_filter('eelv_newsletter_parse_receipients','your_function');
+`<?php add_filter('eelv_newsletter_parse_receipients','your_function');
 function your_function(){
     return 'first@email.dom,second@email.com';
 }
+?>
 `
 
 == Installation ==
@@ -87,11 +93,11 @@ Yes, email registered in the black list, won't receive any newsletter from your 
 
 = Can I create my own skins ? =
 Yes, skins are registered as post-type.
-<ol> 
-<li>Site admins can create skins into newsletter > skins</li>
-<li>To add skins on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: `$eelv_nl_default_themes['your skin name']='Your skin HTML here';`</li>
-<li>To add a default content to this skin, add an item to the default content variable. ex : `$eelv_nl_content_themes['your skin name']='Your content here';`</li>
-</ol>
+
+1. Site admins can create skins into newsletter > skins
+2. To add skins on each blog on a multisite network, just add some items to the default themes variable in your functions.php ex: `$eelv_nl_default_themes['your skin name']='Your skin HTML here';`
+3. To add a default content to this skin, add an item to the default content variable. ex : `$eelv_nl_content_themes['your skin name']='Your content here';`
+
 
 
 == Screenshots ==
@@ -103,7 +109,11 @@ Yes, skins are registered as post-type.
 
 = Todo =
 * Add: Drag'n'drop editor tool
-* Add: Import/export in address books
+* Add: Import in address books
+
+= 3.12.0 =
+* Add: Configuration help : check if shortcodes are present
+* Fix: Archives widget bug with post loops
 
 = 3.11.0 =
 * Add: Configuration option : End of line \r\n and \n to fix problem on some servers such as qmail

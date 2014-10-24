@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.11.0
+Version: 3.12.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -2192,44 +2192,68 @@ function newsletter_page_configuration() {
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_desinsc_url"><?php _e('Unsubscribe page', 'eelv_lettreinfo' ) ?> :</label>
-                   
+                    <label for="newsletter_desinsc_url"><?php _e('Unsubscribe page', 'eelv_lettreinfo' ) ?> :</label><br>
+                    <small>[eelv_news_form]</small>
                 </td><td>
                 <select  name="newsletter_desinsc_url"   id="newsletter_desinsc_url">
                   <option></option>
                   <?php
   $querystr = "";
-                      $ret =  $wpdb->get_results("SELECT * FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'page' ORDER BY `post_title`");
+  $page_choosen='';
+                      $ret =  $wpdb->get_results("SELECT `ID`,`post_title`,`post_content` FROM $wpdb->posts WHERE post_status = 'publish' AND post_type = 'page' ORDER BY `post_title`");
                       if(is_array($ret) && sizeof($ret)>0){            
                         foreach($ret as $item){ 
                           $permalink = get_permalink( $item->ID );
                           ?>
-                  <option value="<?=$permalink;?>" <? if($desinsc_url==$permalink) echo"selected"; ?>><?=$item->post_title;?></option> 
+                  <option value="<?=$permalink;?>" <?php if($desinsc_url==$permalink){ echo"selected"; $page_choosen=$item; } ?>><?=$item->post_title;?></option> 
                   <?php } 
                       }
                       ?>
                 </select><br/>
-				<legend><?php echo ( !empty($desinsc_url) ? '<a href="'.$desinsc_url.'" target="_blank">'.$desinsc_url.'</a>' : ''); ?></legend>              
+				<legend>
+                                    <?php 
+                                        echo ( 
+                                                !empty($desinsc_url) && is_object($page_choosen) ? 
+                                                '<a href="'.$desinsc_url.'" target="_blank">'.$desinsc_url.'</a> '.(
+                                                        strstr($page_choosen->post_content,'[eelv_news_form')?
+                                                        '<span class="dashicons dashicons-yes"></span>':
+                                                        '<br><div class="error"><span class="dashicons dashicons-dismiss"></span> <a href="post.php?post='.$page_choosen->ID.'&action=edit">'.__('It seems that the [eelv_news_form] is not present on the unsubscribe page. Click here to edit the page ', 'eelv_lettreinfo' ).'</a></div>'
+                                                        ) : 
+                                            '<a href="post-new.php?post_type=page&content=[eelv_news_form]&post_title='.__('Newsletter', 'eelv_lettreinfo' ).'">'.__('Create a new page with [eelv_news_form] shotcode', 'eelv_lettreinfo' ).'</a>'); 
+                                    ?>
+                                </legend>              
                 </td>
               </tr>
               <tr>
                 <td width="30%">
-                  <label for="newsletter_reply_url"><?php _e('Reply page', 'eelv_lettreinfo' ) ?> :</label>
+                    <label for="newsletter_reply_url"><?php _e('Reply page', 'eelv_lettreinfo' ) ?> :</label><br>
+                    <small>[nl_reply_form]</small>
                 </td><td>
                 <select  name="newsletter_reply_url" id="newsletter_reply_url">
                   <option></option>
                   <?php
   $querystr = "";
+  $page_choosen='';
                       if(is_array($ret) && sizeof($ret)>0){            
                         foreach($ret as $item){ 
                           $permalink = get_permalink( $item->ID );
                           ?>
-                  <option value="<?=$permalink;?>" <? if($reply_url==$permalink) echo"selected"; ?>><?=$item->post_title;?></option> 
+                  <option value="<?=$permalink;?>" <?php if($reply_url==$permalink){ echo"selected"; $page_choosen=$item; } ?>><?=$item->post_title;?></option> 
                   <?php } 
                       }
                       ?>
                 </select><br/>                
-				<legend><?php echo ( !empty($reply_url) ? '<a href="'.$reply_url.'" target="_blank">'.$reply_url.'</a>' : ''); ?></legend>  
+				<legend><?php 
+                                echo ( 
+                                        !empty($reply_url) && is_object($page_choosen) ? 
+                                        '<a href="'.$reply_url.'" target="_blank">'.$reply_url.'</a>'.(
+                                                        strstr($page_choosen->post_content,'[nl_reply_form')?
+                                                        '<span class="dashicons dashicons-yes"></span>':
+                                                        '<br><div class="error"><span class="dashicons dashicons-dismiss"></span> <a href="post.php?post='.$page_choosen->ID.'&action=edit">'.__('It seems that the [nl_reply_form] is not present on the reply page. Click here to edit the page ', 'eelv_lettreinfo' ).'</a></div>'
+                                                        ) : 
+                                    '<a href="post-new.php?post_type=page&content=[nl_reply_form]&post_title='.__('Newsletter answer page', 'eelv_lettreinfo' ).'">'.__('Create a new page with [nl_reply_form] shotcode', 'eelv_lettreinfo' ).'</a>'); 
+                                ?>
+                                </legend>  
                 </td>
               </tr>
               <tr>

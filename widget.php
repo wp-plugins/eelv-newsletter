@@ -44,6 +44,7 @@ class EELV_NL_Archives_Widget extends WP_Widget {
 			}
 			echo $args['after_widget'];
 		}	
+                wp_reset_query();
    }
    
    function update($new_instance, $old_instance) {
