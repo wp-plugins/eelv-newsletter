@@ -66,15 +66,24 @@ Links will be automaticly created with the e-mail address of the receipient. If 
 = Sending alert =
 * Network admins can also setup an email to receive each newsletter sent by the server, for preventing spam usage or support users
 
-=External address books with hooks=
+= External address books with hooks =
 Use theses hooks to use any external address book
 
-To hook into the pre-sending form, use `<?php add_action('eelv_newsletter_select_receipients'); ?>` and add your receipients selector  
+To hook into the pre-sending form and and add your receipients selector, use :
+`<?php 
+add_action('eelv_newsletter_select_receipients','my_receipeints_select_function'); 
+function my_receipeints_select_function(){
+    echo'<input type="checkbox" name="my_receipeints" value="my_receipeints"> My receipeints';
+}
+?>` 
 
 To parse the query and correctly add emails to the queue, use :
-`<?php add_filter('eelv_newsletter_parse_receipients','your_function');
-function your_function(){
-    return 'first@email.dom,second@email.com';
+`<?php 
+add_filter('eelv_newsletter_parse_receipients','my_receipeints_parse_function');
+function my_receipeints_parse_function(){
+    if(isset($_GET['my_receipeints'])){
+        return 'first@email.dom,second@email.com';
+    }
 }
 ?>
 `
