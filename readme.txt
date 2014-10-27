@@ -47,9 +47,9 @@ example:
 
 >`[nl_reply_link val="Yes I do" rep="yes"]`
 >
->`[nl_reply_link val="it's fine" rep="fine"]`
->
 >`[nl_reply_link val="Not at all" rep="no"]`
+>
+>`[nl_reply_link val="Can you repeat the question ?" rep="misunderstand"]`
 >
 
 Links will be automaticly created with the e-mail address of the receipient. If the link is broken, with not enougth datas, a form will be displayed to complete it.
@@ -69,7 +69,7 @@ Links will be automaticly created with the e-mail address of the receipient. If 
 =External address books with hooks=
 Use theses hooks to use any external address book
 
-To hook into the pre-sending form, use `add_action('eelv_newsletter_select_receipients');` and add your receipients selector  
+To hook into the pre-sending form, use `<?php add_action('eelv_newsletter_select_receipients'); ?>` and add your receipients selector  
 
 To parse the query and correctly add emails to the queue, use :
 `<?php add_filter('eelv_newsletter_parse_receipients','your_function');
