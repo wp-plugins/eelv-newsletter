@@ -75,7 +75,8 @@ add_action('eelv_newsletter_select_receipients','my_receipeints_select_function'
 function my_receipeints_select_function(){
     echo'<input type="checkbox" name="my_receipeints" value="my_receipeints"> My receipeints';
 }
-?>` 
+?>
+` 
 
 To parse the query and correctly add emails to the queue, use :
 `<?php 
