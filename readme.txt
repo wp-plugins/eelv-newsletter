@@ -1,4 +1,4 @@
-=== WP Newsletter ===
+=== EELV Newsletter ===
 Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
@@ -41,7 +41,7 @@ a newsletter adminer on BackOffice : manage skins, address book, archives, answe
 (the page wich contains the shortcode [nl_reply_form] to allow visitors to answer your newsletter)
 * add answer links in your newsletters by adding the shortcode [nl_reply_link], you can add as many links as you want.
 Attributes your anwser links are rep="the_answer_code" val="the link's text"
-example: 
+example:
 
 **Do you like this plugin ?**
 
@@ -70,16 +70,16 @@ Links will be automaticly created with the e-mail address of the receipient. If 
 Use theses hooks to use any external address book
 
 To hook into the pre-sending form and and add your receipients selector, use :
-`<?php 
-add_action('eelv_newsletter_select_receipients','my_receipeints_select_function'); 
+`<?php
+add_action('eelv_newsletter_select_receipients','my_receipeints_select_function');
 function my_receipeints_select_function(){
     echo'<input type="checkbox" name="my_receipeints" value="my_receipeints"> My receipeints';
 }
 ?>
-` 
+`
 
 To parse the query and correctly add emails to the queue, use :
-`<?php 
+`<?php
 add_filter('eelv_newsletter_parse_receipients','my_receipeints_parse_function');
 function my_receipeints_parse_function(){
     if(isset($_GET['my_receipeints'])){
@@ -121,6 +121,9 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import in address books
 
+= 3.12.1 =
+* Fix: text-domain issue
+
 = 3.12.0 =
 * Add: Configuration help : check if shortcodes are present
 * Fix: Archives widget bug with post loops
@@ -139,8 +142,8 @@ Yes, skins are registered as post-type.
 
 = 3.9.0 =
 * Add: Shortcode wizard to insert answer links
-* Add: Export contacts from a group as CSV 
-* Add: Hooks to add some external address books 
+* Add: Export contacts from a group as CSV
+* Add: Hooks to add some external address books
 * Fix: [nl_date] & [desinsc_url] not parsed
 * Fix: Encoding on Mac clients by using "Quoted-printable" instead of "8bit"
 
@@ -164,7 +167,7 @@ http://fr2.php.net/manual/fr/function.mail.php
 = 3.8.1 =
 * Fix: Break lines after inserted posts in newsletter editor to prevent posts in other posts
 
-= 3.8.0 = 
+= 3.8.0 =
 * Add: More options in skin management and for default content
 * Add: Remove autoP formating for skins and newsletters
 * Add: 2 cols preformated template
@@ -172,7 +175,7 @@ http://fr2.php.net/manual/fr/function.mail.php
 * Add: Displays real posts in realtime preview for default content
 * Fix: Refresh after selecting a skin in newsletter editing
 
-= 3.7.0 = 
+= 3.7.0 =
 * Add: Edit default content for each newsletter skin
 * Add: Edit item style for each default content with realtime preview
 * Add: Archives widget
@@ -183,38 +186,38 @@ http://fr2.php.net/manual/fr/function.mail.php
 * Fix: Few bugs
 
 
-= 3.6.7 = 
+= 3.6.7 =
 * Add : 5sec. delay between two bursts
 * Add : Custom wpdb query for users adressing in order to get only required datas (improves performances)
 
-= 3.6.6 = 
+= 3.6.6 =
 * Fix : Integration in WP 3.8
 
-= 3.6.5 = 
+= 3.6.5 =
 * Fix : suscription bug
 
-= 3.6.4 = 
+= 3.6.4 =
 * Fix : update edit.php to post.php
 * Fix : performances optimisation
 * Fix : suscription bug
 
-= 3.6.3 = 
+= 3.6.3 =
 * Fix : Addressing assignation problem
 
-= 3.6.2 = 
+= 3.6.2 =
 * Add : Double verification for users role, for preventing conflict with custom capabilities
 
-= 3.6.1 = 
+= 3.6.1 =
 * Fix : Important bug fix with role selection for receipients
 * Add : Add addressing possibility with `login` values
 * Fix : French translation
 
-= 3.6.0 = 
+= 3.6.0 =
 * Add : Add addressing possibility with `name` and `email` values
 * Add : Default WP `aligncenter`, `alignleft` and `alignright` style support
 * Add : Edit spy image's text
 
-= 3.5.9 = 
+= 3.5.9 =
 * Fix : Options stripslashes
 * Fix : Address book fields focus
 
@@ -294,7 +297,7 @@ http://fr2.php.net/manual/fr/function.mail.php
 * Add : Send a confirmation e-mail to (un)suscribers
 * Add : Some help and legend
 * Fix : Replace deprecated functions
-* Fix : Remove some php warnings 
+* Fix : Remove some php warnings
 
 = 3.2.2 =
 * Fix : Check if apply_filter('the_content') doesn't make content empty
@@ -323,7 +326,7 @@ http://fr2.php.net/manual/fr/function.mail.php
 
 = 3.1.0 =
 * Add : Reading tracking : now appears in archives list
-* Fix : Archive front page override other post-types 
+* Fix : Archive front page override other post-types
 
 = 3.0.0 =
 * Add : Reading tracking : try to know if sent emails is readen by recepient (optional)
@@ -359,19 +362,19 @@ http://fr2.php.net/manual/fr/function.mail.php
 * Add: Custom content now works for creation, not just edit newsletter
 
 = 2.6.6 =
-* Fix: Performances optimisation 
+* Fix: Performances optimisation
 
 = 2.6.5 =
 * Fix: broken link for stylesheet
 
 = 2.6.4 =
 * Add: custom column for archives to display queue and sent
-* Add: Choice of the archive status : publish or private (for tests) 
+* Add: Choice of the archive status : publish or private (for tests)
 * Add: Some more lines for completing translation, soon soon!
 
 = 2.6.3 =
 * Add: custom email to receive a copy of any campaign send (manage it in the network admin)
-* Add: Performances optimisation 
+* Add: Performances optimisation
 * Add: Add some lines for completing translation, not finished yet !
 
 = 2.6.2 =
@@ -382,12 +385,12 @@ http://fr2.php.net/manual/fr/function.mail.php
 
 == Upgrade notice ==
 
-= 3.8.7 = 
+= 3.8.7 =
 Subscribe form shortcode attributes changed !
 suscribe becomes subscribe
 unsuscribe becomes unsubscribe
 
-= 3.8.0 = 
+= 3.8.0 =
 AutoP is removed form skins and newsletters. Please, re-edit them.
 
 == Languages ==
