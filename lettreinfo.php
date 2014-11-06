@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.12.1
+Version: 3.12.2
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -1011,7 +1011,7 @@ class EELV_newsletter{
               <td><?=$groupe->id?></td>
               <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>'><b><?=$groupe->nom?></b></a></td>
               <td><b><?=$nbinsc?></b></td>
-              <td>[eelv_news_form groupe=<?=$groupe->id?>]</td>
+              <td>[eelv_news_form group=<?=$groupe->id?>]</td>
               <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&liste=<?=$groupe->id?>' class="button"><span class="dashicons list"></span> <?php _e('List', 'eelv_lettreinfo' ) ?></a></td>
               <td><a href='admin-post.php?action=newsletter_export_address_csv&grp_id=<?=$groupe->id?>' class="button" target="_blank"><span class="dashicons list"></span> <?php _e('Export', 'eelv_lettreinfo' ) ?></a></td>
               <td><a href='edit.php?post_type=newsletter&page=news_carnet_adresse&groupe=<?=$groupe->id?>' class="button"><span class="dashicons edit"></span> <?php _e('Rename', 'eelv_lettreinfo' ) ?></a></td>
@@ -1139,7 +1139,7 @@ class EELV_newsletter{
         	</thead>
           	<tbody>
           		<tr><td>
-          			[eelv_news_form groupe=<?=$grp_id?>]
+          			[eelv_news_form group=<?=$grp_id?>]
           		</td></tr>
           	</tbody>
           </table>
