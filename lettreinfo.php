@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 3.12.3
+Version: 3.13.0
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -125,6 +125,8 @@ class EELV_newsletter{
 		add_action('manage_newsletter_posts_custom_column', array(&$this,'lettreinfo_columns_content'), 10, 2);
 		add_filter('manage_newsletter_archive_posts_columns', array(&$this,'lettreinfo_archives_columns_head'));
 		add_action('manage_newsletter_archive_posts_custom_column', array(&$this,'lettreinfo_archives_columns_content'), 10, 2);
+		add_filter('manage_newsletter_template_posts_columns', array(&$this,'lettreinfo_template_columns_head'));
+		add_action('manage_newsletter_template_posts_custom_column', array(&$this,'lettreinfo_template_columns_content'), 10, 2);
 
                 add_action('admin_post_newsletter_export_address_csv', array( &$this, 'export_address_csv'));
 
@@ -358,7 +360,34 @@ class EELV_newsletter{
 	  }
     }
   }
+// ADD NEW COLUMN (TEMPLATES)
+  function lettreinfo_template_columns_head($defaults) {
+    $defaults['used_models'] = __('Used','eelv_lettreinfo');
+    $defaults['used_sent'] = __('Sent','eelv_lettreinfo');
+    return $defaults;
+  }
+  // COLUMN CONTENT  (ARCHIVES)
+  function lettreinfo_template_columns_content($column_name, $post_ID) {
+    if ($column_name == 'used_models') {
+	$args = array(
+	    'post_type'  => 'newsletter',
+	    'meta_key'   => 'nl_template',
+	    'meta_value'    => $post_ID
+	);
+	$query = new WP_Query( $args );
+	echo $query->found_posts;
+    }
+    if ($column_name == 'used_sent') {
+	$args = array(
+	    'post_type'  => 'newsletter_archive',
+	    'meta_key'   => 'nl_template',
+	    'meta_value'    => $post_ID
+	);
+	$query = new WP_Query( $args );
+	echo $query->found_posts;
+    }
 
+  }
 
   /* Adds a box to the main column on the Post and Page edit screens */
   function newsletter_add_custom_box() {
@@ -2117,22 +2146,26 @@ function eelv_newsletter_addAlert() {
 // mt_toplevel_page() displays the page content for the custom Test Toplevel menu
 function newsletter_page_configuration() {
   global $wpdb;
-  if( isset($_REQUEST[ 'type' ]) && $_REQUEST[ 'type' ] == 'update' ) {
-	update_option( 'newsletter_default_exp', stripslashes($_REQUEST['newsletter_default_exp']) );
-	update_option( 'newsletter_default_mel', stripslashes($_REQUEST['newsletter_default_mel']) );
-	update_option( 'newsletter_desinsc_url', stripslashes($_REQUEST['newsletter_desinsc_url']) );
-	update_option( 'newsletter_reply_url', stripslashes($_REQUEST['newsletter_reply_url']) );
-	update_option( 'newsletter_precoch_rs', stripslashes($_REQUEST['newsletter_precoch_rs']) );
-	update_option( 'newsletter_spy_text', stripslashes($_REQUEST['newsletter_spy_text']) );
-	update_option( 'newsletter_mime_type', stripslashes($_REQUEST['newsletter_mime_type']) );
-	update_option( 'newsletter_eol', stripslashes($_REQUEST['newsletter_eol']) );
+
+  if(\filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING) == 'update' ) {
+        if (!wp_verify_nonce(\filter_input(INPUT_POST, 'newsletter_update_options', FILTER_SANITIZE_STRING), 'newsletter_update_options')) {
+	    wp_die(__('Security error', 'yast'));
+	}
+	update_option( 'newsletter_default_exp', \filter_input(INPUT_POST, 'newsletter_default_exp', FILTER_SANITIZE_STRING));
+	update_option( 'newsletter_default_mel', \filter_input(INPUT_POST, 'newsletter_default_mel', FILTER_SANITIZE_EMAIL));
+	update_option( 'newsletter_desinsc_url', \filter_input(INPUT_POST, 'newsletter_desinsc_url', FILTER_SANITIZE_URL));
+	update_option( 'newsletter_reply_url', \filter_input(INPUT_POST, 'newsletter_reply_url', FILTER_SANITIZE_URL));
+	update_option( 'newsletter_precoch_rs', \filter_input(INPUT_POST, 'newsletter_precoch_rs', FILTER_SANITIZE_NUMBER_INT));
+	update_option( 'newsletter_spy_text',\filter_input(INPUT_POST, 'newsletter_spy_text', FILTER_SANITIZE_STRING));
+	update_option( 'newsletter_mime_type', \filter_input(INPUT_POST, 'newsletter_mime_type', FILTER_SANITIZE_STRING));
+	update_option( 'newsletter_eol', \filter_input(INPUT_POST, 'newsletter_eol', FILTER_SANITIZE_STRING));
 
 	update_option( 'newsletter_msg', array(
-		'sender'=>$_REQUEST['newsletter_msg_sender'] ,
-		'suscribe_title'=>$_REQUEST['newsletter_msg_suscribe_title'] ,
-		'suscribe'=>$_REQUEST['newsletter_msg_suscribe'] ,
-		'unsuscribe_title'=>$_REQUEST['newsletter_msg_unsuscribe_title'] ,
-		'unsuscribe'=>$_REQUEST['newsletter_msg_unsuscribe']
+		'sender'=>\filter_input(INPUT_POST, 'newsletter_msg_sender', FILTER_SANITIZE_EMAIL),
+		'suscribe_title'=>\filter_input(INPUT_POST, 'newsletter_msg_suscribe_title', FILTER_SANITIZE_STRING),
+		'suscribe'=>\filter_input(INPUT_POST, 'newsletter_msg_suscribe', FILTER_SANITIZE_STRING),
+		'unsuscribe_title'=>\filter_input(INPUT_POST, 'newsletter_msg_unsuscribe_title', FILTER_SANITIZE_STRING),
+		'unsuscribe'=>\filter_input(INPUT_POST, 'newsletter_msg_unsuscribe', FILTER_SANITIZE_STRING)
 	));
 	//update_option( 'affichage_NL_hp', $_REQUEST['affichage_NL_hp'] );
 	?>
@@ -2166,6 +2199,7 @@ function newsletter_page_configuration() {
         <div id="icon-edit" class="icon32 icon32-posts-newsletter"><br/></div>
         <h2><?=_e('Newsletter', 'eelv_lettreinfo' )?></h2>
         <form name="typeSite" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+	    <?php wp_nonce_field('newsletter_update_options', 'newsletter_update_options'); ?>
           <input type="hidden" name="type" value="update">
           <input type="hidden" name="newsletter_options_version" value="<?=$this->eelv_newsletter_options_version?>"/>
           <table class="widefat" style="margin-top: 1em;">
