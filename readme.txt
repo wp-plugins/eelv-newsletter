@@ -121,8 +121,12 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import in address books
 
+= 3.13.1 =
+* Add: Use of wp_mail function to make the plugin more hookable
+* Some code cleanup
+
 = 3.13.0 =
-* Add: Usage statistiques in skins list
+* Add: Usage statistics in skins list
 * Add: Security improvement in options page
 * Fix: Unwanted slashes in options saving
 
