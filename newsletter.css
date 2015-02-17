@@ -1,0 +1,151 @@
+/* CSS Document 
+Plugin Name: EELV Gestionnaire de newsletter
+Version: 0.1
+*/
+body#newsletter_archive{
+	text-align:center;	
+}
+#wpbody-content { 
+margin-bottom:40px;
+ }
+.eelv_news_frame{
+  width:95%;
+  height:30%;
+  position:relative;
+  padding:10px ;
+  margin:20px 0px;
+  overflow:auto;
+  border:#999 2px inset;
+  border-radius:5px;  
+}
+.eelv_news label{
+  display:block;
+  min-height:35px;
+}
+.eelv_news label input[type=text],.eelv_news label input[type=email]{
+  float:right;
+}
+.eelv_news label input:after{
+  display:block;
+  content:' ';
+  clear:both;
+}
+.widefat li{
+  margin-left:50px;
+}
+.widefat li h3{
+  margin-left:-50px;
+}
+.newsform{
+  position:relative;
+}
+.news_hidden_option{
+  position:absolute;
+  top:30px;
+  left:0px;
+  width:200px;
+  background:#333;
+}
+.news_hidden_option label,.news_hidden_option p{
+  display:block !important;
+  min-height: 0;  
+  padding:0.5em;
+	margin:0;
+	text-align:left;
+}
+.news_hidden_option a,.news_hidden_option label,.news_hidden_option p{
+	color:#999;
+}
+.news_hidden_option input{
+  display:inline !important;
+  position:relative !important;  
+}
+#news_return{
+  position:absolute;
+  top:30px;
+  left:0px;
+  width:180px;
+  background:#FFC;
+  color:#333;
+  padding:10px !important;
+  line-height:1em;
+  font-size:0.8em;
+  cursor:pointer;
+}
+.news_retour{
+  background:#FFC;
+  color:#333;
+  padding:5px !important;
+  border-radius:5px;
+  -moz-border-radius:5px;
+  -webkit-border-radius:5px;
+  border:#FF9 1px solid;
+}
+/*********************/
+.eelvnl{
+	text-align:left;
+	width:700px;
+	margin:auto;
+}
+.eelvnl_content{
+    background:#FFF;
+    width:100%;
+    text-align:center;
+}
+.eelvnl_wrapper{
+  width: auto; 
+  margin:20px auto;
+}
+.eelvnl_wrapper:after{
+  content:" ";
+  padding:1px;
+  display:block;
+  clear:both;
+}
+.eelvnl td{
+  padding:5px !important;
+  vertical-align:top !important;
+}
+
+.eelvnl li.eelvnl_archives{
+  margin:5px;
+  padding:10px;
+  border:#EEE 1px solid;
+  background:#FFF;
+  display:block;
+  width:250px;
+  height:330px;
+  float:left;
+  text-align:left;
+  box-shadow:#CCC 0px 5px 20px;
+  overflow:hidden;
+}
+
+/****************************/
+.nl_message{
+	display:block;
+	padding:1em;
+	margin:0.3em auto;
+	border-radius:5px;
+	font-weight:700;
+	border-width:1px;
+	border-style:solid;
+	border-color:#BB9;
+	color:#009;
+	text-align:center;
+}
+.nl_confirm{
+	color:#090;
+	background:#DFD;
+	border-color:#BEB;
+}
+.nl_alert{
+	color:#900;
+	background:#FDD;
+	border-color:#EBB;
+}
+
+
+
+
+
