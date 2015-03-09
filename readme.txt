@@ -121,6 +121,9 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import in address books
 
+= 3.13.3 =
+* Fix: Better use of imagettftext (removes PHP warning)
+
 = 3.13.2 =
 * Add: Send per burst and burst interval options
 * Move full use of wp_mail to branch 4.0
