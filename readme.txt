@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
-Tested up to: 4.1.0
+Tested up to: 4.3
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -120,6 +120,9 @@ Yes, skins are registered as post-type.
 = Todo =
 * Add: Drag'n'drop editor tool
 * Add: Import in address books
+
+= 3.13.4 =
+* WP 4.3 compliant
 
 = 3.13.3 =
 * Fix: Better use of imagettftext (removes PHP warning)
