@@ -1,7 +1,10 @@
 <?php
 class EELV_NL_Archives_Widget extends WP_Widget {
-   function EELV_NL_Archives_Widget() {
+   function __construct() {
   	  parent::__construct(false, __( 'Newsletter Archives', 'eelv_lettreinfo' ),array('description'=>__( 'Displays a list of last sent newsletters', 'eelv_lettreinfo' )));
+   }
+   function EELV_NL_Archives_Widget(){
+       $this->__construct();
    }
    function widget($args, $instance) {
        extract( $args );

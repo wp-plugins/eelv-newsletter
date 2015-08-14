@@ -121,6 +121,9 @@ Yes, skins are registered as post-type.
 * Add: Drag'n'drop editor tool
 * Add: Import in address books
 
+= 3.13.5 =
+* more WP 4.3 compliant
+
 = 3.13.4 =
 * WP 4.3 compliant
 
