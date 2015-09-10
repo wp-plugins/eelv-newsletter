@@ -117,9 +117,16 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
-= Todo =
-* Add: Drag'n'drop editor tool
-* Add: Import in address books
+= 4.0.0 =
+ Release date : 2015-09-10
+
+* Add import addressbook by CVS
+* Allow scheduled sending
+* New editor helper with preview of post and autocompleter
+* New multi-instance widget with more options
+* Fix header's Message-id (thanks to Inglebard)
+* Small code refactoring
+* improved translation
 
 = 3.13.5 =
 * more WP 4.3 compliant
