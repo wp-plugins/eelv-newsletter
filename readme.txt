@@ -117,6 +117,13 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 4.0.1 =
+ Release date : 2015-09-11
+
+* Update version
+* Wrap sender name in quotes
+
+
 = 4.0.0 =
  Release date : 2015-09-10
 
