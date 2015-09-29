@@ -63,8 +63,9 @@ jQuery(document).ready(function ($) {
             }
         });
     });
-
-    eelv_newsletter_refresh_queue();
+    if(eelv_newsletter.screen=='newsletter_archive'){
+        eelv_newsletter_refresh_queue();
+    }
     
     eelv_newsletter_check_tracking();
 

@@ -3,7 +3,7 @@ Contributors: bastho, ecolosites
 Donate link: http://ba.stienho.fr#don
 Tags: newsletter, email, tracking, addressbook, mailing
 Requires at least: 3.8
-Tested up to: 4.3
+Tested up to: 4.3.1
 Stable tag: /trunk
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -116,6 +116,20 @@ Yes, skins are registered as post-type.
 2. Sending options
 
 == Changelog ==
+
+= 4.1.1 =
+
+* Fix a cron bug
+* More verbose queue list
+* Explicitly display locale time
+
+
+= 4.1.0 =
+ Release date : 2015-09-18
+
+* Modulable cron interval
+* Better performances
+* Code cleanup
 
 = 4.0.1 =
  Release date : 2015-09-11
@@ -427,6 +441,9 @@ http://fr2.php.net/manual/fr/function.mail.php
 * Publication in the wordpress repository
 
 == Upgrade notice ==
+
+= 4.1.0 =
+The default burst interval has changed to 50 mails per 5 minutes.
 
 = 3.8.7 =
 Subscribe form shortcode attributes changed !
