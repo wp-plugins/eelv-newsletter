@@ -117,6 +117,11 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 4.1.2 =
+
+* minified JS and CSS on front
+* default date is local date on sending form
+
 = 4.1.1 =
 
 * Fix a cron bug

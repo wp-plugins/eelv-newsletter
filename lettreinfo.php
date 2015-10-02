@@ -3,7 +3,7 @@
 Plugin Name: EELV Newsletter
 Plugin URI: http://ecolosites.eelv.fr/tag/newsletter/
 Description:  Add a registration form on frontOffice, a newsletter manager on BackOffice
-Version: 4.1.1
+Version: 4.1.2
 Author: bastho, ecolosites // EELV
 Author URI: http://ecolosites.eelv.fr
 License: GPLv2
@@ -345,9 +345,9 @@ class EELV_newsletter{
       }
    //Front side
     function eelv_news_scripts() {
-        wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.css' , __FILE__ ));
+        wp_enqueue_style('eelv_newsletter',plugins_url( 'newsletter.min.css' , __FILE__ ), null, $this->eelv_newsletter_version);
         wp_enqueue_script('jquery');
-        wp_enqueue_script('eelv_newsletter',plugins_url( 'newsletter.js' , __FILE__ ),'jquery',$this->eelv_newsletter_version,true);
+        wp_enqueue_script('eelv_newsletter',plugins_url( 'newsletter.min.js' , __FILE__ ), 'jquery', $this->eelv_newsletter_version,true);
     }
 
 
@@ -1519,10 +1519,10 @@ class EELV_newsletter{
 		      </p>
 
                       <p><label for="post_date"><?php _e('Post date', 'eelv_lettreinfo' ) ?>
-			<input name="post_date" id="post_date" class="widefat" value="<?php echo current_time('Y-m-d H:i:s', 0); ?>">
+			<input name="post_date" id="post_date" class="widefat" value="<?php echo current_time('Y-m-d H:i:s', 1); ?>">
                         (
                         <?php _e('Local time is:', 'eelv_lettreinfo' ) ?>
-                        <?php echo date('d/m/Y H:i:s', current_time('timestamp', 0)); ?>
+                        <?php echo date('d/m/Y H:i:s', current_time('timestamp', 1)); ?>
                         )
 		      </p>
 
