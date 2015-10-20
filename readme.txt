@@ -117,6 +117,17 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 4.2.0 =
+ Release date : 2015-10-20
+
+* More accurate sending date
+* GLobal UI: Use of native Dashicons
+* Improved UI in archives: Progress bar
+
+* Fix headers encoding
+* Put JS and CSS in separated directories
+* Code cleanup
+
 = 4.1.2 =
 
 * minified JS and CSS on front

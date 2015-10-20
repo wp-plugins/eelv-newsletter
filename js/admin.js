@@ -108,10 +108,10 @@ function eelv_newsletter_refresh_queue() {
 
 function eelv_newsletter_check_tracking() {
     // Check tracking
-    jQuery('#eelv_nl_sentlist').children('li').each(function (index, element) {
-        if (jQuery(this).data('email') != '') {
+    jQuery('#eelv_nl_sentlist li').each(function (index, element) {
+        if (jQuery(this).attr('data-email') != '') {
 
-            jQuery(this).html(jQuery(this).data('email')).click(function () {
+            jQuery(this).text(jQuery(this).attr('data-email')).click(function () {
                 post_id = jQuery('#post_ID').val();
                 jQuery.ajax({
                     type: 'POST',
