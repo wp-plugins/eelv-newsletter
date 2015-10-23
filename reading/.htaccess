@@ -1,0 +1,7 @@
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteRule "." - [skip=100]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule "." - [skip=100]
+
+RewriteRule (.+)$		read.php?vars=$1 [L]
