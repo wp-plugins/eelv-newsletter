@@ -1,0 +1,50 @@
+
+.eelv_news_groups .dashicons:before{
+    line-height: 25px;
+}
+
+
+#newsletter_item_post_preview{
+    padding:1em;
+    display:table;
+}
+
+
+
+/***********/
+
+  #eelv_nl_sentlist .eelv_nl_sent{
+    display:inline-block;
+    padding:3px 7px;
+    margin:2px;
+    background-color:#888;
+    color:#FFF;
+  }
+  #eelv_nl_sentlist .eelv_nl_sent:before{
+    margin-right:3px;
+  }
+  #eelv_nl_sentlist .eelv_nl_status_-1{
+    background:#800;
+  }
+  #eelv_nl_sentlist .eelv_nl_status_0{
+    background:#C00;
+  }
+  #eelv_nl_sentlist .eelv_nl_status_1{
+    background:#060;
+  }
+  #eelv_nl_sentlist .eelv_nl_status_2{
+    background:#000;
+  }
+  
+  #eelv_nl_sentlist li.eelv_nl_status_3{
+    background:#0C0;
+  }
+  #eelv_nl_sentlist .eelv_nl_status_-1:before, #eelv_nl_sentlist .eelv_nl_status_0:before{
+    content:"\f534";
+  }
+  #eelv_nl_sentlist .eelv_nl_status_2:before{
+    content:"\f153";
+  }
+  #eelv_nl_sentlist li.eelv_nl_status_3:before{
+    content:"";
+  }
