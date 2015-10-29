@@ -19,7 +19,7 @@
                     <?php
                     $the_content= $eelv_newsletter->nl_content(get_the_ID());
 
-                    $destinataire['name']=__('Visitor','eelv_lettreinfo');
+                    $destinataire['name']=__('Visitor','eelv-newsletter');
                     $destinataire['login']='';
                     $destinataire['email']='*****@***.**';
 

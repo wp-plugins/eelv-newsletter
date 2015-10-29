@@ -117,6 +117,12 @@ Yes, skins are registered as post-type.
 
 == Changelog ==
 
+= 4.2.1 =
+ Release date : 2015-10-29
+
+* remove use of <? shortcuts
+* Update textdomain to match plugin slug
+
 = 4.2.0 =
  Release date : 2015-10-20
 

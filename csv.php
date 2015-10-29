@@ -3,13 +3,13 @@
 
 
 if(!current_user_can('publish_posts')){
-    wp_die(__('Whoop ! you are not authorized to export datas.','eelv_lettreinfo'));
+    wp_die(__('Whoop ! you are not authorized to export datas.','eelv-newsletter'));
 }
 
 if(isset($_GET['grp_id']) && is_numeric($_GET['grp_id'])){ // groupes
     $grp_id=$_GET['grp_id'];
     $MBRS = $this->news_liste_contacts($grp_id); 
-    $outputxt='ID;'.__('Name','eelv_lettreinfo').';'.__('Email','eelv_lettreinfo').";\n";
+    $outputxt='ID;'.__('Name','eelv-newsletter').';'.__('Email','eelv-newsletter').";\n";
     foreach($MBRS as $contact){        
         $outputxt.=$contact->id.';'
                 . $contact->nom.';'
@@ -17,7 +17,7 @@ if(isset($_GET['grp_id']) && is_numeric($_GET['grp_id'])){ // groupes
     }
 }
 else{
-    wp_die(__('Hum hum... Sorry, but you are using a bad link.','eelv_lettreinfo'));
+    wp_die(__('Hum hum... Sorry, but you are using a bad link.','eelv-newsletter'));
 }
 if(defined('WP_DEBUG') && WP_DEBUG==true){
      header("Content-Type: text/plain");

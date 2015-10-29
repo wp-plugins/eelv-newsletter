@@ -37,7 +37,7 @@ function EelvNlReply_getanswer($postid, $email) {
  */
 function EelvNlReply_form($atts) {
     if (isset($_REQUEST['nl']) && is_numeric($_REQUEST['nl'])) {
-        $ret = '<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv_lettreinfo') . '</span>';
+        $ret = '<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv-newsletter') . '</span>';
         define('NL_IN_REPLY_PAGE', true);
         $nl = get_post($_REQUEST['nl']);
         if ($nl && is_object($nl)) {
@@ -68,10 +68,10 @@ function EelvNlReply_form($atts) {
                 $print_answer = '<strong>' . $r . '</strong>';
                 if (false !== $answer = EelvNlReply_getanswer($_REQUEST['nl'], $_REQUEST['m'])) {
                     update_post_meta($_REQUEST['nl'], 'eelv_nl_reply', $value, $answer->meta_value);
-                    $ret.=sprintf(__('Thank you, your answer "%s" has been updated !', 'eelv_lettreinfo'), $print_answer);
+                    $ret.=sprintf(__('Thank you, your answer "%s" has been updated !', 'eelv-newsletter'), $print_answer);
                 } else {
                     add_post_meta($_REQUEST['nl'], 'eelv_nl_reply', $value);
-                    $ret.=sprintf(__('Thank you, your answer "%s" has been registered !', 'eelv_lettreinfo'), $print_answer);
+                    $ret.=sprintf(__('Thank you, your answer "%s" has been registered !', 'eelv-newsletter'), $print_answer);
                 }
                 $ret.='</div>';
             }
@@ -82,7 +82,7 @@ function EelvNlReply_form($atts) {
             $ret.='</form>';
         }
     } else {
-        $ret = '<div class="nl_alert">' . __('Please access this page only by following a reply link', 'eelv_lettreinfo') . '</div>';
+        $ret = '<div class="nl_alert">' . __('Please access this page only by following a reply link', 'eelv-newsletter') . '</div>';
     }
     return $ret;
 }
@@ -94,8 +94,8 @@ function EelvNlReply_form($atts) {
  */
 function EelvNlReply_innerlink($atts) {
     extract(shortcode_atts(array(
-        'val' => __('Visible link', 'eelv_lettreinfo'),
-        'rep' => __('reply_code', 'eelv_lettreinfo'),
+        'val' => __('Visible link', 'eelv-newsletter'),
+        'rep' => __('reply_code', 'eelv-newsletter'),
         'nl' => 0
                     ), $atts));
     $ret = '';
@@ -105,9 +105,9 @@ function EelvNlReply_innerlink($atts) {
         $reply_url.=strpos($reply_url, '?') > -1 ? '&' : '?';
         $ret.=' <a href="' . $reply_url . 'nl=' . $nl . '&r=' . $rep . '&m=' . $dest . '">' . $val . '</a> ';
     } elseif (is_admin()) {
-        $ret.='<a href="#TB_inline?width=400&height=150&inlineId=eelv_news_prevlink" class="thickbox">' . __('Preview link:', 'eelv_lettreinfo') . ' ' . $val . '</a>';
+        $ret.='<a href="#TB_inline?width=400&height=150&inlineId=eelv_news_prevlink" class="thickbox">' . __('Preview link:', 'eelv-newsletter') . ' ' . $val . '</a>';
     } else {
-        $ret.='<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv_lettreinfo') . '</span>';
+        $ret.='<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv-newsletter') . '</span>';
     }
 
     return $ret;
@@ -124,16 +124,16 @@ function EelvNlReply_link($atts) {
     if (!empty($reply_url)) {
         if (!defined('NL_IN_REPLIED_PAGE')) {
             extract(shortcode_atts(array(
-                'val' => __('Visible link', 'eelv_lettreinfo'),
-                'rep' => __('reply_code', 'eelv_lettreinfo')
+                'val' => __('Visible link', 'eelv-newsletter'),
+                'rep' => __('reply_code', 'eelv-newsletter')
                             ), $atts));
             if (defined('NL_IN_REPLY_PAGE') && NL_IN_REPLY_PAGE == true) {
                 if (!defined('NL_HAS_REPLY_PAGE')) {
                     define('NL_HAS_REPLY_PAGE', true);
-                    $ret.='<label>' . __('Please fill your email', 'eelv_lettreinfo') . '
+                    $ret.='<label>' . __('Please fill your email', 'eelv-newsletter') . '
 				 			<input type="text" name="m" value="' . (isset($_REQUEST['m']) ? $_REQUEST['m'] : '') . '"/>
 				 		</label>
-				 		<label><input type="submit" class="button" value="' . __('ok', 'eelv_lettreinfo') . '"/></label>
+				 		<label><input type="submit" class="button" value="' . __('ok', 'eelv-newsletter') . '"/></label>
 				 		';
                 }
                 $ret.='<label><input type="radio" name="r" value="' . $rep . '"/> ' . $val . '</label>';
@@ -143,10 +143,10 @@ function EelvNlReply_link($atts) {
             }
         } elseif (!defined('NL_HAS_REPLY_PAGE')) {
             define('NL_HAS_REPLY_PAGE', true);
-            $ret.='<span class="nl_message nl_confirm">' . __('Thank you for your answer', 'eelv_lettreinfo') . '</span>';
+            $ret.='<span class="nl_message nl_confirm">' . __('Thank you for your answer', 'eelv-newsletter') . '</span>';
         }
     } else {
-        $ret.='<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv_lettreinfo') . '</span>';
+        $ret.='<span class="nl_message nl_alert">' . __('Invalid answer link', 'eelv-newsletter') . '</span>';
     }
     return $ret;
 }
